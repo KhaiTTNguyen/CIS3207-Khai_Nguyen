@@ -3,7 +3,6 @@
 
 #include "config.h"
 #include "header.h"
-using namespace std;
 
 int main()
 {
@@ -11,11 +10,8 @@ int main()
     cout<< "Finish time is " << FIN_TIME << endl;
     cout<< "Quit prob is " << QUIT_PROB << endl;
 
-    int a = 8;
-    a++;
-    
-    enum event { red, green, blue };
-    event r = blue;
+    enum event_tag { red, green, blue };
+    event_tag r = blue;
 
     switch(r)
     {
@@ -24,19 +20,26 @@ int main()
         case blue : std::cout << r << endl;  break;
     }
 
-//     Time t1(10, 50, 59);
-//      t1.print();   // 10:50:59
-//      Time t2;
-//      t2.print(); // 06:39:09
-//      t2.setTime(6, 39, 9);
-//      t2.print();  // 06:39:09
+/*
+while (!eventQueue.empty() && running){ // main simulation loop (runs until hit SIMULATION_FINISH event)
+    currentTime= eventQueue.top().time; // update currentTimeof simulation
+    switch(eventQueue.top().eventType){  // switch case to determine how to handle event
+        case PROCESS_ARRIVAL: handle_process_arrival();
+        case CPU_ENTER: eventQueue.pop();
+        case PROCESS_FINISH: handle_process_finish);
+        case PROCESS_EXIT: eventQueue.pop();
+        case DISK1_ARRIVAL: eventQueue.pop();
+        case DISK2_ARRIVAL:eventQueue.pop();
+        case DISK1_FINISH: handle_disk_finish();
+        case DISK2_FINISH: handle_disk_finish();
+        case SIMULATION_FINISH: running = !running;
+    }
+    // update CPU and Disk queues, creates new events where appropriate
+    update_CPU();
+    update_disks();
+}
 
-//      if(t1.equals(t2))
-//           cout << "Two objects are equal\n";
-//      else
-//           cout << "Two objects are not equal\n";
-
-
+*/
     return 0;
 }
 
@@ -44,14 +47,7 @@ int main()
 
 
 /*
-Data Structure:
-3 Queues � one for the CPU and one for each disk drive
- 
-Process = struct{
-    ID, 
-    status, 
-    time
-}
+
 
 
 events // event types as an enum -- a set of functions

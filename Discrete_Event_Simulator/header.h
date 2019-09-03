@@ -7,23 +7,26 @@
 
 // Include libraries
 #include <iostream>
+#include <queue>          // std::queue
+#include <string>         // std::string
+using namespace std;
 
-// class Time
-// {
-//      private :
-//           int hour;
-//           int minute;
-//           int second;
-//      public :
-//           //with default value
-//           Time(const int h = 0, const int m  = 0, const int s = 0);
-//           //	setter function
-//           void setTime(const int h, const int m, const int s);
-//           // Print a description of object in " hh:mm:ss"
-//           void print() const;
-//           //compare two time object
-//           bool equals(const Time&);
-// };
+/* Declare data structures
+// Private structs for that file: in .c file
+// Public structs: .h file.
+// Queues: CPU and 2 disks
+*/
+struct process
+{
+    short id;
+    string status;
+    double time;
+};
+
+queue <process> CPU;
+queue <process> disk_1;
+queue <process> disk_2;
+
 
 
 int getfavoritenumber(void);

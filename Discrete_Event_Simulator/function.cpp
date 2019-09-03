@@ -10,12 +10,14 @@ int getfavoritenumber(void)
     return 3;
 }
 
-
-
-// Time :: Time(const int h, const int m, const int s)
-//   : hour(h), minute (m), second(s)
-// {}
-
+// void cpu_enter (){
+//     /*
+//     events 
+//     time
+//     a description
+//     a set of rules
+//     */
+// }
 // void Time :: setTime(const int h, const int m, const int s)
 // {
 //      hour = h;

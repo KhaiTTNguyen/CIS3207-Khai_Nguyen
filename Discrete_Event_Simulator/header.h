@@ -23,11 +23,6 @@ struct process
     double time;
 };
 
-queue <process> CPU;
-queue <process> disk_1;
-queue <process> disk_2;
-
-
 
 int getfavoritenumber(void);
 

@@ -6,6 +6,14 @@
 
 int main()
 {
+    // Declare queues in main 
+    queue <process> CPU;
+    queue <process> disk_1;
+    queue <process> disk_2;
+
+    process A1 { 1, "running", 0.2 };
+    CPU.push(A1);
+    cout<< "A1.status is: " << A1.status << endl;
     cout<< getfavoritenumber() << endl;
     cout<< "Finish time is " << FIN_TIME << endl;
     cout<< "Quit prob is " << QUIT_PROB << endl;

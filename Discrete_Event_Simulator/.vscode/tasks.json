@@ -8,7 +8,8 @@
             "type": "shell",
             "command": "g++", // -g for deugging
             "args": [
-                "-g", "main.cpp", "function.cpp"
+                "-g", "main.cpp", "function.cpp",
+                "-o", "a.exe"
             ],
             "group": {
                 "kind": "build",

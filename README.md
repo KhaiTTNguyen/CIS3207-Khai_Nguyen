@@ -11,6 +11,13 @@ Project 1 - Giorgio's Discrete Event Simulator
 Configuration constants are included in "config.h"
 
 ## Usage
+A high level overview of your program (e.g. what the purpose
+of the program is)
 
-## Contributors
+A brief explaination of how you designed the program
+what kind of data structures did you use?
+how did you represent your data?
+what is the “work-flow” of your program?
+
+# Contributors
 Khai Nguyen: khainguyen@temple.edu

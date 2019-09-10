@@ -1,11 +1,12 @@
 // Khai Nguyen
 // Filename: main.cpp
 
-#include "config.h"
 #include "header.h"
 
 int main()
 {
+    srand (time(NULL));
+    
     // Declare queues in main 
     queue <process> CPU;
     queue <process> disk_1;
@@ -23,29 +24,46 @@ int main()
 
     switch(r)
     {
-        case red  : std::cout << r << endl;   break;
-        case green: std::cout << r << endl; break;
-        case blue : std::cout << r << endl;  break;
+        case red  : std::cout << "Color is " << r << endl;   break;
+        case green: std::cout << "Color is " << r << endl; break;
+        case blue : std::cout << "Color is " << r << endl;  break;
     }
 
 /*
 while (!eventQueue.empty() && running){ // main simulation loop (runs until hit SIMULATION_FINISH event)
     currentTime= eventQueue.top().time; // update currentTimeof simulation
-    switch(eventQueue.top().eventType){  // switch case to determine how to handle event
-        case PROCESS_ARRIVAL: handle_process_arrival();
-        case CPU_ENTER: eventQueue.pop();
-        case PROCESS_FINISH: handle_process_finish);
-        case PROCESS_EXIT: eventQueue.pop();
+    
+    event = eventQueue.myQueuePop();
+    // add a function - write event into log file (At time [t] [process ID] [event description])
+
+    switch(ventQueue.top().eventType){  // switch case to determine how to handle event
+        case PROCESS_ARRIVAL: handle_process_arrival(event, EventQueue);
+            break;
+        case CPU_ENTER: eventQueue.pop(event, EventQueue);
+            break;
+        case PROCESS_FINISH: handle_process_finish(event, EventQueue);
+            break;
         case DISK1_ARRIVAL: eventQueue.pop();
+            break;
         case DISK2_ARRIVAL:eventQueue.pop();
+            break;
         case DISK1_FINISH: handle_disk_finish();
+            break;
         case DISK2_FINISH: handle_disk_finish();
+            break;
         case SIMULATION_FINISH: running = !running;
+            break;
     }
     // update CPU and Disk queues, creates new events where appropriate
     update_CPU();
     update_disks();
+
+    // GET a user input & print stats//user debug before moving on, instead of running everything all@once
 }
+
+Edge case:
+both disks queues are full
+both disj queues are empty
 
 */
     return 0;

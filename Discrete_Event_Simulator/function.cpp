@@ -2,7 +2,6 @@
 // Filename: function.cpp
 // Usage: to build functions
 
-#include "config.h"
 #include "header.h"
 
 int getfavoritenumber(void)
@@ -10,6 +9,27 @@ int getfavoritenumber(void)
     return 3;
 }
 
+// SEED rand only ONCE
+
+/* cpu_exit(oldEvent, EventQueue){
+    // process exit
+    if {
+        EventQueue.push(newEvent);
+
+    // oricess not exit
+    } else {
+
+    }
+}
+
+myQueuePop(queue){
+    queue.pop();
+    findmax(queue.size); // to calculate STAT file (queue avg size // max & avg time CPU in use // throughput = number_of_job_handles/)
+
+
+}
+
+*/
 // void cpu_enter (){
 //     /*
 //     events 

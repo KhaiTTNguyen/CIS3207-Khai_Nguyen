@@ -9,6 +9,8 @@
 #include <iostream>
 #include <queue>          // std::queue
 #include <string>         // std::string
+#include "config.h"  
+#include "event.h"
 using namespace std;
 
 /* Declare data structures

@@ -9,24 +9,24 @@
 #pragma once
 
 // Define constants
-#define SEED  // a number that we will feed into our random numbergenerator.
+#define SEED  1122 // a number that we will feed into our random numbergenerator.
 #define INIT_TIME 0
 #define FIN_TIME 10000
 
-#define ARRIVE_MIN
-#define ARRIVE_MAX
+#define ARRIVE_MIN 20
+#define ARRIVE_MAX 80
 // new processes willenter the system in a random interval between these twoconstants.
 
 #define QUIT_PROB 0.2
 
 // time a process spends on the CPU
-#define CPU_MIN
-#define CPU_MAX
+#define CPU_MIN 5
+#define CPU_MAX 50
 
-#define DISK1_MIN
-#define DISK1_MAX
+#define DISK1_MIN 50
+#define DISK1_MAX 200
 
-#define DISK2_MIN
-#define DISK2_MAX
+#define DISK2_MIN 50
+#define DISK2_MAX 200
 
 #endif

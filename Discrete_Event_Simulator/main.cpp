@@ -3,17 +3,62 @@
 
 #include "header.h"
 
+void showq(queue <process> gq) 
+{ 
+    queue <process> g = gq; 
+    while (!g.empty()) 
+    { 
+        cout << '\t' << g.front().time; 
+        g.pop(); 
+    } 
+    cout << '\n'; 
+} 
+
+void showpq(priority_queue <process, vector<process>, compareTime> eventQueue) 
+{ 
+    priority_queue <process, vector<process>, compareTime> g = eventQueue; 
+    while (!g.empty()) 
+    { 
+        cout << '\t' << g.top().time; 
+        g.pop(); 
+    } 
+    cout << '\n'; 
+} 
+
 int main()
 {
     srand (time(NULL));
-    
+  
+
     // Declare queues in main 
     queue <process> CPU;
     queue <process> disk_1;
     queue <process> disk_2;
 
+    priority_queue <process, vector<process>, compareTime> eventQueue;
+
     process A1 { 1, "running", 0.2 };
+    process A2 { 2, "starting", 0.9 };
+    process A3 { 3, "terminating", 0.4 };
+
     CPU.push(A1);
+    CPU.push(A2);
+    CPU.push(A3);
+    CPU.push(A2);
+    CPU.push(A2);
+
+    cout << "The CPU queue is : "; 
+    showq(CPU); 
+    
+    eventQueue.push(A1);
+    eventQueue.push(A2);
+    eventQueue.push(A3);
+    eventQueue.push(A2);
+    eventQueue.push(A2);
+
+    cout << "The eventQueue is : "; 
+    showpq(eventQueue); 
+
     cout<< "A1.status is: " << A1.status << endl;
     cout<< getfavoritenumber() << endl;
     cout<< "Finish time is " << FIN_TIME << endl;

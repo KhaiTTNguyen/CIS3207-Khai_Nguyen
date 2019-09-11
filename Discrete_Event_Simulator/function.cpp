@@ -11,23 +11,101 @@ int getfavoritenumber(void)
 
 // SEED rand only ONCE
 
-/* cpu_exit(oldEvent, EventQueue){
-    // process exit
-    if {
-        EventQueue.push(newEvent);
 
-    // oricess not exit
+myQueuePop(priority_queue <process, vector<process>, compareTime> eventQueue){
+    return eventQueue.pop();
+    // findmax(queue.size); // to calculate STAT file (queue avg size // max & avg time CPU in use // throughput = number_of_job_handles/)
+    
+}
+
+/* 
+// PROCESS_ARRIVAL
+{
+If CPU is occupied or Queue is non-empty
+put process on CPU queue
+
+If CPU is not occupied AND queue is empty
+    create new event PROCESS_ARRIVE_CPU
+        event time = current system time
+        set CPU to occupied
+
+Create new event for PROCESS_ARRIVAL (so the processes
+keep on pourin’ in!
+    event time = current system time + random interval between
+    ARIVE_MIN and ARRIVE_MAX
+    create new process with a unique ID
+
+    print to log file
+}
+
+// PROCESS_ARRIVE_CPU
+{
+Create new event PROCESS_FINISH_CPU 
+    event time = current system time + random interval between CPU_MIN and CPU_MAX
+}
+
+// PROCESS_FINISH_CPU
+{
+Set CPU To not occupied
+Determine if process will exit system or not based on QUIT_PROB
+    if quit, create new event PROCESS_EXIT_SYSTEM with time = current system time
+    if not quit: check if disk1 or disk2 is currently not occupied
+        If either one is free, create new event
+        PROCESS_ARRIVE_DISK1 or PROCESS_ARRIVE_DISK_2
+        and set the disk to OCCUPIED
+
+        Otherwise, place process on one of the two disk queues (go to the one that is smaller)
+
+If CPU Queue is non-empty
+    pull process off of queue and create new event PROCESS_ARRIVE_CPU
+    set CPU to occupied
+}
+
+// **pending**
+cpu_exit(oldEvent, eventQueue){
+    // process exit
+    // create new PROCESS_EXIT event
+    if (random double between 0 and 1 < QUIT_PROB){
+        create newEvent of type PROCESS_EXIT
+        assign process from oldEvent to newEvent
+        assign newEvent time to oldEvent time
+        EventQueue.push(newEvent)
+
+    // process not exit
     } else {
 
     }
 }
 
-myQueuePop(queue){
-    queue.pop();
-    findmax(queue.size); // to calculate STAT file (queue avg size // max & avg time CPU in use // throughput = number_of_job_handles/)
-
-
+// PROCESS_ARRIVE_DISK
+Create new event PROCESS_FINISH_DISK
+    event time = current system time + random interval between
+    DISK_MIN and DISK_MAX (could be different for disk 1 and disk 2!)
 }
+
+// PROCESS_FINISH_DISK
+Set Disk to not occupied
+If CPU occupied or Queue is non-empty
+    put process on CPU queue
+If CPU is not occupied AND queue is empty
+    create new event PROCESS_ARRIVE_CPU
+        event time = current system time
+        set CPU to occupied
+If Disk Queue is non-empty
+    pull process off of queue and create new event PROCESS_ARRIVE_DISK_?
+    set disk to occupied
+}
+
+// SIMULATION_FINISH
+Cleanup!
+Finish writing to log file
+Write final statistics to STAT file
+close all file handles
+free up any alloc’d memory left
+print a nice message saying goodbye, maybe :)
+
+// random generator
+int indexTur = rand() % (R_MAX + 1) + R_MIN;    // generate random index between R_MIN and R_MAX
 
 */
 // void cpu_enter (){
@@ -38,20 +116,7 @@ myQueuePop(queue){
 //     a set of rules
 //     */
 // }
-// void Time :: setTime(const int h, const int m, const int s)
-// {
-//      hour = h;
-//      minute = m;
-//      second = s;
-// }
-
-// void Time :: print() const
-// {
-//      cout << setw(2) << setfill('0') << hour << ":"
-// 	<< setw(2) << setfill('0') << minute << ":"
-//  	<< setw(2) << setfill('0') << second << "\n";
-
-// }
+// 
 
 // bool Time :: equals(const Time &otherTime)
 // {

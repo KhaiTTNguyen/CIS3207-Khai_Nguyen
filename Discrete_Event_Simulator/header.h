@@ -9,6 +9,8 @@
 #include <iostream>
 #include <queue>          // std::queue
 #include <string>         // std::string
+#include <time.h>         // for random
+
 #include "config.h"  
 #include "event.h"
 using namespace std;
@@ -23,8 +25,20 @@ struct process
     short id;
     string status;
     double time;
+    // Initialize variables
+    process(short id, string status, double time) 
+    : id(id), status(status), time(time)
+    { 
+    } 
 };
 
+struct compareTime { 
+    bool operator()(process const& p1, process const& p2) 
+    {
+        // "true" if "p1" is longer than "p2"
+        return p1.time < p2.time; 
+    } 
+}; 
 
 int getfavoritenumber(void);
 

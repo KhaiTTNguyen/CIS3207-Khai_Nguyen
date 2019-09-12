@@ -12,11 +12,11 @@ int getfavoritenumber(void)
 // SEED rand only ONCE
 
 
-myQueuePop(priority_queue <process, vector<process>, compareTime> eventQueue){
-    return eventQueue.pop();
-    // findmax(queue.size); // to calculate STAT file (queue avg size // max & avg time CPU in use // throughput = number_of_job_handles/)
+// process myQueuePop(priority_queue <event, vector<event>, compareTime> eventQueue){
+//     return eventQueue.pop();
+//     // findmax(queue.size); // to calculate STAT file (queue avg size // max & avg time CPU in use // throughput = number_of_job_handles/)
     
-}
+// }
 
 /* 
 // PROCESS_ARRIVAL

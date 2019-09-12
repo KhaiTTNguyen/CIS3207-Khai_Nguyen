@@ -24,19 +24,31 @@ struct process
 {
     short id;
     string status;
-    double time;
+    double ptime;
     // Initialize variables
-    process(short id, string status, double time) 
-    : id(id), status(status), time(time)
+    process(short id, string status, double ptime) 
+    : id(id), status(status), ptime(ptime)
+    { 
+    } 
+};
+
+struct event
+{
+    EVENT eventType;
+    double etime;
+    process event_p;
+
+    event(EVENT eventType,double etime,process event_p) 
+    : eventType(eventType), etime(etime), event_p(event_p)
     { 
     } 
 };
 
 struct compareTime { 
-    bool operator()(process const& p1, process const& p2) 
+    bool operator()(event const& e1, event const& e2) 
     {
         // "true" if "p1" is longer than "p2"
-        return p1.time < p2.time; 
+        return e1.etime < e2.etime; 
     } 
 }; 
 

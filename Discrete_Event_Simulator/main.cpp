@@ -8,18 +8,18 @@ void showq(queue <process> gq)
     queue <process> g = gq; 
     while (!g.empty()) 
     { 
-        cout << '\t' << g.front().time; 
+        cout << '\t' << g.front().ptime; 
         g.pop(); 
     } 
     cout << '\n'; 
 } 
 
-void showpq(priority_queue <process, vector<process>, compareTime> eventQueue) 
+void showpq(priority_queue <event, vector<event>, compareTime> eventQueue) 
 { 
-    priority_queue <process, vector<process>, compareTime> g = eventQueue; 
+    priority_queue <event, vector<event>, compareTime> g = eventQueue; 
     while (!g.empty()) 
     { 
-        cout << '\t' << g.top().time; 
+        cout << '\t' << g.top().etime; 
         g.pop(); 
     } 
     cout << '\n'; 
@@ -35,11 +35,16 @@ int main()
     queue <process> disk_1;
     queue <process> disk_2;
 
-    priority_queue <process, vector<process>, compareTime> eventQueue;
+    priority_queue <event, vector<event>, compareTime> eventQueue;
 
     process A1 { 1, "running", 0.2 };
     process A2 { 2, "starting", 0.9 };
     process A3 { 3, "terminating", 0.4 };
+
+    event B1 {PROCESS_ARRIVAL, 0.5, A1};
+    event B2 {PROCESS_ARRIVAL, 0.2, A1};
+    event B3 {PROCESS_ARRIVAL, 0.57, A1};
+
 
     CPU.push(A1);
     CPU.push(A2);
@@ -50,11 +55,11 @@ int main()
     cout << "The CPU queue is : "; 
     showq(CPU); 
     
-    eventQueue.push(A1);
-    eventQueue.push(A2);
-    eventQueue.push(A3);
-    eventQueue.push(A2);
-    eventQueue.push(A2);
+    eventQueue.push(B1);
+    eventQueue.push(B2);
+    eventQueue.push(B1);
+    eventQueue.push(B3);
+    eventQueue.push(B1);
 
     cout << "The eventQueue is : "; 
     showpq(eventQueue); 
@@ -74,38 +79,39 @@ int main()
         case blue : std::cout << "Color is " << r << endl;  break;
     }
 
-/*
-while (!eventQueue.empty() && running){ // main simulation loop (runs until hit SIMULATION_FINISH event)
-    currentTime= eventQueue.top().time; // update currentTimeof simulation
+
+// while (!eventQueue.empty() && running){ // main simulation loop (runs until hit SIMULATION_FINISH event)
+//     currentTime = eventQueue.top().time; // update currentTimeof simulation
     
-    event = eventQueue.myQueuePop();
-    // add a function - write event into log file (At time [t] [process ID] [event description])
+//     event = myQueuePop(eventQueue);
+//     // add a function - write event into log file (At time [t] [process ID] [event description])
 
-    switch(ventQueue.top().eventType){  // switch case to determine how to handle event
-        case PROCESS_ARRIVAL: handle_process_arrival(event, EventQueue);
-            break;
-        case CPU_ENTER: eventQueue.pop(event, EventQueue);
-            break;
-        case PROCESS_FINISH: handle_process_finish(event, EventQueue);
-            break;
-        case DISK1_ARRIVAL: eventQueue.pop();
-            break;
-        case DISK2_ARRIVAL:eventQueue.pop();
-            break;
-        case DISK1_FINISH: handle_disk_finish();
-            break;
-        case DISK2_FINISH: handle_disk_finish();
-            break;
-        case SIMULATION_FINISH: running = !running;
-            break;
-    }
-    // update CPU and Disk queues, creates new events where appropriate
-    update_CPU();
-    update_disks();
+//     switch(eventQueue.top().eventType){  // switch case to determine how to handle event
+//         case PROCESS_ARRIVAL: handle_process_arrival(event, EventQueue);
+//             break;
+//         case CPU_ENTER: eventQueue.pop(event, EventQueue);
+//             break;
+//         case PROCESS_FINISH: handle_process_finish(event, EventQueue);
+//             break;
+//         case DISK1_ARRIVAL: eventQueue.pop();
+//             break;
+//         case DISK2_ARRIVAL:eventQueue.pop();
+//             break;
+//         case DISK1_FINISH: handle_disk_finish();
+//             break;
+//         case DISK2_FINISH: handle_disk_finish();
+//             break;
+//         case SIMULATION_FINISH: running = !running;
+//             break;
+//     }
+//     // update CPU and Disk queues, creates new events where appropriate
+//     update_CPU();
+//     update_disks();
 
-    // GET a user input & print stats//user debug before moving on, instead of running everything all@once
-}
+//     // GET a user input & print stats//user debug before moving on, instead of running everything all@once
+// }
 
+/*
 Edge case:
 both disks queues are full
 both disj queues are empty

@@ -3,55 +3,42 @@
 
 #include "header.h"
 
-void showq(queue <process> gq) 
-{ 
-    queue <process> g = gq; 
-    while (!g.empty()) 
-    { 
-        cout << '\t' << g.front().ptime; 
-        g.pop(); 
-    } 
-    cout << '\n'; 
-} 
-
-void showpq(priority_queue <event, vector<event>, compareTime> eventQueue) 
-{ 
-    priority_queue <event, vector<event>, compareTime> g = eventQueue; 
-    while (!g.empty()) 
-    { 
-        cout << '\t' << g.top().etime; 
-        g.pop(); 
-    } 
-    cout << '\n'; 
-} 
+queue <process> CPU;
+queue <process> disk_1;
+queue <process> disk_2;
+bool CPU_busy = false;
+bool disk_1_busy = false;
+bool disk_2_busy = false;
 
 int main()
 {
-    srand (time(NULL));
-  
+    srand(time(NULL));
 
-    // Declare queues in main 
-    queue <process> CPU;
-    queue <process> disk_1;
-    queue <process> disk_2;
+    double q = ((double)rand() / RAND_MAX);
+    double real_q = Q_MIN + q * (Q_MAX - Q_MIN);
+    
+    cout << "Q is: " << q << endl;
 
     priority_queue <event, vector<event>, compareTime> eventQueue;
 
     process A1 { 1, "running", 0.2 };
     process A2 { 2, "starting", 0.9 };
     process A3 { 3, "terminating", 0.4 };
+    // process A4;
 
     event B1 {PROCESS_ARRIVAL, 0.5, A1};
-    event B2 {PROCESS_ARRIVAL, 0.2, A1};
-    event B3 {PROCESS_ARRIVAL, 0.57, A1};
-
+    event B2 {DISK1_FINISH, 0.2, A1};
+    event B3 {DISK2_FINISH, 0.57, A1};
+    // event B4;
 
     CPU.push(A1);
     CPU.push(A2);
     CPU.push(A3);
     CPU.push(A2);
     CPU.push(A2);
-
+    //CPU.push(A4);
+    //CPU.push(A4);
+    
     cout << "The CPU queue is : "; 
     showq(CPU); 
     
@@ -60,6 +47,8 @@ int main()
     eventQueue.push(B1);
     eventQueue.push(B3);
     eventQueue.push(B1);
+    //eventQueue.push(B4);
+    //eventQueue.push(B4);
 
     cout << "The eventQueue is : "; 
     showpq(eventQueue); 
@@ -79,19 +68,22 @@ int main()
         case blue : std::cout << "Color is " << r << endl;  break;
     }
 
+/*------------------------*/
+double currentTime;
+cpu_finish(B1, eventQueue);
+// while (!eventQueue.empty()){ // (&& running -- til hit SIMULATION_FINISH event)
+//     currentTime = eventQueue.top().etime; // update currentTimeof simulation
+//     cout << "currentTime is " << currentTime << endl;
 
-// while (!eventQueue.empty() && running){ // main simulation loop (runs until hit SIMULATION_FINISH event)
-//     currentTime = eventQueue.top().time; // update currentTimeof simulation
-    
-//     event = myQueuePop(eventQueue);
-//     // add a function - write event into log file (At time [t] [process ID] [event description])
-
-//     switch(eventQueue.top().eventType){  // switch case to determine how to handle event
-//         case PROCESS_ARRIVAL: handle_process_arrival(event, EventQueue);
+//     event currentEvent = eventQueue.top();
+//     eventQueue.pop();
+// //     // add a function - write event into log file (At time [t] [process ID] [event description])
+//    switch(currentEvent.eventType){  // switch case to determine how to handle event
+//         case PROCESS_ARRIVAL: handle_process_arrival(event, eventQueue);
 //             break;
-//         case CPU_ENTER: eventQueue.pop(event, EventQueue);
+//         case CPU_ARRIVAL: eventQueue.pop(event, EventQueue);
 //             break;
-//         case PROCESS_FINISH: handle_process_finish(event, EventQueue);
+//         case CPU_FINISH: cpu_finish(currentEvent, eventQueue);
 //             break;
 //         case DISK1_ARRIVAL: eventQueue.pop();
 //             break;

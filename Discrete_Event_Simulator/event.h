@@ -7,15 +7,15 @@
 #define MYENUM_H
 
 enum EVENT { 
-    PROCESS_ARRIVAL,
-    PROCESS_ARRIVE_CPU,
-    PROCESS_FINISH_CPU,
-    PROCESS_EXIT_SYSTEM,
-    PROCESS_ARRIVE_DISK1,
-    PROCESS_ARRIVE_DISK2,
-    PROCESS_FINISH_DISK1,
-    PROCESS_FINISH_DISK2,
-    SIMULATION_FINISH
+    PROCESS_ARRIVAL,        // 0
+    CPU_ARRIVAL,            // 1    
+    CPU_FINISH,             // 2
+    PROCESS_EXIT,           // 3
+    DISK1_ARRIVAL,          // 4
+    DISK2_ARRIVAL,          // 5
+    DISK1_FINISH,           // 6
+    DISK2_FINISH,           // 7
+    SIMULATION_FINISH       // 8
 };
 
 #endif

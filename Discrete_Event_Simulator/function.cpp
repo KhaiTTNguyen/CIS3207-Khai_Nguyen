@@ -6,35 +6,39 @@
 
 
 double randomDoub(){
-    double q = ((double)rand() / RAND_MAX);
-    return Q_MIN + q * (Q_MAX - Q_MIN);
+    return (random() / (double)RAND_MAX);
 }
 
 int randomTime(int tMin, int tMax){
-    return rand() % (tMax + 1) + tMin;
+    return (rand() % (tMax - tMin + 1)) + tMin;
 }
 
-int getfavoritenumber(void)
-{
+int getfavoritenumber(void){
     return 3;
 }
 
-void cpu_finish(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue){
+/*
+case PROCESS_ARRIVAL: handle_process_arrival(currentEvent, eventQueue);
+            break;
+*/
+
+void handle_process_finish_cpu(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue){
     // process exit
     CPU_busy = false;
     double quit_prob = randomDoub();
     cout << "Quit prob is: "<< quit_prob << endl;
+    int eventTime = oldEvent.etime;
+
     if (quit_prob < QUIT_PROB){
-        // time = currentTime OR oldEvent.etime
-        event newEvent {PROCESS_EXIT, oldEvent.etime, oldEvent.event_p};
+        event newEvent {PROCESS_EXIT, eventTime, oldEvent.event_p};
         eventQueue.push(newEvent);
     // process goes to DISK1 or DISK2
     } else if (disk_1.empty() && disk_1_busy == false) {       
-        event newEvent {DISK1_ARRIVAL, oldEvent.etime, oldEvent.event_p};
+        event newEvent {DISK1_ARRIVAL, eventTime, oldEvent.event_p};
         eventQueue.push(newEvent);
         disk_1_busy = true;
     } else if (disk_2.empty() && disk_2_busy == false) {        
-        event newEvent {DISK2_ARRIVAL, oldEvent.etime, oldEvent.event_p};
+        event newEvent {DISK2_ARRIVAL, eventTime, oldEvent.event_p};
         eventQueue.push(newEvent);
         disk_2_busy = true;
     } else {
@@ -45,53 +49,58 @@ void cpu_finish(event oldEvent, priority_queue <event, vector<event>, compareTim
         }
     }
 
+    // put new process onto CPU
     if (!CPU.empty()){
         process newCPUProcess = CPU.pop();
         currentTime = currentTime + randomTime(CPU_MIN, CPU_MAX);
-        event cpuArrivalEvent = {CPU_ARRIVAL, currentTime, newCPUProcess};
-        // enQueue?
-        //adding 
+        // event time
+
+        event cpuArrivalEvent = {PROCESS_ARRIVE_CPU, currentTime, newCPUProcess};
+        eventQueue.push(cpuArrivalEvent);
         CPU_busy = true;
     }
 }
 
 
 // PROCESS_ARRIVAL
+// if event = PROCESS_ARRIVAL --> put on CPU, create another event with PROCESS_ARRIVAL
 void handle_process_arrival(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue){
-    if (!CPU.empty() || CPU_busy == true){      // CPU_busy == false
+    if (!CPU.empty() || CPU_busy == true){ 
         CPU.push(oldEvent.event_p);
     } 
 
     if (CPU.empty() && CPU_busy == false){
-        event newEvent {PROCESS_ARRIVAL, currentTime, oldEvent.event_p};
-        // put on eventQueue?
+        event newEvent {PROCESS_ARRIVAL, oldEvent.etime, oldEvent.event_p};
+        eventQueue.push(newEvent);
+        CPU_busy = true;
     } 
-
-    currentTime = currentTime + randomTime(ARRIVE_MIN, ARRIVE_MAX);
-    process arrivalProcess {processCount, "arrive in system", currentTime}
-    processCount++;
-    event arrivalEvent {PROCESS_ARRIVAL, currentTime, arrivalProcess};
     
-
+    // New processes ONLY generated here
+    // eventTime or currentTime?
+    int eventTime = oldEvent.etime + randomTime(ARRIVE_MIN, ARRIVE_MAX);
+    processID++;
+    process arrivalProcess {processID, "arrive in system", eventTime};
+    event arrivalEvent {PROCESS_ARRIVAL, eventTime, arrivalProcess};
+    eventQueue.push(arrivalEvent);
     // print to log file
 }
 
 
-// // PROCESS_ARRIVE_CPU
-// void cpu_enter(){
-//     currentTime = currentTime + randomTime(CPU_MIN, CPU_MAX);
-//     // process arrivalProcess {processCount, "arrive in system", currentTime}
-//     // processCount++;
-//     event finishCPUEvent {CPU_ARRIVAL, currentTime, // arrivalProcess};
-    
-//     event time = current system time + random interval between CPU_MIN and CPU_MAX
-// eventQueue.pop(event, EventQueue);
-// }
+// PROCESS_ARRIVE_CPU
+// pick event ARRIVE_CPU --> add time --> create FINISH_CPU
+void handle_process_arrive_cpu(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue){
+    // eventTime or currentTime?
+    int eventTime = currentTime + randomTime(CPU_MIN, CPU_MAX);
+
+    event finishCPUEvent {PROCESS_FINISH_CPU, eventTime, oldEvent.event_p};
+    eventQueue.push(finishCPUEvent);
+
+    currentTime = eventTime;
+}
 
 
 /*--------Supplement functions----------*/
-void showpq(priority_queue <event, vector<event>, compareTime> eventQueue) 
-{ 
+void showpq(priority_queue <event, vector<event>, compareTime> eventQueue) { 
     priority_queue <event, vector<event>, compareTime> g = eventQueue; 
     while (!g.empty()) 
     { 
@@ -102,8 +111,7 @@ void showpq(priority_queue <event, vector<event>, compareTime> eventQueue)
 } 
 
 
-void showq(queue <process> gq) 
-{ 
+void showq(queue <process> gq) { 
     queue <process> g = gq; 
     while (!g.empty()) 
     { 
@@ -114,29 +122,59 @@ void showq(queue <process> gq)
 } 
 
 
+// PROCESS_ARRIVE_DISK_1
+// grab disk_arrival event --> add time -> create disk_finish 
+void handle_process_arrive_disk_1(event currentEvent, priority_queue <event, vector<event>, compareTime>eventQueue){
+
+    int newEventTime = currentEvent.etime + randomTime(DISK1_MIN, DISK1_MAX);
+    event newDiskEvent = {DISK1_FINISH, newEventTime, currentEvent.event_p};
+}
+
+// PROCESS_ARRIVE_DISK_2
+// grab disk_arrival event --> add time -> create disk_finish 
+void handle_process_arrive_disk_2(event newEventTime, priority_queue <event, vector<event>, compareTime>eventQueue){
+
+    currentTime = currentTime + randomTime(DISK2_MIN, DISK2_MAX);
+    event newDiskEvent = {DISK2_FINISH, currentTime, currentEvent.event_p};
+}
+
 // PROCESS_FINISH_DISK --- MAKE SEPARATE FOR 2 DISKS
 void handle_disk_1_finish(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue){
     disk_1_busy = false;
     if (CPU_busy == true || !CPU.empty()){
         CPU.push(oldEvent.event_p);
     }
-
     if (CPU_busy == false && CPU.empty()){
-        event cpuArriveEvent = {CPU_ARRIVAL, currentTime, oldEvent.event_p};
+        event cpuArriveEvent = {PROCESS_ARRIVE_CPU, currentTime, oldEvent.event_p};
         CPU_busy = true;
     }
     
+    // pull another process to disk
     if (!disk_1.empty()){
-
+        event diskArrive = {DISK1_ARRIVAL, currentTime, disk_1.top()};
+        eventQueue.push(diskArrive);
+        disk_1.pop();
+        disk_1_busy = true;
     }
+}
 
-If CPU is not occupied AND queue is empty
-    create new event PROCESS_ARRIVE_CPU
-        event time = current system time
-        set CPU to occupied
-If Disk Queue is non-empty
-    pull process off of queue and create new event PROCESS_ARRIVE_DISK_?
-    set disk to occupied
+void handle_disk_2_finish(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue){
+    disk_2_busy = false;
+    if (CPU_busy == true || !CPU.empty()){
+        CPU.push(oldEvent.event_p);
+    }
+    if (CPU_busy == false && CPU.empty()){
+        event cpuArriveEvent = {PROCESS_ARRIVE_CPU, currentTime, oldEvent.event_p};
+        CPU_busy = true;
+    }
+    
+    // pull another process to disk
+    if (!disk_2.empty()){
+        event diskArrive = {DISK2_ARRIVAL, currentTime, disk_2.top()};
+        eventQueue.push(diskArrive);
+        disk_2.pop();
+        disk_2_busy = true;
+    }
 }
 
 
@@ -151,61 +189,7 @@ If Disk Queue is non-empty
 
 
 /*
-
-// PROCESS_FINISH_CPU
-void {
-Set CPU To not occupied
-Determine if process will exit system or not based on QUIT_PROB
-    if quit, create new event PROCESS_EXIT_SYSTEM with time = current system time
-    if not quit: check if disk1 or disk2 is currently not occupied
-        If either one is free, create new event
-        PROCESS_ARRIVE_DISK1 or PROCESS_ARRIVE_DISK_2
-        and set the disk to OCCUPIED
-
-        Otherwise, place process on one of the two disk queues (go to the one that is smaller)
-
-If CPU Queue is non-empty
-    pull process off of queue and create new event PROCESS_ARRIVE_CPU
-    set CPU to occupied
-}
-
 // **pending**
-
-
-// PROCESS_ARRIVE_DISK
-Create new event PROCESS_FINISH_DISK
-    event time = current system time + random interval between
-    DISK_MIN and DISK_MAX (could be different for disk 1 and disk 2!)
-}
-
-// SIMULATION_FINISH
-Cleanup!
-Finish writing to log file
-Write final statistics to STAT file
-close all file handles
-free up any alloc’d memory left
-print a nice message saying goodbye, maybe :)
 
 // random generator
 int indexTur = rand() % (R_MAX + 1) + R_MIN;    // generate random index between R_MIN and R_MAX
-
-*/
-// void cpu_enter (){
-//     /*
-//     events 
-//     time
-//     a description
-//     a set of rules
-//     */
-// }
-// 
-
-// bool Time :: equals(const Time &otherTime)
-// {
-//      if(hour == otherTime.hour
-//           && minute == otherTime.minute
-//           && second == otherTime.second)
-//           return true;
-//      else
-//           return false;
-// }

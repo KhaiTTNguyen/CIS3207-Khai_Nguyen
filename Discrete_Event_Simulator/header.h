@@ -56,16 +56,19 @@ struct compareTime {
 extern queue <process> CPU;
 extern queue <process> disk_1;
 extern queue <process> disk_2;
+extern priority_queue <event, vector<event>, compareTime> eventQueue;
 extern bool CPU_busy;
 extern bool disk_1_busy;
 extern bool disk_2_busy;
-
+extern double currentTime;
+extern long processID;
 
 int getfavoritenumber(void);
 
 // functions
 void cpu_finish(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);
 double randomDoub();
+int randomTime(int tMin, int tMax);
 void showpq(priority_queue <event, vector<event>, compareTime> eventQueue);
 void showq(queue <process> gq);
 #endif

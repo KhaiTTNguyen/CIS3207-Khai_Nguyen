@@ -8,8 +8,8 @@
 
 enum EVENT { 
     PROCESS_ARRIVAL,        // 0
-    CPU_ARRIVAL,            // 1    
-    CPU_FINISH,             // 2
+    PROCESS_ARRIVE_CPU,            // 1    
+    PROCESS_FINISH_CPU,             // 2
     PROCESS_EXIT,           // 3
     DISK1_ARRIVAL,          // 4
     DISK2_ARRIVAL,          // 5

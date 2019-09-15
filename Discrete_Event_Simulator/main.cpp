@@ -10,79 +10,31 @@ priority_queue <event, vector<event>, compareTime> eventQueue;
 bool CPU_busy = false;
 bool disk_1_busy = false;
 bool disk_2_busy = false;
-//double currentTime = 0.0;
 long processID = 0;
 
 int main()
 {
     srand(time(NULL));
 
-    process initial_p { 2, "starting"};
-    process final_p { 3, "terminating"};
+    process initial_p {0, "start"};
+    process final_p {99999, "end"};
 
     event initial_e {PROCESS_ARRIVAL, INIT_TIME, initial_p};
-    event finish_e {SIMULATION_FINISH, FIN_TIME, finish_p};
-    
-    // cout << "Q is: " << q << endl;
-
-
-    
-    // process A4;
-
-    CPU.push(A1);
-    CPU.push(A2);
-    CPU.push(A3);
-    CPU.push(A2);
-    CPU.push(A2);
-    //CPU.push(A4);
-    //CPU.push(A4);
-    
-    cout << "The CPU queue is : "; 
-    showq(CPU); 
-    
-    eventQueue.push(B1);
-    eventQueue.push(B2);
-    eventQueue.push(B1);
-    eventQueue.push(B3);
-    eventQueue.push(B1);
-    //eventQueue.push(B4);
-    //eventQueue.push(B4);
-
-    cout << "The eventQueue is : "; 
-    showpq(eventQueue); 
-
-    cout<< "A1.status is: " << A1.status << endl;
-    cout<< getfavoritenumber() << endl;
-    cout<< "Finish time is " << FIN_TIME << endl;
-    cout<< "Quit prob is " << QUIT_PROB << endl;
-
-    enum event_tag { red, green, blue };
-    event_tag r = blue;
-
-    switch(r)
-    {
-        case red  : std::cout << "Color is " << r << endl;   break;
-        case green: std::cout << "Color is " << r << endl; break;
-        case blue : std::cout << "Color is " << r << endl;  break;
-    }
+    event finish_e {SIMULATION_FINISH, FIN_TIME, final_p};
 
 /*------------------------*/
-cpu_finish(B1, eventQueue);
 
 bool running = true;
 
 while (!eventQueue.empty() && running == true) {
-    // currentTime = eventQueue.top().etime; // update currentTime of simulation
-    // cout << "currentTime is " << currentTime << endl;
-
     event currentEvent = eventQueue.top();
     eventQueue.pop();
-//     // add a function - write event into log file (At time [t] [process ID] [event description])
+    // add a function - write event into log file (At time [t] [process ID] [event description])
 
-   switch(currentEvent.eventType){  // switch case to determine how to handle event
+    switch(currentEvent.eventType){  // switch case to determine how to handle event
         case PROCESS_ARRIVAL: handle_process_arrival(currentEvent, eventQueue);
             break;
-        case PROCESS_EXIT: 
+        case PROCESS_EXIT: // just break (already pop() the event & process above)
             break;
         case PROCESS_ARRIVE_CPU: handle_process_arrive_cpu(currentEvent, eventQueue);
             break;
@@ -99,12 +51,23 @@ while (!eventQueue.empty() && running == true) {
         case SIMULATION_FINISH: running = !running;
             break;
     }
+
+    cout << "The CPU queue is : "; 
+    showq(CPU); 
+    
+    cout << "The eventQueue is : "; 
+    showpq(eventQueue); 
+    
+    int i;
+    cout << "Please enter an integer value: ";
+    cin >> i;
+    cout << "The value you entered is " << i;
+
     // update CPU and Disk queues, creates new events where appropriate
     // update_CPU();
     // update_disks();
-    printQ(eventQ);
-    // print event with smaller time
-
+    
+    // printQ(eventQ);
 
     // GET a user input & print stats//user debug before moving on, instead of running everything all@once
 }

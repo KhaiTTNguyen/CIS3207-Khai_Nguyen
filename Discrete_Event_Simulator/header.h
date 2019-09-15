@@ -25,31 +25,22 @@ using namespace std;
 // Public structs: .h file.
 */
 
-struct process
-{
-    int id;
+struct process{
+    long id;
     string status;
-    double ptime;
-    // Default constructor
-    // process(int id = 0, string status = "", double ptime = 0.0) 
-    // : id(id), status(status), ptime(ptime) {} 
 };
 
-struct event
-{
+struct event{
     EVENT eventType ;
-    double etime;
+    int etime;
     process event_p;
-
-    // event(EVENT eventType = PROCESS_ARRIVAL, double = 0.0, process event_p = {0, "", 0.0}) 
-    // : eventType(eventType), etime(etime), event_p(event_p) {} 
 };
 
 struct compareTime { 
     bool operator()(event const& e1, event const& e2) 
     {
-        // "true" if "e1" is longer than "e2"
-        return e1.etime > e2.etime; 
+        // "true" if "e1" arrives before "e2"
+        return e1.etime < e2.etime; 
     } 
 }; 
 
@@ -60,13 +51,17 @@ extern priority_queue <event, vector<event>, compareTime> eventQueue;
 extern bool CPU_busy;
 extern bool disk_1_busy;
 extern bool disk_2_busy;
-extern double currentTime;
 extern long processID;
 
-int getfavoritenumber(void);
-
 // functions
-void cpu_finish(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);
+void handle_process_arrival(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);
+void handle_process_arrive_cpu(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);
+void handle_process_finish_cpu(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);
+void handle_process_arrive_disk_1(event currentEvent, priority_queue <event, vector<event>, compareTime>eventQueue);
+void handle_process_arrive_disk_2(event newEventTime, priority_queue <event, vector<event>, compareTime>eventQueue);
+void handle_disk_1_finish(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);
+void handle_disk_2_finish(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);
+
 double randomDoub();
 int randomTime(int tMin, int tMax);
 void showpq(priority_queue <event, vector<event>, compareTime> eventQueue);

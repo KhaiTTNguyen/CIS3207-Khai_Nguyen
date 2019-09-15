@@ -12,16 +12,18 @@ void handle_process_arrival(event oldEvent, priority_queue <event, vector<event>
     } 
 
     if (CPU.empty() && CPU_busy == false){
-        event newEvent {PROCESS_ARRIVAL, oldEvent.etime, oldEvent.event_p};
+        event newEvent = {PROCESS_ARRIVAL, oldEvent.etime, oldEvent.event_p};
         eventQueue.push(newEvent);
+        cout << "The eventQueue in handle_arrive is : "; 
+        showpq(eventQueue);
         CPU_busy = true;
     } 
     
     // New processes ONLY generated here
     int eventTime = oldEvent.etime + randomTime(ARRIVE_MIN, ARRIVE_MAX);
     processID++;
-    process arrivalProcess {processID, "arrive in system"};
-    event arrivalEvent {PROCESS_ARRIVAL, eventTime, arrivalProcess};
+    process arrivalProcess = {processID, "arrive in system"};
+    event arrivalEvent = {PROCESS_ARRIVAL, eventTime, arrivalProcess};
     eventQueue.push(arrivalEvent);
 }
 
@@ -29,7 +31,7 @@ void handle_process_arrival(event oldEvent, priority_queue <event, vector<event>
 // pick event ARRIVE_CPU --> add time --> create FINISH_CPU
 void handle_process_arrive_cpu(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue){
     int eventTime = oldEvent.etime + randomTime(CPU_MIN, CPU_MAX);
-    event finish_CPU_Event {PROCESS_FINISH_CPU, eventTime, oldEvent.event_p};
+    event finish_CPU_Event = {PROCESS_FINISH_CPU, eventTime, oldEvent.event_p};
     eventQueue.push(finish_CPU_Event);
 }
 
@@ -40,15 +42,15 @@ void handle_process_finish_cpu(event oldEvent, priority_queue <event, vector<eve
     cout << "Quit prob is: "<< quit_prob << endl;
 
     if (quit_prob < QUIT_PROB){
-        event newEvent {PROCESS_EXIT, oldEvent.etime, oldEvent.event_p};
+        event newEvent = {PROCESS_EXIT, oldEvent.etime, oldEvent.event_p};
         eventQueue.push(newEvent);
     // process goes to DISK1 or DISK2
     } else if (disk_1.empty() && disk_1_busy == false) {       
-        event newEvent {DISK1_ARRIVAL, oldEvent.etime, oldEvent.event_p};
+        event newEvent = {DISK1_ARRIVAL, oldEvent.etime, oldEvent.event_p};
         eventQueue.push(newEvent);
         disk_1_busy = true;
     } else if (disk_2.empty() && disk_2_busy == false) {        
-        event newEvent {DISK2_ARRIVAL, oldEvent.etime, oldEvent.event_p};
+        event newEvent = {DISK2_ARRIVAL, oldEvent.etime, oldEvent.event_p};
         eventQueue.push(newEvent);
         disk_2_busy = true;
     } else {

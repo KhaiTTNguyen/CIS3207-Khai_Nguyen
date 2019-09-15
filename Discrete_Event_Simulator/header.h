@@ -40,7 +40,7 @@ struct compareTime {
     bool operator()(event const& e1, event const& e2) 
     {
         // "true" if "e1" arrives before "e2"
-        return e1.etime < e2.etime; 
+        return e1.etime > e2.etime; 
     } 
 }; 
 

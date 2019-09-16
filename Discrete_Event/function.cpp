@@ -4,6 +4,7 @@
 
 #include "header.h"
 
+
 // PROCESS_ARRIVAL
 // if event = PROCESS_ARRIVAL --> put on CPU, create another event with PROCESS_ARRIVAL
 void handle_process_arrival(event oldE, priority_queue <event, vector<event>, compareTime> eventQ) {
@@ -15,38 +16,47 @@ void handle_process_arrival(event oldE, priority_queue <event, vector<event>, co
 	}
 
 	if (CPU.empty() && CPU_busy == false) {
-		/*cout << "The eventQueue before adding is : ";
-		showpq(eventQ);*/
 		event newEvent = { PROCESS_ARRIVE_CPU, oldE.etime, oldE.event_p };
 		eventQ.push(newEvent);
-		/*cout << "The eventQueue after adding is : ";
-		showpq(eventQ);
-		*/
 		CPU_busy = true;
 		newEvent.event_p.status = "arrive at cpu";
 	}
 
 	// New processes ONLY generated here
-	int eventTime = oldE.etime + randomTime(ARRIVE_MIN, ARRIVE_MAX);
+	double eventTime = oldE.etime + randomTime(ARRIVE_MIN, ARRIVE_MAX);
 	processID++;
 	process arrivalProcess = { processID, "arrive in system" };
 	event arrivalEvent = { PROCESS_ARRIVAL, eventTime, arrivalProcess };
 	eventQ.push(arrivalEvent);
 	eventQueue = eventQ;
+
+	// stat record
+	
 }
+
 
 // PROCESS_ARRIVE_CPU
 // pick event ARRIVE_CPU --> add time --> create FINISH_CPU
 void handle_process_arrive_cpu(event oldE, priority_queue <event, vector<event>, compareTime> eventQ) {
-	int eventTime = oldE.etime + randomTime(CPU_MIN, CPU_MAX);
+	double eventTime = oldE.etime + randomTime(CPU_MIN, CPU_MAX);
+
+	// record stats
+	record_time(0, eventTime - oldE.etime);
+	record_size_CPU();
+	record_throughput(0);
+
 	event finish_CPU_Event = { PROCESS_FINISH_CPU, eventTime, oldE.event_p };
 	finish_CPU_Event.event_p.status = "finish cpu";
 	eventQ.push(finish_CPU_Event);
-	//cout << "The eventQueue in CPU_arrive is : ";
-	//showpq(eventQ);
+	// cout << "The eventQueue in CPU_arrive is : ";
+	// showpq(eventQ);
 	eventQueue = eventQ;
 }
-
+/*
+handle_process_finish_cpu:
+input: event, priority_queue
+output: void
+*/
 void handle_process_finish_cpu(event oldE, priority_queue <event, vector<event>, compareTime> eventQ) {
 	// process exit
 	CPU_busy = false;
@@ -101,7 +111,12 @@ void handle_process_finish_cpu(event oldE, priority_queue <event, vector<event>,
 // PROCESS_ARRIVE_DISK_1
 // grab disk_arrival event --> add time -> create disk_finish 
 void handle_process_arrive_disk_1(event oldEvent, priority_queue <event, vector<event>, compareTime>eventQ) {
-	int newEventTime = oldEvent.etime + randomTime(DISK1_MIN, DISK1_MAX);
+	double newEventTime = oldEvent.etime + randomTime(DISK1_MIN, DISK1_MAX);
+	
+	record_time(1, newEventTime - oldEvent.etime);
+	record_size_disk_1();
+	record_throughput(1);
+
 	event newDiskEvent = { DISK1_FINISH, newEventTime, oldEvent.event_p };
 	newDiskEvent.event_p.status = "finish at disk1";
 	eventQ.push(newDiskEvent);
@@ -111,7 +126,13 @@ void handle_process_arrive_disk_1(event oldEvent, priority_queue <event, vector<
 // PROCESS_ARRIVE_DISK_2
 // grab disk_arrival event --> add time -> create disk_finish 
 void handle_process_arrive_disk_2(event oldEvent, priority_queue <event, vector<event>, compareTime>eventQ) {
-	int newEventTime = oldEvent.etime + randomTime(DISK2_MIN, DISK2_MAX);
+	double newEventTime = oldEvent.etime + randomTime(DISK2_MIN, DISK2_MAX);
+	
+	// record stats
+	record_time(2, newEventTime - oldEvent.etime);
+	record_size_disk_2();
+	record_throughput(2);
+
 	event newDiskEvent = { DISK2_FINISH, newEventTime, oldEvent.event_p };
 	newDiskEvent.event_p.status = "finish at disk2";
 	eventQ.push(newDiskEvent);
@@ -173,37 +194,12 @@ void handle_disk_2_finish(event oldEvent, priority_queue <event, vector<event>, 
 
 
 /*--------Supplement functions----------*/
-
-void print_log(event currentE) {
-	fstream file;
-	file.open("log.txt", ios::out);
-	string line;
-
-	// Backup streambuffers of  cout 
-	streambuf* stream_buffer_cout = cout.rdbuf();
-	streambuf* stream_buffer_cin = cin.rdbuf();
-
-	// Get the streambuffer of the file 
-	streambuf* stream_buffer_file = file.rdbuf();
-
-	// Redirect cout to file 
-	cout.rdbuf(stream_buffer_file);
-
-	cout << "At time " << currentE.etime << " process " << currentE.event_p.id << " " << currentE.event_p.status << endl;
-
-	// Redirect cout back to screen 
-	cout.rdbuf(stream_buffer_cout);
-	cout << "At time " << currentE.etime << " process " << currentE.event_p.id << " " << currentE.event_p.status << endl;
-
-	file.close();
-}
-
 double randomDoub() {
 	return ((double)rand() / (double)RAND_MAX);
 }
 
-int randomTime(int tMin, int tMax) {
-	return (rand() % (tMax - tMin + 1)) + tMin;
+double randomTime(int tMin, int tMax) {
+	return (double)(rand() % (tMax - tMin + 1)) + tMin;
 }
 
 void showpq(priority_queue <event, vector<event>, compareTime> eventQ) {
@@ -227,8 +223,157 @@ void showq(queue <process> gq) {
 	cout << '\n';
 }
 
-// process myQueuePop(priority_queue <event, vector<event>, compareTime> eventQueue){
-//     return eventQueue.pop();
-//     // findmax(queue.size); // to calculate STAT file (queue avg size // max & avg time CPU in use // throughput = number_of_job_handles/)
 
-// }
+
+void record_size_CPU() {
+	if (CPU.size() > component_max_size[0]) {
+		component_max_size[0] = CPU.size();
+	}
+	CPU_size.push(CPU.size());
+}
+
+void record_size_disk_1() {
+	if (disk_1.size() > component_max_size[1]) {
+		component_max_size[1] = disk_1.size();
+	}
+	disk_1_size.push(disk_1.size());
+}
+
+void record_size_disk_2() {
+	if (disk_2.size() > component_max_size[2]) {
+		component_max_size[2] = disk_2.size();
+	}
+	disk_2_size.push(disk_2.size());
+}
+
+
+void record_time(int component_num, double time_difference) {
+	if (component_num == 0) {
+		use_time[component_num] += time_difference;
+	}
+
+	if (component_num == 1) {
+		use_time[component_num] += time_difference;
+	}
+
+	if (component_num == 2) {
+		use_time[component_num] += time_difference;
+	}
+}
+
+void record_time_disk_1(double time_difference) {
+	use_time[1] += time_difference;
+}
+
+void record_time_disk_2(double time_difference) {
+	use_time[2] += time_difference;
+}
+
+
+void record_throughput(int component_num) {
+	if (component_num == 0) {
+		thoughput[component_num]++;
+	}
+
+	if (component_num == 1) {
+		thoughput[component_num]++;
+	}
+
+	if (component_num == 2) {
+		thoughput[component_num]++;
+	}
+}
+
+
+void print_stats(fstream& file) {
+			
+	// calculate average size
+	double all_CPU_size = 0.0;
+	double cpu_size = CPU_size.size();
+	while (!CPU_size.empty()) {
+		all_CPU_size += CPU_size.front();
+		CPU_size.pop();
+	}
+
+	double average_size_cpu = all_CPU_size/cpu_size;
+
+	double all_disk1_size = 0.0;
+	double d1_size = disk_1_size.size();
+	while (!disk_1_size.empty()) {
+		all_disk1_size += disk_1_size.front();
+		disk_1_size.pop();
+	}
+
+	double average_size_disk1 = all_disk1_size / d1_size;
+
+	double all_disk_2_size = 0.0;
+	double d2_size = disk_2_size.size();
+	while (!disk_2_size.empty()) {
+		all_disk_2_size += disk_2_size.front();
+		disk_2_size.pop();
+	}
+
+	double average_size_disk_2 = all_disk_2_size / d2_size;
+
+	// calculate throughput
+	double t_0 = (double) thoughput[0] / use_time[0];
+	double t_1 = (double) thoughput[1] / use_time[1];
+	double t_2 = (double) thoughput[2] / use_time[2];
+
+	// calculate ultiplization
+	double cpu_ulti = use_time[0] / FIN_TIME;
+	double disk1_ulti = use_time[1] / FIN_TIME;
+	double disk2_ulti = use_time[2] / FIN_TIME;
+
+		string line;
+
+		// Backup streambuffers of  cout 
+		streambuf* stream_buffer_cout = cout.rdbuf();
+		streambuf* stream_buffer_cin = cin.rdbuf();
+
+		// Get the streambuffer of the file 
+		streambuf* stream_buffer_file = file.rdbuf();
+
+		// Redirect cout to file 
+		cout.rdbuf(stream_buffer_file);
+		cout << "-----------------Queue----------------" << endl;
+		cout << "Average size of CPU Queue: " << average_size_cpu << endl;
+		cout << "Max size of CPU Queue: " << component_max_size[0] << endl;
+		cout << "Average size of Disk1 Queue: " << average_size_disk1 << endl;
+		cout << "Max size of Disk2 Queue: " << component_max_size[1] << endl;
+		cout << "Average size of Disk2 Queue: " << average_size_disk_2 << endl;
+		cout << "Max size of Disk2 Queue: " << component_max_size[2] << endl;
+
+		cout << "-----------------Ultilization----------------" << endl;
+		cout << "Ulitilization of CPU: " << cpu_ulti << endl;
+		cout << "Ulitilization of Disk 1: " << disk1_ulti << endl;
+		cout << "Ulitilization of Disk 2: " << disk2_ulti << endl;
+		
+		cout << "-----------------Throughput----------------" << endl;
+		cout << "Throughput of CPU: " << t_0 << " jobs per time unit" << endl;
+		cout << "Throughput of Disk 1: " << t_1 << " jobs per time unit" << endl;
+		cout << "Throughput of Disk 2: " << t_2 << " jobs per time unit" << endl;
+
+}
+
+
+
+void print_log(event currentE, fstream& file) {
+	string line;
+
+	// Backup streambuffers of  cout 
+	streambuf* stream_buffer_cout = cout.rdbuf();
+	streambuf* stream_buffer_cin = cin.rdbuf();
+
+	// Get the streambuffer of the file 
+	streambuf* stream_buffer_file = file.rdbuf();
+
+	// Redirect cout to file 
+	cout.rdbuf(stream_buffer_file);
+
+	cout << "At time " << currentE.etime << " process " << currentE.event_p.id << " " << currentE.event_p.status << "\n" << endl;
+
+	// Redirect cout back to screen 
+	cout.rdbuf(stream_buffer_cout);
+	cout << "At time " << currentE.etime << " process " << currentE.event_p.id << " " << currentE.event_p.status << "\n" << endl;
+}

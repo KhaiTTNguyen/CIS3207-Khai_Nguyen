@@ -12,6 +12,13 @@ bool disk_1_busy;
 bool disk_2_busy;
 long processID;
 
+int component_max_size[4];
+double use_time[3];
+long thoughput[3];
+queue <int> CPU_size;		// 0
+queue <int> disk_1_size;	// 1
+queue <int> disk_2_size;	// 2
+
 /*-----MAIN FILE STARTS HEREH-----*/
 
 int main() {
@@ -25,6 +32,11 @@ int main() {
 	disk_1_busy = false;
 	disk_2_busy = false;
 	processID = 0;
+	
+	component_max_size;
+	use_time;
+	thoughput;
+
 
 	/*cout << "CPU_busy is : " << CPU_busy << endl;
 	cout << "disk_1_busy is : " << disk_1_busy << endl;
@@ -43,6 +55,12 @@ int main() {
 	/*------------------------*/
 
 	bool running = true;
+	
+	fstream file_str;
+	fstream file_str_stat;
+
+	file_str.open("log.txt", ios::out);
+	file_str_stat.open("stat.txt", ios::out);
 
 	while (!eventQueue.empty() && running == true) {
 		event currentEvent = eventQueue.top();
@@ -50,7 +68,7 @@ int main() {
 		eventQueue.pop();
 
 		// add a function - write event into log file (At time [t] [process ID] [event description])
-		print_log(currentEvent);
+		print_log(currentEvent, file_str);
 
 		switch (currentEvent.eventType) {  // switch case to determine how to handle event
 		case PROCESS_ARRIVAL:
@@ -79,80 +97,11 @@ int main() {
 		case SIMULATION_FINISH: running = !running;
 			break;
 		}
-
-		/*cout << "the cpu queue is : ";
-		showq(cpu);*/
-
-		// cout << "The disk1 queue is : "; 
-		// showq(disk_1); 
-
-		// cout << "The disk2 queue is : "; 
-		// showq(disk_2); 
-
-		cout << "The eventQueue after main is : ";
-		showpq(eventQueue);
-
-		int i = 0;
-		cout << "Please enter an integer value: ";
-		cin >> i;
-		cout << "The value you entered is " << i << endl;
-
-		// update CPU and Disk queues, creates new events where appropriate
-		// update_CPU();
-		// update_disks();
-
-		// printQ(eventQ);
-
-		// GET a user input & print stats//user debug before moving on, instead of running everything all@once
 	}
-
-	/*
-	Edge case:
-	both disks queues are full
-	both disj queues are empty
-
-	*/
+	print_stats(file_str_stat);
+	
+	file_str.close();
+	file_str_stat.close();
 	return 0;
+
 }
-
-
-
-
-/*
-
-
-
-events // event types as an enum -- a set of functions
-time
-a description
-a set of rules
-enum event { red, green, blue };
-event r = red;
-switch(r)
-{
-	case red  : std::cout << "red\n";   break;
-	case green: std::cout << "green\n"; break;
-	case blue : std::cout << "blue\n";  break;
-}
-
-Functions:
-An entry mechanism, by which processes can enter the system
-An exit mechanism, by which processes can exit the system
-
-a set of rules for events
-if CPU Queue is Empty
-	execute process 422 on CPU
-else
-	place process 422 on CPU queue
-
-
-how torepresent your data:
-
-
-main loop{
-	(1) pluck anevent of the event queue,
-	(2) pick the appropriate event handlerfunction and call it (best handled through a switch case)
-	(3)continue this process indefinitely untill you hit the end of thesimulation (or if you get a segfault ;) )
-}
-Note that before entering themain loop, you’ll want to add a special event to the event queue,which represents the simulation finishing, with a time set toFIN_TIME. You’ll probably want to give that event it’s own specialtype, too.
-*/

@@ -23,8 +23,8 @@
 #define CPU_MIN 5
 #define CPU_MAX 50
 
-#define DISK1_MIN 50
-#define DISK1_MAX 200
+#define DISK1_MIN 900
+#define DISK1_MAX 1000
 
 #define DISK2_MIN 50
 #define DISK2_MAX 200

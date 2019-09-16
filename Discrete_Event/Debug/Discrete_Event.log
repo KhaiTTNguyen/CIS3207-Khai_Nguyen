@@ -1,5 +1,8 @@
 ﻿  function.cpp
 C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Code\Lab_1\CIS3207_Khai_Nguyen_Simulator\Discrete_Event\function.cpp(229,17): warning C4018:  '>': signed/unsigned mismatch
 C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Code\Lab_1\CIS3207_Khai_Nguyen_Simulator\Discrete_Event\function.cpp(236,20): warning C4018:  '>': signed/unsigned mismatch
+  main.cpp
 C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Code\Lab_1\CIS3207_Khai_Nguyen_Simulator\Discrete_Event\function.cpp(243,20): warning C4018:  '>': signed/unsigned mismatch
+  Generating Code...
+C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Code\Lab_1\CIS3207_Khai_Nguyen_Simulator\Discrete_Event\main.cpp(25,12): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Discrete_Event.vcxproj -> C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Code\Lab_1\CIS3207_Khai_Nguyen_Simulator\Discrete_Event\Debug\Discrete_Event.exe

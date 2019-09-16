@@ -14,6 +14,13 @@ The logs and statistics of the simulation is then recorded for futher understand
 Configuration constants are included in "config.h"
 
 ## Design
+The project is broken down into:
+- main.cpp
+- function.cpp
+- event.h
+- header.h
+- config.h
+
 Events: represented by structure with eventType, event time, and process attached to that event
 
 Process: created with unique ID
@@ -32,6 +39,13 @@ Workflow: is maintained in the specified time frame by the following fuctions th
 
 Test cases are carried out and recorded in the run.txt file.
 Logs and stats of the program are recorded in log.txt and stat.txt
+
+## Learning 
+- system design
+- enum & switch cases
+- structs
+- git branch
+- dividing long / double
 
 # Contributors
 Khai Nguyen: khainguyen@temple.edu

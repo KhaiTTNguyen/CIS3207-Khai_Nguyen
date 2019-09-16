@@ -3,19 +3,29 @@
 
 #include "header.h"
 
+queue <process> CPU;
+queue <process> disk_1;
+queue <process> disk_2;
+priority_queue <event, vector<event>, compareTime> eventQueue;
+bool CPU_busy;
+bool disk_1_busy;
+bool disk_2_busy;
+long processID;
 
-    queue <process> CPU;
-    queue <process> disk_1;
-    queue <process> disk_2;
-    priority_queue <event, vector<event>, compareTime> eventQueue;
-    bool CPU_busy = false;
-    bool disk_1_busy = true;
-    bool disk_2_busy = true;
-    long processID = 0;
+/*-----MAIN FILE STARTS HEREH-----*/
 
 int main(){
     srand(time(NULL));
-
+    
+    CPU;
+    disk_1;
+    disk_2;
+    eventQueue;
+    CPU_busy = false;
+    disk_1_busy = true;
+    disk_2_busy = true;
+    processID = 0; 
+    
     cout << "CPU_busy is : "<< CPU_busy << endl; 
     cout << "disk_1_busy is : "<< disk_1_busy << endl;
     cout << "disk_2_busy is : "<< disk_2_busy << endl;
@@ -39,9 +49,13 @@ while (!eventQueue.empty() && running == true) {
     cout << "Current event is: " << currentEvent.eventType << endl;
     eventQueue.pop();
     // add a function - write event into log file (At time [t] [process ID] [event description])
+    
+    
 
     switch(currentEvent.eventType){  // switch case to determine how to handle event
         case PROCESS_ARRIVAL: 
+            cout << "The eventQueue call is : "; 
+            showpq(eventQueue); 
             handle_process_arrival(currentEvent, eventQueue);
             break;
         case PROCESS_EXIT: // just break (already pop() the event & process above)

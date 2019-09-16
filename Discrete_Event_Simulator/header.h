@@ -44,6 +44,7 @@ struct compareTime {
     } 
 }; 
 
+
 extern queue <process> CPU;
 extern queue <process> disk_1;
 extern queue <process> disk_2;
@@ -52,6 +53,8 @@ extern bool CPU_busy;
 extern bool disk_1_busy;
 extern bool disk_2_busy;
 extern long processID;
+
+
 
 // functions
 void handle_process_arrival(event oldEvent, priority_queue <event, vector<event>, compareTime> eventQueue);

@@ -1,3 +1,0 @@
-// Config for that run - from config file
-// 3+ runs
-// How cofigs affec the stat

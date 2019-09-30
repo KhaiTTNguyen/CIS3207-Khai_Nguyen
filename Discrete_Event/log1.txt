@@ -1,0 +1,2634 @@
+At time 0 process 0 start
+
+At time 0 process 0 start
+
+At time 25 process 0 finish cpu
+
+At time 25 process 0 arrive at disk1
+
+At time 64 process 1 arrive in system
+
+At time 64 process 1 arrive in system
+
+At time 99 process 1 finish cpu
+
+At time 99 process 1 exit
+
+At time 128 process 2 arrive in system
+
+At time 128 process 2 arrive in system
+
+At time 160 process 3 arrive in system
+
+At time 160 process 2 finish cpu
+
+At time 160 process 2 arrive at disk2
+
+At time 160 process 3 arrive at cpu
+
+At time 198 process 0 finish at disk1
+
+At time 199 process 3 finish cpu
+
+At time 199 process 3 arrive at disk1
+
+At time 199 process 0 arrive at cpu
+
+At time 223 process 0 finish cpu
+
+At time 226 process 4 arrive in system
+
+At time 226 process 4 arrive in system
+
+At time 253 process 4 finish cpu
+
+At time 261 process 5 arrive in system
+
+At time 261 process 5 arrive in system
+
+At time 264 process 3 finish at disk1
+
+At time 264 process 4 arrive at disk1
+
+At time 284 process 6 arrive in system
+
+At time 285 process 2 finish at disk2
+
+At time 285 process 0 arrive at disk2
+
+At time 305 process 5 finish cpu
+
+At time 305 process 3 arrive at cpu
+
+At time 317 process 7 arrive in system
+
+At time 332 process 4 finish at disk1
+
+At time 338 process 3 finish cpu
+
+At time 338 process 3 exit
+
+At time 338 process 6 arrive at cpu
+
+At time 360 process 8 arrive in system
+
+At time 371 process 6 finish cpu
+
+At time 371 process 6 arrive at disk1
+
+At time 371 process 2 arrive at cpu
+
+At time 403 process 2 finish cpu
+
+At time 403 process 7 arrive at cpu
+
+At time 408 process 9 arrive in system
+
+At time 410 process 7 finish cpu
+
+At time 410 process 4 arrive at cpu
+
+At time 420 process 4 finish cpu
+
+At time 420 process 8 arrive at cpu
+
+At time 423 process 6 finish at disk1
+
+At time 423 process 2 arrive at disk1
+
+At time 424 process 0 finish at disk2
+
+At time 424 process 5 arrive at disk2
+
+At time 429 process 8 finish cpu
+
+At time 429 process 9 arrive at cpu
+
+At time 463 process 10 arrive in system
+
+At time 468 process 9 finish cpu
+
+At time 468 process 9 exit
+
+At time 468 process 6 arrive at cpu
+
+At time 491 process 6 finish cpu
+
+At time 491 process 0 arrive at cpu
+
+At time 513 process 5 finish at disk2
+
+At time 513 process 7 arrive at disk2
+
+At time 533 process 11 arrive in system
+
+At time 539 process 0 finish cpu
+
+At time 539 process 10 arrive at cpu
+
+At time 544 process 2 finish at disk1
+
+At time 544 process 4 arrive at disk1
+
+At time 562 process 12 arrive in system
+
+At time 563 process 10 finish cpu
+
+At time 563 process 5 arrive at cpu
+
+At time 571 process 5 finish cpu
+
+At time 571 process 11 arrive at cpu
+
+At time 581 process 11 finish cpu
+
+At time 581 process 11 exit
+
+At time 581 process 2 arrive at cpu
+
+At time 586 process 7 finish at disk2
+
+At time 586 process 8 arrive at disk2
+
+At time 604 process 4 finish at disk1
+
+At time 604 process 6 arrive at disk1
+
+At time 614 process 13 arrive in system
+
+At time 622 process 2 finish cpu
+
+At time 622 process 12 arrive at cpu
+
+At time 632 process 12 finish cpu
+
+At time 632 process 7 arrive at cpu
+
+At time 639 process 14 arrive in system
+
+At time 676 process 7 finish cpu
+
+At time 676 process 4 arrive at cpu
+
+At time 690 process 4 finish cpu
+
+At time 690 process 13 arrive at cpu
+
+At time 697 process 15 arrive in system
+
+At time 723 process 16 arrive in system
+
+At time 737 process 13 finish cpu
+
+At time 737 process 14 arrive at cpu
+
+At time 742 process 8 finish at disk2
+
+At time 742 process 0 arrive at disk2
+
+At time 754 process 17 arrive in system
+
+At time 774 process 18 arrive in system
+
+At time 781 process 14 finish cpu
+
+At time 781 process 15 arrive at cpu
+
+At time 787 process 6 finish at disk1
+
+At time 787 process 10 arrive at disk1
+
+At time 807 process 15 finish cpu
+
+At time 807 process 16 arrive at cpu
+
+At time 820 process 19 arrive in system
+
+At time 833 process 16 finish cpu
+
+At time 833 process 16 exit
+
+At time 833 process 8 arrive at cpu
+
+At time 834 process 0 finish at disk2
+
+At time 834 process 5 arrive at disk2
+
+At time 856 process 20 arrive in system
+
+At time 865 process 8 finish cpu
+
+At time 865 process 17 arrive at cpu
+
+At time 876 process 17 finish cpu
+
+At time 876 process 18 arrive at cpu
+
+At time 908 process 21 arrive in system
+
+At time 924 process 18 finish cpu
+
+At time 924 process 6 arrive at cpu
+
+At time 939 process 10 finish at disk1
+
+At time 939 process 2 arrive at disk1
+
+At time 960 process 6 finish cpu
+
+At time 960 process 19 arrive at cpu
+
+At time 971 process 22 arrive in system
+
+At time 979 process 19 finish cpu
+
+At time 979 process 19 exit
+
+At time 979 process 0 arrive at cpu
+
+At time 1004 process 23 arrive in system
+
+At time 1007 process 5 finish at disk2
+
+At time 1007 process 12 arrive at disk2
+
+At time 1012 process 0 finish cpu
+
+At time 1012 process 20 arrive at cpu
+
+At time 1015 process 2 finish at disk1
+
+At time 1015 process 7 arrive at disk1
+
+At time 1025 process 24 arrive in system
+
+At time 1046 process 20 finish cpu
+
+At time 1046 process 21 arrive at cpu
+
+At time 1060 process 21 finish cpu
+
+At time 1060 process 10 arrive at cpu
+
+At time 1071 process 7 finish at disk1
+
+At time 1071 process 13 arrive at disk1
+
+At time 1081 process 25 arrive in system
+
+At time 1102 process 10 finish cpu
+
+At time 1102 process 10 exit
+
+At time 1102 process 22 arrive at cpu
+
+At time 1136 process 22 finish cpu
+
+At time 1136 process 23 arrive at cpu
+
+At time 1153 process 26 arrive in system
+
+At time 1154 process 23 finish cpu
+
+At time 1154 process 5 arrive at cpu
+
+At time 1168 process 12 finish at disk2
+
+At time 1168 process 4 arrive at disk2
+
+At time 1174 process 13 finish at disk1
+
+At time 1174 process 15 arrive at disk1
+
+At time 1188 process 27 arrive in system
+
+At time 1193 process 5 finish cpu
+
+At time 1193 process 2 arrive at cpu
+
+At time 1199 process 2 finish cpu
+
+At time 1199 process 24 arrive at cpu
+
+At time 1215 process 28 arrive in system
+
+At time 1227 process 24 finish cpu
+
+At time 1227 process 7 arrive at cpu
+
+At time 1234 process 7 finish cpu
+
+At time 1234 process 25 arrive at cpu
+
+At time 1245 process 29 arrive in system
+
+At time 1267 process 25 finish cpu
+
+At time 1267 process 25 exit
+
+At time 1267 process 26 arrive at cpu
+
+At time 1270 process 4 finish at disk2
+
+At time 1270 process 14 arrive at disk2
+
+At time 1291 process 15 finish at disk1
+
+At time 1291 process 18 arrive at disk1
+
+At time 1304 process 26 finish cpu
+
+At time 1304 process 12 arrive at cpu
+
+At time 1305 process 30 arrive in system
+
+At time 1342 process 12 finish cpu
+
+At time 1342 process 13 arrive at cpu
+
+At time 1350 process 31 arrive in system
+
+At time 1381 process 13 finish cpu
+
+At time 1381 process 27 arrive at cpu
+
+At time 1411 process 32 arrive in system
+
+At time 1416 process 27 finish cpu
+
+At time 1416 process 28 arrive at cpu
+
+At time 1432 process 14 finish at disk2
+
+At time 1432 process 8 arrive at disk2
+
+At time 1436 process 18 finish at disk1
+
+At time 1436 process 28 finish cpu
+
+At time 1436 process 6 arrive at disk1
+
+At time 1436 process 29 arrive at cpu
+
+At time 1447 process 29 finish cpu
+
+At time 1447 process 4 arrive at cpu
+
+At time 1454 process 4 finish cpu
+
+At time 1454 process 15 arrive at cpu
+
+At time 1460 process 33 arrive in system
+
+At time 1488 process 15 finish cpu
+
+At time 1488 process 30 arrive at cpu
+
+At time 1494 process 8 finish at disk2
+
+At time 1494 process 17 arrive at disk2
+
+At time 1503 process 34 arrive in system
+
+At time 1515 process 30 finish cpu
+
+At time 1515 process 31 arrive at cpu
+
+At time 1543 process 31 finish cpu
+
+At time 1543 process 32 arrive at cpu
+
+At time 1548 process 6 finish at disk1
+
+At time 1548 process 20 arrive at disk1
+
+At time 1573 process 32 finish cpu
+
+At time 1573 process 14 arrive at cpu
+
+At time 1579 process 35 arrive in system
+
+At time 1602 process 20 finish at disk1
+
+At time 1602 process 17 finish at disk2
+
+At time 1602 process 22 arrive at disk1
+
+At time 1602 process 0 arrive at disk2
+
+At time 1615 process 14 finish cpu
+
+At time 1615 process 18 arrive at cpu
+
+At time 1629 process 18 finish cpu
+
+At time 1629 process 33 arrive at cpu
+
+At time 1651 process 36 arrive in system
+
+At time 1653 process 33 finish cpu
+
+At time 1653 process 8 arrive at cpu
+
+At time 1676 process 22 finish at disk1
+
+At time 1676 process 23 arrive at disk1
+
+At time 1700 process 8 finish cpu
+
+At time 1700 process 34 arrive at cpu
+
+At time 1704 process 37 arrive in system
+
+At time 1718 process 34 finish cpu
+
+At time 1718 process 34 exit
+
+At time 1718 process 6 arrive at cpu
+
+At time 1725 process 38 arrive in system
+
+At time 1737 process 0 finish at disk2
+
+At time 1737 process 21 arrive at disk2
+
+At time 1751 process 39 arrive in system
+
+At time 1753 process 23 finish at disk1
+
+At time 1753 process 2 arrive at disk1
+
+At time 1758 process 6 finish cpu
+
+At time 1758 process 35 arrive at cpu
+
+At time 1787 process 40 arrive in system
+
+At time 1803 process 35 finish cpu
+
+At time 1803 process 35 exit
+
+At time 1803 process 20 arrive at cpu
+
+At time 1845 process 41 arrive in system
+
+At time 1846 process 20 finish cpu
+
+At time 1846 process 20 exit
+
+At time 1846 process 17 arrive at cpu
+
+At time 1859 process 2 finish at disk1
+
+At time 1859 process 7 arrive at disk1
+
+At time 1867 process 42 arrive in system
+
+At time 1869 process 17 finish cpu
+
+At time 1869 process 17 exit
+
+At time 1869 process 36 arrive at cpu
+
+At time 1894 process 36 finish cpu
+
+At time 1894 process 22 arrive at cpu
+
+At time 1908 process 43 arrive in system
+
+At time 1916 process 22 finish cpu
+
+At time 1916 process 37 arrive at cpu
+
+At time 1924 process 7 finish at disk1
+
+At time 1924 process 12 arrive at disk1
+
+At time 1935 process 21 finish at disk2
+
+At time 1935 process 5 arrive at disk2
+
+At time 1945 process 37 finish cpu
+
+At time 1945 process 37 exit
+
+At time 1945 process 38 arrive at cpu
+
+At time 1968 process 44 arrive in system
+
+At time 1989 process 38 finish cpu
+
+At time 1989 process 0 arrive at cpu
+
+At time 1991 process 5 finish at disk2
+
+At time 1991 process 24 arrive at disk2
+
+At time 2000 process 12 finish at disk1
+
+At time 2000 process 27 arrive at disk1
+
+At time 2022 process 45 arrive in system
+
+At time 2029 process 0 finish cpu
+
+At time 2029 process 39 arrive at cpu
+
+At time 2062 process 46 arrive in system
+
+At time 2075 process 39 finish cpu
+
+At time 2075 process 23 arrive at cpu
+
+At time 2083 process 47 arrive in system
+
+At time 2094 process 23 finish cpu
+
+At time 2094 process 23 exit
+
+At time 2094 process 40 arrive at cpu
+
+At time 2123 process 40 finish cpu
+
+At time 2123 process 41 arrive at cpu
+
+At time 2129 process 27 finish at disk1
+
+At time 2129 process 29 arrive at disk1
+
+At time 2133 process 48 arrive in system
+
+At time 2159 process 41 finish cpu
+
+At time 2159 process 41 exit
+
+At time 2159 process 2 arrive at cpu
+
+At time 2162 process 49 arrive in system
+
+At time 2188 process 2 finish cpu
+
+At time 2188 process 2 exit
+
+At time 2188 process 42 arrive at cpu
+
+At time 2190 process 24 finish at disk2
+
+At time 2190 process 26 arrive at disk2
+
+At time 2201 process 50 arrive in system
+
+At time 2210 process 42 finish cpu
+
+At time 2210 process 42 exit
+
+At time 2210 process 43 arrive at cpu
+
+At time 2227 process 43 finish cpu
+
+At time 2227 process 7 arrive at cpu
+
+At time 2245 process 29 finish at disk1
+
+At time 2245 process 15 arrive at disk1
+
+At time 2251 process 7 finish cpu
+
+At time 2251 process 21 arrive at cpu
+
+At time 2261 process 51 arrive in system
+
+At time 2275 process 21 finish cpu
+
+At time 2275 process 44 arrive at cpu
+
+At time 2296 process 44 finish cpu
+
+At time 2296 process 5 arrive at cpu
+
+At time 2297 process 52 arrive in system
+
+At time 2322 process 15 finish at disk1
+
+At time 2322 process 32 arrive at disk1
+
+At time 2324 process 53 arrive in system
+
+At time 2334 process 26 finish at disk2
+
+At time 2334 process 13 arrive at disk2
+
+At time 2339 process 5 finish cpu
+
+At time 2339 process 12 arrive at cpu
+
+At time 2356 process 12 finish cpu
+
+At time 2356 process 12 exit
+
+At time 2356 process 45 arrive at cpu
+
+At time 2368 process 54 arrive in system
+
+At time 2382 process 45 finish cpu
+
+At time 2382 process 46 arrive at cpu
+
+At time 2396 process 46 finish cpu
+
+At time 2396 process 46 exit
+
+At time 2396 process 47 arrive at cpu
+
+At time 2403 process 47 finish cpu
+
+At time 2403 process 27 arrive at cpu
+
+At time 2433 process 55 arrive in system
+
+At time 2435 process 27 finish cpu
+
+At time 2435 process 48 arrive at cpu
+
+At time 2450 process 48 finish cpu
+
+At time 2450 process 49 arrive at cpu
+
+At time 2453 process 13 finish at disk2
+
+At time 2453 process 28 arrive at disk2
+
+At time 2488 process 32 finish at disk1
+
+At time 2488 process 14 arrive at disk1
+
+At time 2496 process 49 finish cpu
+
+At time 2496 process 24 arrive at cpu
+
+At time 2511 process 56 arrive in system
+
+At time 2512 process 24 finish cpu
+
+At time 2512 process 50 arrive at cpu
+
+At time 2548 process 57 arrive in system
+
+At time 2553 process 50 finish cpu
+
+At time 2553 process 50 exit
+
+At time 2553 process 29 arrive at cpu
+
+At time 2574 process 58 arrive in system
+
+At time 2585 process 29 finish cpu
+
+At time 2585 process 51 arrive at cpu
+
+At time 2607 process 51 finish cpu
+
+At time 2607 process 52 arrive at cpu
+
+At time 2611 process 28 finish at disk2
+
+At time 2611 process 4 arrive at disk2
+
+At time 2618 process 59 arrive in system
+
+At time 2643 process 52 finish cpu
+
+At time 2643 process 15 arrive at cpu
+
+At time 2654 process 60 arrive in system
+
+At time 2667 process 15 finish cpu
+
+At time 2667 process 15 exit
+
+At time 2667 process 53 arrive at cpu
+
+At time 2679 process 14 finish at disk1
+
+At time 2679 process 33 arrive at disk1
+
+At time 2680 process 53 finish cpu
+
+At time 2680 process 53 exit
+
+At time 2680 process 26 arrive at cpu
+
+At time 2687 process 61 arrive in system
+
+At time 2712 process 62 arrive in system
+
+At time 2720 process 4 finish at disk2
+
+At time 2720 process 30 arrive at disk2
+
+At time 2725 process 26 finish cpu
+
+At time 2725 process 54 arrive at cpu
+
+At time 2740 process 54 finish cpu
+
+At time 2740 process 55 arrive at cpu
+
+At time 2768 process 33 finish at disk1
+
+At time 2768 process 8 arrive at disk1
+
+At time 2772 process 55 finish cpu
+
+At time 2772 process 13 arrive at cpu
+
+At time 2773 process 63 arrive in system
+
+At time 2779 process 30 finish at disk2
+
+At time 2779 process 31 arrive at disk2
+
+At time 2781 process 13 finish cpu
+
+At time 2781 process 13 exit
+
+At time 2781 process 32 arrive at cpu
+
+At time 2817 process 32 finish cpu
+
+At time 2817 process 56 arrive at cpu
+
+At time 2835 process 64 arrive in system
+
+At time 2840 process 56 finish cpu
+
+At time 2840 process 57 arrive at cpu
+
+At time 2848 process 57 finish cpu
+
+At time 2848 process 58 arrive at cpu
+
+At time 2870 process 58 finish cpu
+
+At time 2870 process 28 arrive at cpu
+
+At time 2883 process 65 arrive in system
+
+At time 2890 process 28 finish cpu
+
+At time 2890 process 59 arrive at cpu
+
+At time 2901 process 8 finish at disk1
+
+At time 2901 process 36 arrive at disk1
+
+At time 2909 process 66 arrive in system
+
+At time 2930 process 59 finish cpu
+
+At time 2930 process 60 arrive at cpu
+
+At time 2939 process 67 arrive in system
+
+At time 2954 process 60 finish cpu
+
+At time 2954 process 60 exit
+
+At time 2954 process 14 arrive at cpu
+
+At time 2969 process 31 finish at disk2
+
+At time 2969 process 68 arrive in system
+
+At time 2969 process 18 arrive at disk2
+
+At time 2991 process 69 arrive in system
+
+At time 3002 process 14 finish cpu
+
+At time 3002 process 61 arrive at cpu
+
+At time 3007 process 36 finish at disk1
+
+At time 3007 process 22 arrive at disk1
+
+At time 3031 process 18 finish at disk2
+
+At time 3031 process 6 arrive at disk2
+
+At time 3037 process 70 arrive in system
+
+At time 3040 process 61 finish cpu
+
+At time 3040 process 62 arrive at cpu
+
+At time 3068 process 62 finish cpu
+
+At time 3068 process 4 arrive at cpu
+
+At time 3088 process 71 arrive in system
+
+At time 3094 process 4 finish cpu
+
+At time 3094 process 33 arrive at cpu
+
+At time 3103 process 33 finish cpu
+
+At time 3103 process 63 arrive at cpu
+
+At time 3131 process 72 arrive in system
+
+At time 3140 process 63 finish cpu
+
+At time 3140 process 30 arrive at cpu
+
+At time 3161 process 73 arrive in system
+
+At time 3167 process 22 finish at disk1
+
+At time 3167 process 0 arrive at disk1
+
+At time 3190 process 30 finish cpu
+
+At time 3190 process 64 arrive at cpu
+
+At time 3214 process 6 finish at disk2
+
+At time 3214 process 38 arrive at disk2
+
+At time 3216 process 74 arrive in system
+
+At time 3240 process 64 finish cpu
+
+At time 3240 process 65 arrive at cpu
+
+At time 3256 process 75 arrive in system
+
+At time 3265 process 65 finish cpu
+
+At time 3265 process 8 arrive at cpu
+
+At time 3286 process 0 finish at disk1
+
+At time 3286 process 40 arrive at disk1
+
+At time 3305 process 76 arrive in system
+
+At time 3309 process 8 finish cpu
+
+At time 3309 process 66 arrive at cpu
+
+At time 3325 process 66 finish cpu
+
+At time 3325 process 66 exit
+
+At time 3325 process 67 arrive at cpu
+
+At time 3334 process 38 finish at disk2
+
+At time 3334 process 39 arrive at disk2
+
+At time 3365 process 77 arrive in system
+
+At time 3371 process 67 finish cpu
+
+At time 3371 process 31 arrive at cpu
+
+At time 3403 process 31 finish cpu
+
+At time 3403 process 31 exit
+
+At time 3403 process 68 arrive at cpu
+
+At time 3410 process 68 finish cpu
+
+At time 3410 process 68 exit
+
+At time 3410 process 69 arrive at cpu
+
+At time 3411 process 78 arrive in system
+
+At time 3420 process 69 finish cpu
+
+At time 3420 process 36 arrive at cpu
+
+At time 3429 process 36 finish cpu
+
+At time 3429 process 18 arrive at cpu
+
+At time 3437 process 40 finish at disk1
+
+At time 3437 process 7 arrive at disk1
+
+At time 3458 process 79 arrive in system
+
+At time 3479 process 18 finish cpu
+
+At time 3479 process 70 arrive at cpu
+
+At time 3501 process 80 arrive in system
+
+At time 3519 process 70 finish cpu
+
+At time 3519 process 71 arrive at cpu
+
+At time 3533 process 39 finish at disk2
+
+At time 3533 process 43 arrive at disk2
+
+At time 3551 process 81 arrive in system
+
+At time 3559 process 71 finish cpu
+
+At time 3559 process 72 arrive at cpu
+
+At time 3581 process 82 arrive in system
+
+At time 3596 process 7 finish at disk1
+
+At time 3596 process 21 arrive at disk1
+
+At time 3600 process 72 finish cpu
+
+At time 3600 process 73 arrive at cpu
+
+At time 3618 process 83 arrive in system
+
+At time 3643 process 73 finish cpu
+
+At time 3643 process 22 arrive at cpu
+
+At time 3676 process 22 finish cpu
+
+At time 3676 process 6 arrive at cpu
+
+At time 3691 process 84 arrive in system
+
+At time 3702 process 43 finish at disk2
+
+At time 3702 process 44 arrive at disk2
+
+At time 3721 process 85 arrive in system
+
+At time 3723 process 6 finish cpu
+
+At time 3723 process 74 arrive at cpu
+
+At time 3749 process 74 finish cpu
+
+At time 3749 process 75 arrive at cpu
+
+At time 3792 process 21 finish at disk1
+
+At time 3792 process 5 arrive at disk1
+
+At time 3795 process 86 arrive in system
+
+At time 3796 process 75 finish cpu
+
+At time 3796 process 75 exit
+
+At time 3796 process 0 arrive at cpu
+
+At time 3818 process 87 arrive in system
+
+At time 3820 process 0 finish cpu
+
+At time 3820 process 76 arrive at cpu
+
+At time 3832 process 44 finish at disk2
+
+At time 3832 process 45 arrive at disk2
+
+At time 3857 process 88 arrive in system
+
+At time 3857 process 76 finish cpu
+
+At time 3857 process 38 arrive at cpu
+
+At time 3858 process 5 finish at disk1
+
+At time 3858 process 47 arrive at disk1
+
+At time 3904 process 38 finish cpu
+
+At time 3904 process 77 arrive at cpu
+
+At time 3936 process 89 arrive in system
+
+At time 3950 process 47 finish at disk1
+
+At time 3950 process 48 arrive at disk1
+
+At time 3951 process 77 finish cpu
+
+At time 3951 process 78 arrive at cpu
+
+At time 3960 process 45 finish at disk2
+
+At time 3960 process 27 arrive at disk2
+
+At time 3975 process 90 arrive in system
+
+At time 3991 process 78 finish cpu
+
+At time 3991 process 40 arrive at cpu
+
+At time 3997 process 40 finish cpu
+
+At time 3997 process 79 arrive at cpu
+
+At time 4017 process 91 arrive in system
+
+At time 4024 process 48 finish at disk1
+
+At time 4024 process 24 arrive at disk1
+
+At time 4026 process 79 finish cpu
+
+At time 4026 process 80 arrive at cpu
+
+At time 4037 process 80 finish cpu
+
+At time 4037 process 80 exit
+
+At time 4037 process 39 arrive at cpu
+
+At time 4041 process 27 finish at disk2
+
+At time 4041 process 49 arrive at disk2
+
+At time 4048 process 39 finish cpu
+
+At time 4048 process 39 exit
+
+At time 4048 process 81 arrive at cpu
+
+At time 4052 process 92 arrive in system
+
+At time 4072 process 81 finish cpu
+
+At time 4072 process 82 arrive at cpu
+
+At time 4100 process 24 finish at disk1
+
+At time 4100 process 93 arrive in system
+
+At time 4100 process 51 arrive at disk1
+
+At time 4116 process 82 finish cpu
+
+At time 4116 process 7 arrive at cpu
+
+At time 4122 process 7 finish cpu
+
+At time 4122 process 83 arrive at cpu
+
+At time 4126 process 49 finish at disk2
+
+At time 4126 process 29 arrive at disk2
+
+At time 4145 process 83 finish cpu
+
+At time 4145 process 83 exit
+
+At time 4145 process 84 arrive at cpu
+
+At time 4150 process 94 arrive in system
+
+At time 4177 process 84 finish cpu
+
+At time 4177 process 43 arrive at cpu
+
+At time 4184 process 29 finish at disk2
+
+At time 4184 process 52 arrive at disk2
+
+At time 4215 process 43 finish cpu
+
+At time 4215 process 85 arrive at cpu
+
+At time 4217 process 95 arrive in system
+
+At time 4221 process 85 finish cpu
+
+At time 4221 process 21 arrive at cpu
+
+At time 4262 process 21 finish cpu
+
+At time 4262 process 86 arrive at cpu
+
+At time 4273 process 86 finish cpu
+
+At time 4273 process 87 arrive at cpu
+
+At time 4284 process 87 finish cpu
+
+At time 4284 process 44 arrive at cpu
+
+At time 4289 process 96 arrive in system
+
+At time 4291 process 51 finish at disk1
+
+At time 4291 process 54 arrive at disk1
+
+At time 4310 process 44 finish cpu
+
+At time 4310 process 44 exit
+
+At time 4310 process 88 arrive at cpu
+
+At time 4312 process 97 arrive in system
+
+At time 4323 process 52 finish at disk2
+
+At time 4323 process 26 arrive at disk2
+
+At time 4327 process 88 finish cpu
+
+At time 4327 process 5 arrive at cpu
+
+At time 4347 process 98 arrive in system
+
+At time 4353 process 54 finish at disk1
+
+At time 4353 process 55 arrive at disk1
+
+At time 4369 process 5 finish cpu
+
+At time 4369 process 89 arrive at cpu
+
+At time 4411 process 89 finish cpu
+
+At time 4411 process 47 arrive at cpu
+
+At time 4416 process 99 arrive in system
+
+At time 4443 process 100 arrive in system
+
+At time 4452 process 47 finish cpu
+
+At time 4452 process 45 arrive at cpu
+
+At time 4478 process 45 finish cpu
+
+At time 4478 process 45 exit
+
+At time 4478 process 90 arrive at cpu
+
+At time 4486 process 90 finish cpu
+
+At time 4486 process 91 arrive at cpu
+
+At time 4490 process 101 arrive in system
+
+At time 4503 process 26 finish at disk2
+
+At time 4503 process 32 arrive at disk2
+
+At time 4505 process 91 finish cpu
+
+At time 4505 process 48 arrive at cpu
+
+At time 4511 process 102 arrive in system
+
+At time 4527 process 55 finish at disk1
+
+At time 4527 process 57 arrive at disk1
+
+At time 4541 process 48 finish cpu
+
+At time 4541 process 27 arrive at cpu
+
+At time 4560 process 27 finish cpu
+
+At time 4560 process 27 exit
+
+At time 4560 process 92 arrive at cpu
+
+At time 4580 process 32 finish at disk2
+
+At time 4580 process 56 arrive at disk2
+
+At time 4590 process 103 arrive in system
+
+At time 4592 process 92 finish cpu
+
+At time 4592 process 24 arrive at cpu
+
+At time 4614 process 57 finish at disk1
+
+At time 4614 process 28 arrive at disk1
+
+At time 4626 process 24 finish cpu
+
+At time 4626 process 93 arrive at cpu
+
+At time 4670 process 104 arrive in system
+
+At time 4674 process 93 finish cpu
+
+At time 4674 process 49 arrive at cpu
+
+At time 4685 process 56 finish at disk2
+
+At time 4685 process 58 arrive at disk2
+
+At time 4700 process 49 finish cpu
+
+At time 4700 process 94 arrive at cpu
+
+At time 4705 process 94 finish cpu
+
+At time 4705 process 29 arrive at cpu
+
+At time 4736 process 58 finish at disk2
+
+At time 4736 process 14 arrive at disk2
+
+At time 4739 process 29 finish cpu
+
+At time 4739 process 29 exit
+
+At time 4739 process 95 arrive at cpu
+
+At time 4740 process 105 arrive in system
+
+At time 4763 process 95 finish cpu
+
+At time 4763 process 96 arrive at cpu
+
+At time 4768 process 106 arrive in system
+
+At time 4771 process 96 finish cpu
+
+At time 4771 process 51 arrive at cpu
+
+At time 4801 process 28 finish at disk1
+
+At time 4801 process 59 arrive at disk1
+
+At time 4804 process 14 finish at disk2
+
+At time 4804 process 61 arrive at disk2
+
+At time 4812 process 51 finish cpu
+
+At time 4812 process 97 arrive at cpu
+
+At time 4823 process 97 finish cpu
+
+At time 4823 process 52 arrive at cpu
+
+At time 4840 process 107 arrive in system
+
+At time 4845 process 52 finish cpu
+
+At time 4845 process 98 arrive at cpu
+
+At time 4861 process 108 arrive in system
+
+At time 4884 process 98 finish cpu
+
+At time 4884 process 54 arrive at cpu
+
+At time 4912 process 109 arrive in system
+
+At time 4931 process 54 finish cpu
+
+At time 4931 process 54 exit
+
+At time 4931 process 99 arrive at cpu
+
+At time 4963 process 99 finish cpu
+
+At time 4963 process 99 exit
+
+At time 4963 process 100 arrive at cpu
+
+At time 4971 process 100 finish cpu
+
+At time 4971 process 101 arrive at cpu
+
+At time 4975 process 110 arrive in system
+
+At time 4980 process 59 finish at disk1
+
+At time 4980 process 62 arrive at disk1
+
+At time 4992 process 61 finish at disk2
+
+At time 4992 process 4 arrive at disk2
+
+At time 5011 process 101 finish cpu
+
+At time 5011 process 26 arrive at cpu
+
+At time 5026 process 111 arrive in system
+
+At time 5057 process 112 arrive in system
+
+At time 5059 process 26 finish cpu
+
+At time 5059 process 102 arrive at cpu
+
+At time 5063 process 62 finish at disk1
+
+At time 5063 process 33 arrive at disk1
+
+At time 5080 process 113 arrive in system
+
+At time 5087 process 102 finish cpu
+
+At time 5087 process 55 arrive at cpu
+
+At time 5105 process 55 finish cpu
+
+At time 5105 process 32 arrive at cpu
+
+At time 5110 process 114 arrive in system
+
+At time 5123 process 32 finish cpu
+
+At time 5123 process 103 arrive at cpu
+
+At time 5130 process 103 finish cpu
+
+At time 5130 process 57 arrive at cpu
+
+At time 5159 process 115 arrive in system
+
+At time 5177 process 57 finish cpu
+
+At time 5177 process 104 arrive at cpu
+
+At time 5181 process 4 finish at disk2
+
+At time 5181 process 63 arrive at disk2
+
+At time 5197 process 116 arrive in system
+
+At time 5207 process 104 finish cpu
+
+At time 5207 process 56 arrive at cpu
+
+At time 5225 process 56 finish cpu
+
+At time 5225 process 58 arrive at cpu
+
+At time 5255 process 33 finish at disk1
+
+At time 5255 process 30 arrive at disk1
+
+At time 5264 process 58 finish cpu
+
+At time 5264 process 105 arrive at cpu
+
+At time 5273 process 117 arrive in system
+
+At time 5295 process 105 finish cpu
+
+At time 5295 process 105 exit
+
+At time 5295 process 106 arrive at cpu
+
+At time 5305 process 106 finish cpu
+
+At time 5305 process 28 arrive at cpu
+
+At time 5322 process 63 finish at disk2
+
+At time 5322 process 64 arrive at disk2
+
+At time 5330 process 28 finish cpu
+
+At time 5330 process 14 arrive at cpu
+
+At time 5336 process 14 finish cpu
+
+At time 5336 process 107 arrive at cpu
+
+At time 5342 process 118 arrive in system
+
+At time 5373 process 119 arrive in system
+
+At time 5382 process 107 finish cpu
+
+At time 5382 process 108 arrive at cpu
+
+At time 5391 process 108 finish cpu
+
+At time 5391 process 109 arrive at cpu
+
+At time 5395 process 120 arrive in system
+
+At time 5407 process 109 finish cpu
+
+At time 5407 process 110 arrive at cpu
+
+At time 5415 process 110 finish cpu
+
+At time 5415 process 59 arrive at cpu
+
+At time 5416 process 30 finish at disk1
+
+At time 5416 process 65 arrive at disk1
+
+At time 5423 process 121 arrive in system
+
+At time 5449 process 122 arrive in system
+
+At time 5454 process 59 finish cpu
+
+At time 5454 process 59 exit
+
+At time 5454 process 61 arrive at cpu
+
+At time 5482 process 61 finish cpu
+
+At time 5482 process 111 arrive at cpu
+
+At time 5506 process 123 arrive in system
+
+At time 5506 process 111 finish cpu
+
+At time 5506 process 112 arrive at cpu
+
+At time 5521 process 64 finish at disk2
+
+At time 5521 process 67 arrive at disk2
+
+At time 5540 process 124 arrive in system
+
+At time 5554 process 112 finish cpu
+
+At time 5554 process 62 arrive at cpu
+
+At time 5556 process 65 finish at disk1
+
+At time 5556 process 8 arrive at disk1
+
+At time 5568 process 62 finish cpu
+
+At time 5568 process 113 arrive at cpu
+
+At time 5588 process 125 arrive in system
+
+At time 5597 process 113 finish cpu
+
+At time 5597 process 114 arrive at cpu
+
+At time 5618 process 114 finish cpu
+
+At time 5618 process 115 arrive at cpu
+
+At time 5626 process 67 finish at disk2
+
+At time 5626 process 69 arrive at disk2
+
+At time 5645 process 126 arrive in system
+
+At time 5668 process 115 finish cpu
+
+At time 5668 process 4 arrive at cpu
+
+At time 5679 process 8 finish at disk1
+
+At time 5679 process 4 finish cpu
+
+At time 5679 process 36 arrive at disk1
+
+At time 5679 process 116 arrive at cpu
+
+At time 5691 process 116 finish cpu
+
+At time 5691 process 33 arrive at cpu
+
+At time 5708 process 127 arrive in system
+
+At time 5734 process 33 finish cpu
+
+At time 5734 process 117 arrive at cpu
+
+At time 5749 process 69 finish at disk2
+
+At time 5749 process 70 arrive at disk2
+
+At time 5752 process 117 finish cpu
+
+At time 5752 process 63 arrive at cpu
+
+At time 5753 process 128 arrive in system
+
+At time 5762 process 63 finish cpu
+
+At time 5762 process 118 arrive at cpu
+
+At time 5789 process 129 arrive in system
+
+At time 5797 process 118 finish cpu
+
+At time 5797 process 118 exit
+
+At time 5797 process 119 arrive at cpu
+
+At time 5808 process 36 finish at disk1
+
+At time 5808 process 18 arrive at disk1
+
+At time 5815 process 119 finish cpu
+
+At time 5815 process 120 arrive at cpu
+
+At time 5842 process 120 finish cpu
+
+At time 5842 process 120 exit
+
+At time 5842 process 30 arrive at cpu
+
+At time 5854 process 30 finish cpu
+
+At time 5854 process 30 exit
+
+At time 5854 process 121 arrive at cpu
+
+At time 5862 process 130 arrive in system
+
+At time 5880 process 121 finish cpu
+
+At time 5880 process 122 arrive at cpu
+
+At time 5887 process 18 finish at disk1
+
+At time 5887 process 72 arrive at disk1
+
+At time 5909 process 122 finish cpu
+
+At time 5909 process 123 arrive at cpu
+
+At time 5921 process 131 arrive in system
+
+At time 5934 process 70 finish at disk2
+
+At time 5934 process 71 arrive at disk2
+
+At time 5945 process 123 finish cpu
+
+At time 5945 process 64 arrive at cpu
+
+At time 5953 process 132 arrive in system
+
+At time 5988 process 64 finish cpu
+
+At time 5988 process 124 arrive at cpu
+
+At time 5996 process 133 arrive in system
+
+At time 6003 process 124 finish cpu
+
+At time 6003 process 65 arrive at cpu
+
+At time 6026 process 65 finish cpu
+
+At time 6026 process 125 arrive at cpu
+
+At time 6042 process 125 finish cpu
+
+At time 6042 process 67 arrive at cpu
+
+At time 6044 process 134 arrive in system
+
+At time 6046 process 71 finish at disk2
+
+At time 6046 process 22 arrive at disk2
+
+At time 6052 process 72 finish at disk1
+
+At time 6052 process 73 arrive at disk1
+
+At time 6072 process 67 finish cpu
+
+At time 6072 process 126 arrive at cpu
+
+At time 6102 process 135 arrive in system
+
+At time 6108 process 126 finish cpu
+
+At time 6108 process 8 arrive at cpu
+
+At time 6129 process 8 finish cpu
+
+At time 6129 process 127 arrive at cpu
+
+At time 6138 process 127 finish cpu
+
+At time 6138 process 127 exit
+
+At time 6138 process 69 arrive at cpu
+
+At time 6166 process 136 arrive in system
+
+At time 6166 process 69 finish cpu
+
+At time 6166 process 128 arrive at cpu
+
+At time 6198 process 128 finish cpu
+
+At time 6198 process 128 exit
+
+At time 6198 process 129 arrive at cpu
+
+At time 6216 process 129 finish cpu
+
+At time 6216 process 36 arrive at cpu
+
+At time 6230 process 22 finish at disk2
+
+At time 6230 process 6 arrive at disk2
+
+At time 6236 process 73 finish at disk1
+
+At time 6236 process 74 arrive at disk1
+
+At time 6237 process 137 arrive in system
+
+At time 6246 process 36 finish cpu
+
+At time 6246 process 130 arrive at cpu
+
+At time 6281 process 138 arrive in system
+
+At time 6288 process 130 finish cpu
+
+At time 6288 process 18 arrive at cpu
+
+At time 6299 process 18 finish cpu
+
+At time 6299 process 131 arrive at cpu
+
+At time 6330 process 139 arrive in system
+
+At time 6330 process 131 finish cpu
+
+At time 6330 process 70 arrive at cpu
+
+At time 6378 process 70 finish cpu
+
+At time 6378 process 132 arrive at cpu
+
+At time 6387 process 140 arrive in system
+
+At time 6392 process 6 finish at disk2
+
+At time 6392 process 76 arrive at disk2
+
+At time 6400 process 132 finish cpu
+
+At time 6400 process 133 arrive at cpu
+
+At time 6436 process 74 finish at disk1
+
+At time 6436 process 0 arrive at disk1
+
+At time 6439 process 141 arrive in system
+
+At time 6444 process 133 finish cpu
+
+At time 6444 process 134 arrive at cpu
+
+At time 6452 process 76 finish at disk2
+
+At time 6452 process 78 arrive at disk2
+
+At time 6474 process 134 finish cpu
+
+At time 6474 process 71 arrive at cpu
+
+At time 6512 process 142 arrive in system
+
+At time 6522 process 71 finish cpu
+
+At time 6522 process 72 arrive at cpu
+
+At time 6549 process 0 finish at disk1
+
+At time 6549 process 38 arrive at disk1
+
+At time 6558 process 72 finish cpu
+
+At time 6558 process 72 exit
+
+At time 6558 process 135 arrive at cpu
+
+At time 6578 process 143 arrive in system
+
+At time 6596 process 135 finish cpu
+
+At time 6596 process 136 arrive at cpu
+
+At time 6615 process 78 finish at disk2
+
+At time 6615 process 144 arrive in system
+
+At time 6615 process 40 arrive at disk2
+
+At time 6636 process 145 arrive in system
+
+At time 6643 process 136 finish cpu
+
+At time 6643 process 136 exit
+
+At time 6643 process 22 arrive at cpu
+
+At time 6657 process 22 finish cpu
+
+At time 6657 process 73 arrive at cpu
+
+At time 6677 process 38 finish at disk1
+
+At time 6677 process 77 arrive at disk1
+
+At time 6687 process 73 finish cpu
+
+At time 6687 process 137 arrive at cpu
+
+At time 6699 process 146 arrive in system
+
+At time 6715 process 137 finish cpu
+
+At time 6715 process 138 arrive at cpu
+
+At time 6719 process 147 arrive in system
+
+At time 6734 process 77 finish at disk1
+
+At time 6734 process 79 arrive at disk1
+
+At time 6749 process 148 arrive in system
+
+At time 6753 process 138 finish cpu
+
+At time 6753 process 139 arrive at cpu
+
+At time 6797 process 139 finish cpu
+
+At time 6797 process 140 arrive at cpu
+
+At time 6809 process 140 finish cpu
+
+At time 6809 process 6 arrive at cpu
+
+At time 6814 process 40 finish at disk2
+
+At time 6814 process 81 arrive at disk2
+
+At time 6823 process 149 arrive in system
+
+At time 6850 process 6 finish cpu
+
+At time 6850 process 6 exit
+
+At time 6850 process 74 arrive at cpu
+
+At time 6877 process 79 finish at disk1
+
+At time 6877 process 82 arrive at disk1
+
+At time 6890 process 81 finish at disk2
+
+At time 6890 process 84 arrive at disk2
+
+At time 6891 process 150 arrive in system
+
+At time 6898 process 74 finish cpu
+
+At time 6898 process 74 exit
+
+At time 6898 process 141 arrive at cpu
+
+At time 6908 process 141 finish cpu
+
+At time 6908 process 141 exit
+
+At time 6908 process 76 arrive at cpu
+
+At time 6924 process 76 finish cpu
+
+At time 6924 process 142 arrive at cpu
+
+At time 6929 process 82 finish at disk1
+
+At time 6929 process 7 arrive at disk1
+
+At time 6952 process 151 arrive in system
+
+At time 6972 process 142 finish cpu
+
+At time 6972 process 0 arrive at cpu
+
+At time 6992 process 0 finish cpu
+
+At time 6992 process 143 arrive at cpu
+
+At time 7000 process 152 arrive in system
+
+At time 7024 process 143 finish cpu
+
+At time 7024 process 78 arrive at cpu
+
+At time 7035 process 84 finish at disk2
+
+At time 7035 process 43 arrive at disk2
+
+At time 7046 process 7 finish at disk1
+
+At time 7046 process 21 arrive at disk1
+
+At time 7047 process 153 arrive in system
+
+At time 7072 process 78 finish cpu
+
+At time 7072 process 78 exit
+
+At time 7072 process 144 arrive at cpu
+
+At time 7095 process 43 finish at disk2
+
+At time 7095 process 85 arrive at disk2
+
+At time 7097 process 144 finish cpu
+
+At time 7097 process 145 arrive at cpu
+
+At time 7098 process 21 finish at disk1
+
+At time 7098 process 87 arrive at disk1
+
+At time 7123 process 154 arrive in system
+
+At time 7140 process 145 finish cpu
+
+At time 7140 process 145 exit
+
+At time 7140 process 38 arrive at cpu
+
+At time 7145 process 155 arrive in system
+
+At time 7165 process 156 arrive in system
+
+At time 7190 process 38 finish cpu
+
+At time 7190 process 146 arrive at cpu
+
+At time 7199 process 85 finish at disk2
+
+At time 7199 process 86 arrive at disk2
+
+At time 7212 process 157 arrive in system
+
+At time 7230 process 146 finish cpu
+
+At time 7230 process 147 arrive at cpu
+
+At time 7239 process 147 finish cpu
+
+At time 7239 process 77 arrive at cpu
+
+At time 7245 process 158 arrive in system
+
+At time 7267 process 87 finish at disk1
+
+At time 7267 process 5 arrive at disk1
+
+At time 7275 process 77 finish cpu
+
+At time 7275 process 77 exit
+
+At time 7275 process 148 arrive at cpu
+
+At time 7302 process 148 finish cpu
+
+At time 7302 process 40 arrive at cpu
+
+At time 7320 process 5 finish at disk1
+
+At time 7320 process 89 arrive at disk1
+
+At time 7323 process 40 finish cpu
+
+At time 7323 process 149 arrive at cpu
+
+At time 7324 process 159 arrive in system
+
+At time 7336 process 86 finish at disk2
+
+At time 7336 process 88 arrive at disk2
+
+At time 7358 process 149 finish cpu
+
+At time 7358 process 79 arrive at cpu
+
+At time 7369 process 79 finish cpu
+
+At time 7369 process 79 exit
+
+At time 7369 process 81 arrive at cpu
+
+At time 7372 process 160 arrive in system
+
+At time 7418 process 81 finish cpu
+
+At time 7418 process 150 arrive at cpu
+
+At time 7424 process 88 finish at disk2
+
+At time 7424 process 47 arrive at disk2
+
+At time 7431 process 161 arrive in system
+
+At time 7445 process 150 finish cpu
+
+At time 7445 process 82 arrive at cpu
+
+At time 7465 process 162 arrive in system
+
+At time 7469 process 89 finish at disk1
+
+At time 7469 process 90 arrive at disk1
+
+At time 7476 process 82 finish cpu
+
+At time 7476 process 82 exit
+
+At time 7476 process 151 arrive at cpu
+
+At time 7484 process 47 finish at disk2
+
+At time 7484 process 91 arrive at disk2
+
+At time 7503 process 151 finish cpu
+
+At time 7503 process 151 exit
+
+At time 7503 process 152 arrive at cpu
+
+At time 7531 process 163 arrive in system
+
+At time 7538 process 90 finish at disk1
+
+At time 7538 process 48 arrive at disk1
+
+At time 7548 process 152 finish cpu
+
+At time 7548 process 152 exit
+
+At time 7548 process 84 arrive at cpu
+
+At time 7592 process 84 finish cpu
+
+At time 7592 process 7 arrive at cpu
+
+At time 7600 process 164 arrive in system
+
+At time 7613 process 91 finish at disk2
+
+At time 7613 process 92 arrive at disk2
+
+At time 7623 process 7 finish cpu
+
+At time 7623 process 153 arrive at cpu
+
+At time 7629 process 153 finish cpu
+
+At time 7629 process 43 arrive at cpu
+
+At time 7651 process 48 finish at disk1
+
+At time 7651 process 24 arrive at disk1
+
+At time 7659 process 43 finish cpu
+
+At time 7659 process 21 arrive at cpu
+
+At time 7677 process 165 arrive in system
+
+At time 7708 process 21 finish cpu
+
+At time 7708 process 154 arrive at cpu
+
+At time 7741 process 154 finish cpu
+
+At time 7741 process 155 arrive at cpu
+
+At time 7745 process 166 arrive in system
+
+At time 7752 process 155 finish cpu
+
+At time 7752 process 156 arrive at cpu
+
+At time 7764 process 24 finish at disk1
+
+At time 7764 process 94 arrive at disk1
+
+At time 7778 process 156 finish cpu
+
+At time 7778 process 85 arrive at cpu
+
+At time 7789 process 85 finish cpu
+
+At time 7789 process 157 arrive at cpu
+
+At time 7808 process 92 finish at disk2
+
+At time 7808 process 93 arrive at disk2
+
+At time 7814 process 157 finish cpu
+
+At time 7814 process 158 arrive at cpu
+
+At time 7821 process 167 arrive in system
+
+At time 7850 process 168 arrive in system
+
+At time 7864 process 158 finish cpu
+
+At time 7864 process 87 arrive at cpu
+
+At time 7871 process 94 finish at disk1
+
+At time 7871 process 51 arrive at disk1
+
+At time 7874 process 169 arrive in system
+
+At time 7909 process 87 finish cpu
+
+At time 7909 process 5 arrive at cpu
+
+At time 7926 process 170 arrive in system
+
+At time 7929 process 51 finish at disk1
+
+At time 7929 process 52 arrive at disk1
+
+At time 7943 process 5 finish cpu
+
+At time 7943 process 159 arrive at cpu
+
+At time 7966 process 159 finish cpu
+
+At time 7966 process 86 arrive at cpu
+
+At time 7975 process 171 arrive in system
+
+At time 7976 process 93 finish at disk2
+
+At time 7976 process 49 arrive at disk2
+
+At time 7986 process 86 finish cpu
+
+At time 7986 process 160 arrive at cpu
+
+At time 7992 process 160 finish cpu
+
+At time 7992 process 88 arrive at cpu
+
+At time 8039 process 88 finish cpu
+
+At time 8039 process 88 exit
+
+At time 8039 process 161 arrive at cpu
+
+At time 8042 process 172 arrive in system
+
+At time 8055 process 161 finish cpu
+
+At time 8055 process 162 arrive at cpu
+
+At time 8063 process 162 finish cpu
+
+At time 8063 process 89 arrive at cpu
+
+At time 8066 process 173 arrive in system
+
+At time 8084 process 89 finish cpu
+
+At time 8084 process 89 exit
+
+At time 8084 process 47 arrive at cpu
+
+At time 8103 process 47 finish cpu
+
+At time 8103 process 163 arrive at cpu
+
+At time 8110 process 174 arrive in system
+
+At time 8113 process 52 finish at disk1
+
+At time 8113 process 100 arrive at disk1
+
+At time 8117 process 49 finish at disk2
+
+At time 8117 process 95 arrive at disk2
+
+At time 8147 process 163 finish cpu
+
+At time 8147 process 90 arrive at cpu
+
+At time 8183 process 175 arrive in system
+
+At time 8196 process 90 finish cpu
+
+At time 8196 process 90 exit
+
+At time 8196 process 164 arrive at cpu
+
+At time 8205 process 164 finish cpu
+
+At time 8205 process 91 arrive at cpu
+
+At time 8230 process 176 arrive in system
+
+At time 8247 process 91 finish cpu
+
+At time 8247 process 91 exit
+
+At time 8247 process 48 arrive at cpu
+
+At time 8270 process 48 finish cpu
+
+At time 8270 process 165 arrive at cpu
+
+At time 8274 process 177 arrive in system
+
+At time 8284 process 100 finish at disk1
+
+At time 8284 process 26 arrive at disk1
+
+At time 8299 process 165 finish cpu
+
+At time 8299 process 166 arrive at cpu
+
+At time 8302 process 95 finish at disk2
+
+At time 8302 process 96 arrive at disk2
+
+At time 8319 process 178 arrive in system
+
+At time 8336 process 166 finish cpu
+
+At time 8336 process 24 arrive at cpu
+
+At time 8341 process 179 arrive in system
+
+At time 8353 process 24 finish cpu
+
+At time 8353 process 92 arrive at cpu
+
+At time 8358 process 92 finish cpu
+
+At time 8358 process 167 arrive at cpu
+
+At time 8394 process 180 arrive in system
+
+At time 8395 process 167 finish cpu
+
+At time 8395 process 167 exit
+
+At time 8395 process 168 arrive at cpu
+
+At time 8405 process 168 finish cpu
+
+At time 8405 process 94 arrive at cpu
+
+At time 8413 process 26 finish at disk1
+
+At time 8413 process 102 arrive at disk1
+
+At time 8423 process 94 finish cpu
+
+At time 8423 process 169 arrive at cpu
+
+At time 8424 process 181 arrive in system
+
+At time 8445 process 169 finish cpu
+
+At time 8445 process 170 arrive at cpu
+
+At time 8451 process 170 finish cpu
+
+At time 8451 process 170 exit
+
+At time 8451 process 51 arrive at cpu
+
+At time 8468 process 182 arrive in system
+
+At time 8484 process 51 finish cpu
+
+At time 8484 process 171 arrive at cpu
+
+At time 8495 process 96 finish at disk2
+
+At time 8495 process 97 arrive at disk2
+
+At time 8508 process 102 finish at disk1
+
+At time 8508 process 32 arrive at disk1
+
+At time 8524 process 171 finish cpu
+
+At time 8524 process 171 exit
+
+At time 8524 process 93 arrive at cpu
+
+At time 8547 process 183 arrive in system
+
+At time 8553 process 93 finish cpu
+
+At time 8553 process 172 arrive at cpu
+
+At time 8585 process 172 finish cpu
+
+At time 8585 process 173 arrive at cpu
+
+At time 8591 process 173 finish cpu
+
+At time 8591 process 174 arrive at cpu
+
+At time 8598 process 184 arrive in system
+
+At time 8610 process 174 finish cpu
+
+At time 8610 process 52 arrive at cpu
+
+At time 8627 process 52 finish cpu
+
+At time 8627 process 49 arrive at cpu
+
+At time 8640 process 97 finish at disk2
+
+At time 8640 process 98 arrive at disk2
+
+At time 8656 process 185 arrive in system
+
+At time 8662 process 49 finish cpu
+
+At time 8662 process 175 arrive at cpu
+
+At time 8680 process 175 finish cpu
+
+At time 8680 process 175 exit
+
+At time 8680 process 176 arrive at cpu
+
+At time 8688 process 32 finish at disk1
+
+At time 8688 process 57 arrive at disk1
+
+At time 8696 process 176 finish cpu
+
+At time 8696 process 177 arrive at cpu
+
+At time 8701 process 177 finish cpu
+
+At time 8701 process 100 arrive at cpu
+
+At time 8706 process 186 arrive in system
+
+At time 8740 process 100 finish cpu
+
+At time 8740 process 95 arrive at cpu
+
+At time 8772 process 95 finish cpu
+
+At time 8772 process 95 exit
+
+At time 8772 process 178 arrive at cpu
+
+At time 8775 process 187 arrive in system
+
+At time 8796 process 178 finish cpu
+
+At time 8796 process 178 exit
+
+At time 8796 process 179 arrive at cpu
+
+At time 8800 process 98 finish at disk2
+
+At time 8800 process 101 arrive at disk2
+
+At time 8809 process 188 arrive in system
+
+At time 8826 process 179 finish cpu
+
+At time 8826 process 180 arrive at cpu
+
+At time 8836 process 189 arrive in system
+
+At time 8853 process 57 finish at disk1
+
+At time 8853 process 58 arrive at disk1
+
+At time 8860 process 101 finish at disk2
+
+At time 8860 process 190 arrive in system
+
+At time 8860 process 55 arrive at disk2
+
+At time 8874 process 180 finish cpu
+
+At time 8874 process 26 arrive at cpu
+
+At time 8907 process 191 arrive in system
+
+At time 8915 process 26 finish cpu
+
+At time 8915 process 181 arrive at cpu
+
+At time 8928 process 181 finish cpu
+
+At time 8928 process 182 arrive at cpu
+
+At time 8929 process 58 finish at disk1
+
+At time 8929 process 106 arrive at disk1
+
+At time 8930 process 55 finish at disk2
+
+At time 8930 process 103 arrive at disk2
+
+At time 8960 process 182 finish cpu
+
+At time 8960 process 182 exit
+
+At time 8960 process 96 arrive at cpu
+
+At time 8972 process 192 arrive in system
+
+At time 8980 process 96 finish cpu
+
+At time 8980 process 102 arrive at cpu
+
+At time 8985 process 102 finish cpu
+
+At time 8985 process 183 arrive at cpu
+
+At time 8999 process 183 finish cpu
+
+At time 8999 process 184 arrive at cpu
+
+At time 9013 process 184 finish cpu
+
+At time 9013 process 97 arrive at cpu
+
+At time 9038 process 106 finish at disk1
+
+At time 9038 process 107 arrive at disk1
+
+At time 9050 process 193 arrive in system
+
+At time 9062 process 97 finish cpu
+
+At time 9062 process 185 arrive at cpu
+
+At time 9095 process 103 finish at disk2
+
+At time 9095 process 104 arrive at disk2
+
+At time 9102 process 107 finish at disk1
+
+At time 9102 process 109 arrive at disk1
+
+At time 9103 process 185 finish cpu
+
+At time 9103 process 32 arrive at cpu
+
+At time 9127 process 194 arrive in system
+
+At time 9149 process 32 finish cpu
+
+At time 9149 process 186 arrive at cpu
+
+At time 9154 process 186 finish cpu
+
+At time 9154 process 187 arrive at cpu
+
+At time 9162 process 187 finish cpu
+
+At time 9162 process 98 arrive at cpu
+
+At time 9175 process 195 arrive in system
+
+At time 9183 process 98 finish cpu
+
+At time 9183 process 188 arrive at cpu
+
+At time 9196 process 104 finish at disk2
+
+At time 9196 process 56 arrive at disk2
+
+At time 9200 process 109 finish at disk1
+
+At time 9200 process 61 arrive at disk1
+
+At time 9204 process 196 arrive in system
+
+At time 9210 process 188 finish cpu
+
+At time 9210 process 189 arrive at cpu
+
+At time 9253 process 189 finish cpu
+
+At time 9253 process 57 arrive at cpu
+
+At time 9267 process 197 arrive in system
+
+At time 9271 process 57 finish cpu
+
+At time 9271 process 101 arrive at cpu
+
+At time 9321 process 101 finish cpu
+
+At time 9321 process 190 arrive at cpu
+
+At time 9324 process 56 finish at disk2
+
+At time 9324 process 28 arrive at disk2
+
+At time 9340 process 190 finish cpu
+
+At time 9340 process 190 exit
+
+At time 9340 process 191 arrive at cpu
+
+At time 9346 process 191 finish cpu
+
+At time 9346 process 58 arrive at cpu
+
+At time 9347 process 198 arrive in system
+
+At time 9363 process 61 finish at disk1
+
+At time 9363 process 111 arrive at disk1
+
+At time 9387 process 58 finish cpu
+
+At time 9387 process 55 arrive at cpu
+
+At time 9406 process 55 finish cpu
+
+At time 9406 process 192 arrive at cpu
+
+At time 9409 process 28 finish at disk2
+
+At time 9409 process 14 arrive at disk2
+
+At time 9413 process 199 arrive in system
+
+At time 9445 process 192 finish cpu
+
+At time 9445 process 192 exit
+
+At time 9445 process 106 arrive at cpu
+
+At time 9455 process 200 arrive in system
+
+At time 9471 process 111 finish at disk1
+
+At time 9471 process 62 arrive at disk1
+
+At time 9484 process 106 finish cpu
+
+At time 9484 process 193 arrive at cpu
+
+At time 9486 process 201 arrive in system
+
+At time 9497 process 193 finish cpu
+
+At time 9497 process 103 arrive at cpu
+
+At time 9502 process 14 finish at disk2
+
+At time 9502 process 108 arrive at disk2
+
+At time 9508 process 202 arrive in system
+
+At time 9535 process 103 finish cpu
+
+At time 9535 process 203 arrive in system
+
+At time 9535 process 107 arrive at cpu
+
+At time 9581 process 107 finish cpu
+
+At time 9581 process 107 exit
+
+At time 9581 process 194 arrive at cpu
+
+At time 9595 process 62 finish at disk1
+
+At time 9595 process 114 arrive at disk1
+
+At time 9605 process 204 arrive in system
+
+At time 9612 process 108 finish at disk2
+
+At time 9612 process 110 arrive at disk2
+
+At time 9618 process 194 finish cpu
+
+At time 9618 process 195 arrive at cpu
+
+At time 9658 process 195 finish cpu
+
+At time 9658 process 104 arrive at cpu
+
+At time 9671 process 205 arrive in system
+
+At time 9671 process 114 finish at disk1
+
+At time 9671 process 104 finish cpu
+
+At time 9671 process 4 arrive at disk1
+
+At time 9671 process 109 arrive at cpu
+
+At time 9705 process 109 finish cpu
+
+At time 9705 process 109 exit
+
+At time 9705 process 196 arrive at cpu
+
+At time 9707 process 206 arrive in system
+
+At time 9746 process 196 finish cpu
+
+At time 9746 process 196 exit
+
+At time 9746 process 197 arrive at cpu
+
+At time 9753 process 207 arrive in system
+
+At time 9759 process 197 finish cpu
+
+At time 9759 process 56 arrive at cpu
+
+At time 9783 process 110 finish at disk2
+
+At time 9783 process 112 arrive at disk2
+
+At time 9795 process 56 finish cpu
+
+At time 9795 process 198 arrive at cpu
+
+At time 9815 process 198 finish cpu
+
+At time 9815 process 61 arrive at cpu
+
+At time 9822 process 4 finish at disk1
+
+At time 9822 process 33 arrive at disk1
+
+At time 9829 process 208 arrive in system
+
+At time 9848 process 61 finish cpu
+
+At time 9848 process 28 arrive at cpu
+
+At time 9887 process 209 arrive in system
+
+At time 9895 process 28 finish cpu
+
+At time 9895 process 28 exit
+
+At time 9895 process 199 arrive at cpu
+
+At time 9914 process 210 arrive in system
+
+At time 9915 process 112 finish at disk2
+
+At time 9915 process 113 arrive at disk2
+
+At time 9923 process 199 finish cpu
+
+At time 9923 process 200 arrive at cpu
+
+At time 9951 process 200 finish cpu
+
+At time 9951 process 111 arrive at cpu
+
+At time 9956 process 211 arrive in system
+
+At time 9967 process 33 finish at disk1
+
+At time 9967 process 119 arrive at disk1
+
+At time 9993 process 113 finish at disk2
+
+At time 9993 process 115 arrive at disk2
+
+At time 9995 process 111 finish cpu
+
+At time 9995 process 201 arrive at cpu
+
+At time 10000 process 99999 end
+

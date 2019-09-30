@@ -1,0 +1,117 @@
+Configuration 1: default
+
+SEED  1122
+INIT_TIME 0
+FIN_TIME 10000
+
+ARRIVE_MIN 20
+ARRIVE_MAX 80
+
+QUIT_PROB 0.2
+
+CPU_MIN 5
+CPU_MAX 50
+
+DISK1_MIN 50
+DISK1_MAX 200
+
+DISK2_MIN 50
+DISK2_MAX 200
+
+
+Insights: Fist test, set baseline
+-----------------Queue----------------
+Average size of CPU Queue: 6.20225
+Max size of CPU Queue: 14
+Average size of Disk1 Queue: 27.962
+Max size of Disk2 Queue: 63
+Average size of Disk2 Queue: 30.1538
+Max size of Disk2 Queue: 64
+-----------------Ultilization----------------
+Ulitilization of CPU: 0.9752
+Ulitilization of Disk 1: 0.9991
+Ulitilization of Disk 2: 1.0048
+-----------------Throughput----------------
+Throughput of CPU: 0.0365053 jobs per time unit
+Throughput of Disk 1: 0.00790712 jobs per time unit
+Throughput of Disk 2: 0.00776274 jobs per time unit
+
+
+
+//-----------------------------------------------------//
+Configuration 2: Increase DISK1_MIN & DISK1_MAX
+SEED  1122 
+INIT_TIME 0
+FIN_TIME 10000
+
+ARRIVE_MIN 20
+ARRIVE_MAX 80
+
+QUIT_PROB 0.2
+
+CPU_MIN 5
+CPU_MAX 50
+
+#define DISK1_MIN 900
+#define DISK1_MAX 1000
+
+#define DISK2_MIN 50
+#define DISK2_MAX 200
+
+Insights: CPU queue is shorter, and experience decreased ultilization
+-----------------Queue----------------
+Average size of CPU Queue: 0.300699
+Max size of CPU Queue: 3
+Average size of Disk1 Queue: 33.1818
+Max size of Disk2 Queue: 64
+Average size of Disk2 Queue: 35.0886
+Max size of Disk2 Queue: 68
+-----------------Ultilization----------------
+Ulitilization of CPU: 0.7783
+Ulitilization of Disk 1: 1.0568
+Ulitilization of Disk 2: 1.001
+-----------------Throughput----------------
+Throughput of CPU: 0.0367468 jobs per time unit
+Throughput of Disk 1: 0.00104088 jobs per time unit
+Throughput of Disk 2: 0.00789211 jobs per time unit
+
+
+
+
+//--------------------------------------------//
+Configuration 3: Change SEED to 10
+
+SEED 10
+INIT_TIME 0
+FIN_TIME 10000
+
+ARRIVE_MIN 20
+ARRIVE_MAX 80
+
+QUIT_PROB 0.2
+
+CPU_MIN 5
+CPU_MAX 50
+
+DISK1_MIN 900
+DISK1_MAX 1000
+
+DISK2_MIN 50
+DISK2_MAX 200
+
+Insights: CPU queue is shorter, throughput of DISK1 decreased 
+-----------------Queue----------------
+Average size of CPU Queue: 0.225694
+Max size of CPU Queue: 3
+Average size of Disk1 Queue: 35.4545
+Max size of Disk2 Queue: 73
+Average size of Disk2 Queue: 37.85
+Max size of Disk2 Queue: 77
+-----------------Ultilization----------------
+Ulitilization of CPU: 0.7882
+Ulitilization of Disk 1: 1.053
+Ulitilization of Disk 2: 0.9986
+-----------------Throughput----------------
+Throughput of CPU: 0.0365389 jobs per time unit
+Throughput of Disk 1: 0.00104463 jobs per time unit
+Throughput of Disk 2: 0.00801122 jobs per time unit

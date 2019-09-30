@@ -1,0 +1,15 @@
+-----------------Queue----------------
+Average size of CPU Queue: 1.63506
+Max size of CPU Queue: 7
+Average size of Disk1 Queue: 29.1795
+Max size of Disk2 Queue: 62
+Average size of Disk2 Queue: 28.2267
+Max size of Disk2 Queue: 63
+-----------------Ultilization----------------
+Ulitilization of CPU: 0.9141
+Ulitilization of Disk 1: 0.9945
+Ulitilization of Disk 2: 0.9961
+-----------------Throughput----------------
+Throughput of CPU: 0.0380702 jobs per time unit
+Throughput of Disk 1: 0.00784314 jobs per time unit
+Throughput of Disk 2: 0.00752936 jobs per time unit

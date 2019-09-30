@@ -2,6 +2,9 @@
 Project 1 - Giorgio's Discrete Event Simulator
 
 ## Introduction
+This program demonstrates a simulation of how processes come into the CPU and be processed on disks, with the probability that determines the time they exit the system.
+
+The logs and statistics of the simulation is then recorded for futher understanding of the system's behaviour throughout a provided time frame
 
 ## Requirements
 - Knowledge of processes 
@@ -10,14 +13,39 @@ Project 1 - Giorgio's Discrete Event Simulator
 ## Configuration
 Configuration constants are included in "config.h"
 
-## Usage
-A high level overview of your program (e.g. what the purpose
-of the program is)
+## Design
+The project is broken down into:
+- main.cpp
+- function.cpp
+- event.h
+- header.h
+- config.h
 
-A brief explaination of how you designed the program
-what kind of data structures did you use?
-how did you represent your data?
-what is the “work-flow” of your program?
+Events: represented by structure with eventType, event time, and process attached to that event
+
+Process: created with unique ID
+
+Workflow: is maintained in the specified time frame by the following fuctions that:
+
+- handle_process_arrival
+- handle_process_exit
+- handle_process_arrive_cpu
+- handle_process_finish_cpu
+- handle_process_arrive_disk_1
+- handle_process_arrive_disk_2
+- handle_disk_1_finish
+- handle_disk_2_finish
+- handle_SIMULATION_FINISH
+
+Test cases are carried out and recorded in the run.txt file.
+Logs and stats of the program are recorded in log.txt and stat.txt
+
+## Learning 
+- system design
+- enum & switch cases
+- structs
+- git branch
+- dividing long / double
 
 # Contributors
 Khai Nguyen: khainguyen@temple.edu

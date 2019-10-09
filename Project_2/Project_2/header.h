@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 
+extern char **environ;
 
 // define constants
 #define DELIMITERS " \t\r\n\a"

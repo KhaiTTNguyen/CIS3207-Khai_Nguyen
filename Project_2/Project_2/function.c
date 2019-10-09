@@ -163,12 +163,40 @@ int shell_cd(char** args_list) {
 			printf("chdir system_call error\n");
 		}
 	}
+	// getcwd
 	printf("Return 1 in cd\n");
 	return 1;
 }
 
 int shell_clr(char** args_list){
 	printf("\033[h\033[2j");
+	return 1;
+}
+
+/*
+output redirection
+prints out the environment variables.
+
+to get an environment variable in c, use the system call
+�getenv().
+example : to get �user� environment variables, use
+	getenv(�user�)
+	you do not need to implement all the environment variables
+	that env does; only print out the ones you think are the most
+	beneficial for the user to know.
+
+*/
+int shell_environ(char** args_list){
+	if (args_list[1] != NULL) {
+		printf("Invalid! No arguments for \"environ\"\n");
+	}
+	else {
+		size_t i;
+        for (i=0; *(environ+i)!=NULL; i++) {
+            printf("%s\n", *(environ+i));
+        }
+	}
+	printf("Return 1 in environ\n");
 	return 1;
 }
 
@@ -207,22 +235,16 @@ contents of a directory; once they are all exhausted, it will
 	return 1;
 }
 
-/*
-output redirection
-environ should emulate what the env command in bash does :
-prints out the environment variables.
-to get an environment variable in c, use the system call
-�getenv().
-example : to get �user� environment variables, use
-	getenv(�user�)
-	you do not need to implement all the environment variables
-	that env does; only print out the ones you think are the most
-	beneficial for the user to know.
-
-*/
-int shell_environ(char** args_list){
-	return 1;
+/* returns 1 if path_name represents a directory0 if it isn't */
+int is_dir(char *path_name) {
+    struct stat buff;
+    if (stat(path_name, &buff) < 0){
+        fprintf(stderr, "stat: %s\n", strerror(errno));
+        return 0;
+    }
+    return S_ISDIR(buff.st_mode);
 }
+
 
 
 /*

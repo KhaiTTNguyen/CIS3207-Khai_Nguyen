@@ -21,6 +21,9 @@
     <ClCompile Include="function.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Makefile">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.h">

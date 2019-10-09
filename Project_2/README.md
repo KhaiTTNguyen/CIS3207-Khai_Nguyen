@@ -3,14 +3,10 @@ Project 2: Linux Shell
 
 ## Introduction
 
+# For users
 
-# Requirements
-- Knowledge of processes
-- Knowledge of system calls fork(), exec(), wait() 
-- Familiarity with C/C++
-
-## Configuration
-Configuration constants are included in "config.h"
+Here are the list of functions & usage guide
+# For collaborators
 
 ## Design
 The project is broken down into:
@@ -18,6 +14,30 @@ The project is broken down into:
 - function.c
 - header.h
 - config.h
+
+## Testing 
+# Procedure
+- Compare behaviour with actual shell
+- Execute a batch-file with invalid cmds
+
+# Checkmarks
+* test built ins
+- ls -la mydir
+
+* test I/O redirection
+- greet < names.txt
+- <<
+- >
+- >> 
+"cd >>" cannot exec
+" ls >>" need output file
+
+* test pipe()
+- catch error "| ls"
+
+* test run in background &
+
+* test make file
 
 ## Learning 
 - system design

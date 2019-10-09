@@ -1,4 +1,10 @@
 ﻿  function.c
   main.c
+C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Git\Project_2\Project_2\main.c(24,17): warning C4133:  'function': incompatible types - from 'FILE *' to 'const char *const '
+C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Git\Project_2\Project_2\main.c(44,17): warning C4013:  'strtok' undefined; assuming extern returning int
+C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Git\Project_2\Project_2\main.c(44,41): warning C4047:  '=': 'char *' differs in levels of indirection from 'int'
+C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Git\Project_2\Project_2\main.c(51,36): warning C4047:  '=': 'char *' differs in levels of indirection from 'int'
+C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Git\Project_2\Project_2\main.c(14,8): warning C4101:  'cmd_string': unreferenced local variable
   Generating Code...
+C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Git\Project_2\Project_2\main.c(15,9): warning C4101:  'args': unreferenced local variable
   Project_2.vcxproj -> C:\Users\Khai Nguyen\Documents\Temple_21\Class\Computer Science\3207\Labs\Git\Project_2\Project_2\Debug\Project_2.exe

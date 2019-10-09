@@ -155,11 +155,11 @@ pipe()
 
 */
 int shell_cd(char** args_list) {
-	if (args_list[1] == NULL) {
+	if (*(args_list+1) == NULL) {
 		printf("no directory specified\n");
 	}
 	else {
-		if (chdir(args_list[1]) != 0) {		// change directory of prompt also
+		if (chdir(*(args_list+1)) != 0) {		// change directory of prompt also
 			printf("chdir system_call error\n");
 		}
 	}
@@ -187,7 +187,7 @@ example : to get �user� environment variables, use
 
 */
 int shell_environ(char** args_list){
-	if (args_list[1] != NULL) {
+	if ( *(args_list+1)!= NULL) {
 		printf("Invalid! No arguments for \"environ\"\n");
 	}
 	else {
@@ -220,22 +220,7 @@ while ((s = readdir(dir)) != null) { // get contents
 
 
 */
-int shell_ls(char** args_list) {
-	//�
-	// check if valid or not
-	// take flags
-	/*
-	opendir() (opens a directory and returns a dir pointer)
-readdir() (reads the contents of a directory and returns a dirent
-pointer)
-you have to continually call this method to get the entire
-contents of a directory; once they are all exhausted, it will
-.
-	*/
-	return 1;
-}
-
-/* returns 1 if path_name represents a directory0 if it isn't */
+/* returns 1 if path_name represents a directory, 0 if it isn't */
 int is_dir(char *path_name) {
     struct stat buff;
     if (stat(path_name, &buff) < 0){
@@ -245,7 +230,38 @@ int is_dir(char *path_name) {
     return S_ISDIR(buff.st_mode);
 }
 
+int shell_ls(char** args_list) {
+	// more than 1 arguments 
+	if (*(args_list+2)!= NULL){
+		printf("Invalid arguments.");
+	// not a valid directory
+	} else if ( is_dir(*(args_list+1)) != 1){
+		printf("Invalid directory: %s\n",*(args_list+1));
+	// 0  
+	} else {
+		DIR *dir_p;
+        struct dirent *entry;
+		
+		// 0 argument
+		if (*(args_list+1) == NULL) {
+			char * cur_dir = (char*)get_current_dir_name();
+			printf("Current dir is %s\n", *cur_dir);
+			dir_p = opendir(cur_dir);
+        // 1 argument
+		} else {
+			dir_p = opendir(*(args_list+1));
+		}
 
+		while((entry = readdir(dir_p))!=NULL){
+            if(strcmp(entry->d_name,".")==0) continue;
+            if(strcmp(entry->d_name,"..")==0) continue;
+            printf("%s\t",entry->d_name);
+        }
+        puts("");
+        closedir(dir_p);
+	}
+	return 1;
+}
 
 /*
 output redirection

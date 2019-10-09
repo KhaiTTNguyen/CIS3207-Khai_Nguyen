@@ -15,6 +15,12 @@ int main(int argc, char** argv) {
 
 	//#### redirect stdin to a file to take in "a file of commands"
 	
+	/*
+	if (strcmp(argv[1],"*.txt") == 0){
+		// open file and stream input into shell
+	} 
+	*/
+
 	// shell loop
 	size_t len=strlen(shell);
 	char * prompt = getenv("PWD")+(len)*sizeof(char);
@@ -34,8 +40,6 @@ int main(int argc, char** argv) {
 			printf("Read line error\n");
 			return -1;
 		}
-
-		printf("cmd is %s\n", cmd_string);
 
 
 		/*-------------------- parse cmd ------------------------*/

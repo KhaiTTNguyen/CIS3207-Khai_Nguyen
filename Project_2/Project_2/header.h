@@ -15,9 +15,11 @@
 #include <ctype.h> // for size_t
 #include <fcntl.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
 
-extern char **environ;
-
+extern char** environ;
+extern char* shell;
 // define constants
 #define DELIMITERS " \t\r\n\a"
 #define NUM_BUILT_INS 8 	// 8 built-in functions
@@ -30,6 +32,7 @@ int shell_echo(char** args_list);
 int shell_help(char** args_list);
 int shell_environ(char** args_list);
 int shell_clr(char** args_list);
+int is_dir(char *path_name);
 int shell_ls(char** args_list);
 int shell_exit(char** args_list);
 char* lower(char* s);

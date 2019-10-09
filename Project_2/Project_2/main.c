@@ -23,7 +23,10 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 		// stop @ "\n" or "EOF"
-		fgets(cmd_string, LINE_LENGTH, stdin);
+		if (fgets(cmd_string, LINE_LENGTH, stdin) == NULL){
+			printf("Read line error\n");
+			return -1;
+		}
 
 		printf("cmd is %s\n", cmd_string);
 

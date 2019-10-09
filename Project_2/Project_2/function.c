@@ -163,8 +163,8 @@ int shell_cd(char** args_list) {
 			printf("chdir system_call error\n");
 		}
 	}
-	printf("Return 0\n");
-	return 0;
+	printf("Return 1 in cd\n");
+	return 1;
 }
 
 int shell_clr(char** args_list){

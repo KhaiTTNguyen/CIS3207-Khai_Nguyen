@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 		printf("prompt> ");
 
 		/*-------------------- read cmd ------------------------*/
-		char* cmd_string = malloc(sizeof(char) * LINE_LENGTH);
+		char* cmd_string = (char*)malloc(sizeof(char) * LINE_LENGTH);
 
 		if (cmd_string == NULL) {
 			printf("Mem_allocation failed. \n");
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
 
 		/*-------------------- parse cmd ------------------------*/
-		char** args_list = malloc(sizeof(char*) * LINE_LENGTH);
+		char** args_list = (char**)malloc(sizeof(char*) * LINE_LENGTH);
 		int index = 0;
 		char* token;
 
@@ -51,17 +51,17 @@ int main(int argc, char** argv) {
 		args_list[index] = NULL;		// NULL terminate - pass in exec()
 
 
-		while (*args_list != NULL) {
-			printf("Token list is %s\n", *args_list);
-			args_list++;
-		}
+		// while (*args_list != NULL) {
+		// 	printf("Token list is %s\n", *args_list);
+		// 	args_list++;
+		// }
 
 
 		// if no cmds entered
 		if (args_list[0] == NULL) {
 			continue;
 		}
-
+		printf("Shell exec\n");
 		status = shell_execute(args_list);
 	}
 	

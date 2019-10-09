@@ -108,7 +108,7 @@ int shell_execute(char** args_list) {
 i/o redirection(&file){
 every process
 with 3 default file descriptors
- here’s how you can handle output redirection for these commands:
+ hereï¿½s how you can handle output redirection for these commands:
 1 save the file descriptor for stdout using dup()
 2 open the output file(with the proper modes for either > or>>)
 3 redirect stdout to freshly opened file
@@ -145,7 +145,7 @@ pipe()
 	process 1 (close read)
 	check pipeandexec.c on canvas
 	09/24 ppt slides
-	while (1) { char *cmd = getcmd(); int retval = fork(); if (retval == 0) { // this is the child process // setup the child’s process environment here // e.g., where is standard i/o, how to handle signals? exec(cmd); // exec does not return if it succeeds printf(“error: could not execute %s\n”, cmd); exit(1); } else { // this is the parent process; wait for child to finish int pid = retval; wait(pid); } }
+	while (1) { char *cmd = getcmd(); int retval = fork(); if (retval == 0) { // this is the child process // setup the childï¿½s process environment here // e.g., where is standard i/o, how to handle signals? exec(cmd); // exec does not return if it succeeds printf(ï¿½error: could not execute %s\nï¿½, cmd); exit(1); } else { // this is the parent process; wait for child to finish int pid = retval; wait(pid); } }
 }
 
 */
@@ -163,7 +163,8 @@ int shell_cd(char** args_list) {
 			printf("chdir system_call error\n");
 		}
 	}
-	return 1;
+	printf("Return 0\n");
+	return 0;
 }
 
 int shell_clr(char** args_list){
@@ -176,10 +177,10 @@ output redirection
 dir can take 0 or 1 arguments.
 if 0, the directory to be printed will be the current working
 directory
-use system call get_current_dir_name() (don’t forget to free
+use system call get_current_dir_name() (donï¿½t forget to free
 	afterwards though!it allocates memory!)
 	if 1, use the passed in argument as the directory name.
-		don’t forget to error check!lots can go wrong here		// check can open dir or not
+		donï¿½t forget to error check!lots can go wrong here		// check can open dir or not
 
 
 		char dirname[2] = "/"; // name of directory
@@ -192,7 +193,7 @@ while ((s = readdir(dir)) != null) { // get contents
 
 */
 int shell_ls(char** args_list) {
-	//…
+	//ï¿½
 	// check if valid or not
 	// take flags
 	/*
@@ -211,9 +212,9 @@ output redirection
 environ should emulate what the env command in bash does :
 prints out the environment variables.
 to get an environment variable in c, use the system call
-‘getenv().
-example : to get “user” environment variables, use
-	getenv(“user”)
+ï¿½getenv().
+example : to get ï¿½userï¿½ environment variables, use
+	getenv(ï¿½userï¿½)
 	you do not need to implement all the environment variables
 	that env does; only print out the ones you think are the most
 	beneficial for the user to know.
@@ -260,8 +261,8 @@ int shell_help(char** args_list) {
 int shell_pause(char** args_list) {
 //remember, all pause needs to do is pause the shell until the
 //user presses enter.
-//you can use getchar() or c++‘s std::cin.get() in a loop until
-//the value returned is equal to the’\n’, pretty simple.
+//you can use getchar() or c++ï¿½s std::cin.get() in a loop until
+//the value returned is equal to theï¿½\nï¿½, pretty simple.
 	return 1;
 }
 

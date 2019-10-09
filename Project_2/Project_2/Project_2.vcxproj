@@ -125,7 +125,6 @@
   <ItemGroup>
     <ClCompile Include="function.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.h" />

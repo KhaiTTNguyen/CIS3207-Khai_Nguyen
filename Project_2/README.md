@@ -3,10 +3,10 @@ Project 2: Linux Shell
 
 ## Introduction
 
-# For users
+### For users
 
 Here are the list of functions & usage guide
-# For collaborators
+### For collaborators
 
 ## Design
 The project is broken down into:
@@ -16,11 +16,11 @@ The project is broken down into:
 - config.h
 
 ## Testing 
-# Procedure
+### Procedure
 - Compare behaviour with actual shell
 - Execute a batch-file with invalid cmds
 
-# Checkmarks
+### Checkmarks
 * test built ins
 - ls -la mydir
 

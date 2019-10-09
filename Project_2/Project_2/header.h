@@ -9,7 +9,8 @@
 // Include libraries
 
 #include <unistd.h>
-#include <dirent.h>
+//#include <dirent.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h> // for size_t
@@ -22,8 +23,15 @@
 #define NUM_BUILT_INS 8 	// 8 built-in functions
 
 // Fucntion declarations
-
-int shell_exit(char** args);
+int shell_execute(char** args_list);
+int shell_cd(char** args_list);
+int shell_pause(char** args_list);
+int shell_echo(char** args_list);
+int shell_help(char** args_list);
+int shell_environ(char** args_list);
+int shell_clr(char** args_list);
+int shell_ls(char** args_list);
+int shell_exit(char** args_list);
 char* lower(char* s);
 
 #endif

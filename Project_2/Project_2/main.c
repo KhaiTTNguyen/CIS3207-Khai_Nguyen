@@ -11,8 +11,6 @@ int main(int argc, char** argv) {
 	//#### redirect stdin to a file to take in "a file of commands"
 	
 	// shell loop
-	char* cmd_string;
-	char** args;
 	int status = 1;	// determines whether continue to exec or not
 	while (status) {
 		printf("prompt> ");
@@ -21,7 +19,7 @@ int main(int argc, char** argv) {
 		char* cmd_string = malloc(sizeof(char) * LINE_LENGTH);
 
 		if (cmd_string == NULL) {
-			printf(stderr, "Mem_allocation failed. \n");
+			printf("Mem_allocation failed. \n");
 			return -1;
 		}
 		// stop @ "\n" or "EOF"
@@ -64,7 +62,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 
-		// status = shell_execute(args_list);
+		status = shell_execute(args_list);
 	}
 	
 	return 0;

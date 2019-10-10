@@ -239,6 +239,7 @@ int shell_clr(char** args_list){
 	return 1;
 }
 
+/*----------------------------------------------shell_environ---------------------------------------------*/
 /*
 output redirection
 prints out the environment variables.
@@ -258,14 +259,15 @@ int shell_environ(char** args_list){
 	}
 	else {
 		size_t i;
-        for (i=0; *(environ+i)!=NULL; i++) {
-            printf("%s\n", *(environ+i));
-        }
-		/*
+        // for (i=0; *(environ+i)!=NULL; i++) {
+        //     printf("%s\n", *(environ+i));
+        // }
+		
+		printf("PWD : %s\n", getenv("PWD"));
 		printf("PATH : %s\n", getenv("PATH"));
    		printf("HOME : %s\n", getenv("HOME"));
    		printf("ROOT : %s\n", getenv("ROOT"));
-		*/
+		
 	}
 	printf("Return 1 in environ\n");
 	return 1;

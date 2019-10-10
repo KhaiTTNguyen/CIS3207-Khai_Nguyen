@@ -295,6 +295,11 @@ out to the screen.
 
 	echo(&args);*/
 
+	for(size_t i=1;*(args_list+i)!=NULL;++i){
+        printf("%s ",*(args_list+i));
+    }
+    puts("");
+	free(args_list);
 	return 1;
 }
 
@@ -310,7 +315,12 @@ int shell_pause(char** args_list) {
 //user presses enter.
 //you can use getchar() or c++�s std::cin.get() in a loop until
 //the value returned is equal to the�\n�, pretty simple.
-	return 1;
+	while (1){
+		char c = getchar();
+		if (c == '\n'){
+			return 1;
+		}
+	}
 }
 
 

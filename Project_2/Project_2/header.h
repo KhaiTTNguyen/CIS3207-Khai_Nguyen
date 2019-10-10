@@ -35,6 +35,6 @@ int shell_clr(char** args_list);
 int is_dir(char *path_name);
 int shell_ls(char** args_list);
 int shell_exit(char** args_list);
-char* lower(char* s);
+// char* lower(char* s);
 
 #endif

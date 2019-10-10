@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
 		/* walk through other tokens */
 		while (token != NULL) {
-			args_list[index] = lower(token);
+			args_list[index] = token;
 			index++;
 
 			token = strtok(NULL, DELIMITERS);
@@ -69,6 +69,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 		printf("Shell exec\n");
+		printf("Arg list in main: %s\n", args_list[0]);
 		status = shell_execute(args_list);
 		printf("Shell exec completed\n");
 	}

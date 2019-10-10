@@ -59,6 +59,7 @@ int shell_execute(char** args_list) {
 //int shell_non_built_ins(char** args_list) {
 //	
 //	 you can figure out if the file exists in a particular directory by trying to open the file.
+// 	signal invalid cmd 
 //	 if the open fails, then the file does not exist.
 //
 //
@@ -220,6 +221,7 @@ while ((s = readdir(dir)) != null) { // get contents
 
 
 */
+/*----------------------------------------------shell_ls---------------------------------------------*/
 /* returns 1 if path_name represents a directory, 0 if it isn't */
 int is_dir(char *path_name) {
     struct stat buff;
@@ -232,26 +234,35 @@ int is_dir(char *path_name) {
 
 int shell_ls(char** args_list) {
 	// more than 1 arguments 
-	if (*(args_list+2)!= NULL){
-		printf("Invalid arguments.");
-	// not a valid directory
-	} else if ( is_dir(*(args_list+1)) != 1){
-		printf("Invalid directory: %s\n",*(args_list+1));
-	// 0  
+	printf("Arg2 is %s\n", args_list[2]);
+	if (args_list[2] != NULL){
+		printf("Invalid arguments.\n");
+
 	} else {
 		DIR *dir_p;
         struct dirent *entry;
 		
 		// 0 argument
-		if (*(args_list+1) == NULL) {
+		printf("Taking args_1\n");
+		if (args_list[1] == NULL || args_list[1] == " ")  {
 			char * cur_dir = (char*)get_current_dir_name();
-			printf("Current dir is %s\n", *cur_dir);
+			printf("Getting cur dir\n");
+			printf("Current dir is %s\n", cur_dir);
 			dir_p = opendir(cur_dir);
+			printf("Done get cur dir\n");
         // 1 argument
 		} else {
-			dir_p = opendir(*(args_list+1));
+			// not valid dir
+			if (is_dir(args_list[1]) != 1){
+				printf("Invalid directory: %s\n", args_list[1]);
+				free(args_list);
+				return 1;
+			} else {
+				dir_p = opendir(args_list[1]);
+			}
 		}
 
+		printf("Start reading dir\n");
 		while((entry = readdir(dir_p))!=NULL){
             if(strcmp(entry->d_name,".")==0) continue;
             if(strcmp(entry->d_name,"..")==0) continue;
@@ -260,8 +271,12 @@ int shell_ls(char** args_list) {
         puts("");
         closedir(dir_p);
 	}
+
+	/* Deallocate allocated memory */
+   	free(args_list);
 	return 1;
 }
+
 
 /*
 output redirection
@@ -309,7 +324,7 @@ int shell_pause(char** args_list) {
 handle quit() & exit()
 */
 int shell_exit(char** args_list) {
-	// clean up resources
+	free(args_list);
 	return 0;
 }
 
@@ -317,10 +332,10 @@ int shell_exit(char** args_list) {
 /*--------------------supplements-------------------------*/
 
 /*put a string to all lower case*/
-char* lower(char* s) {
-	int i;
-	for (i = 0; *(s + i) != '\0'; ++i) {
-		*(s + i) = tolower(*(s + i));
-	}
-	return s;
-}
+// char* lower(char* s) {
+// 	int i;
+// 	for (i = 0; *(s + i) != '\0'; ++i) {
+// 		*(s + i) = tolower(*(s + i));
+// 	}
+// 	return s;
+// }

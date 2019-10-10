@@ -235,7 +235,7 @@ int shell_ls(char** args_list) {
 
 /*----------------------------------------------shell_clr---------------------------------------------*/
 int shell_clr(char** args_list){
-	printf("\033[h\033[2j");
+	printf("\033[H\033[J");
 	return 1;
 }
 

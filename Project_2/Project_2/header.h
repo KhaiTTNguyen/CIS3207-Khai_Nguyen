@@ -23,6 +23,8 @@ extern char* shell;
 // define constants
 #define DELIMITERS " \t\r\n\a"
 #define NUM_BUILT_INS 8 	// 8 built-in functions
+// Clearing the shell using escape sequences 
+#define clear() printf("\033[H\033[J") 
 
 // Fucntion declarations
 int shell_execute(char** args_list);

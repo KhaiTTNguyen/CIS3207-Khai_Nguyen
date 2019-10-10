@@ -6,12 +6,12 @@
 #define LINE_LENGTH 100
 
 char **environ;
-char *shell="/home/khaing/Documents/CIS_3207/CIS3207-Khai_Nguyen/Project_2/Project_2/myshell";
+// char *shell = "/home/khaing/Documents/CIS_3207/CIS3207-Khai_Nguyen/Project_2/Project_2/myshell";
 
 int main(int argc, char** argv) {
 	environ;
 	shell;
-	// putenv("myshell_root=/cygdrive/c/Users/USER/Desktop/Hw/C files/myshell");
+	putenv("PWD=/home/khaing/Documents/CIS_3207/CIS3207-Khai_Nguyen/Project_2/Project_2/");
 
 	//#### redirect stdin to a file to take in "a file of commands"
 	
@@ -23,9 +23,10 @@ int main(int argc, char** argv) {
 
 	// shell loop
 	size_t len=strlen(shell);
-	char * prompt = getenv("PWD")+(len)*sizeof(char);
+	
 	int status = 1;	// determines whether continue to exec or not
 	while (status) {
+		char * prompt = getenv("PWD");
 		printf("%s> ", prompt);
 
 		/*-------------------- read cmd ------------------------*/

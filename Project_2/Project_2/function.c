@@ -155,22 +155,22 @@ pipe()
 
 /*----------------------------------------------shell_cd---------------------------------------------*/
 int shell_cd(char** args_list) {
-	char* buf;
 	if(*(args_list+2)!=NULL){
         printf("Invalid arguments.");
 	} else if (args_list[1] == NULL) {
+		printf("%s\n",getenv("PWD"));
+
 		printf("no directory specified\n");
 	} else if(is_dir(*(args_list+1))!=1){
         printf("Invalid directory: %s\n",*(args_list+1));
     } else {
-		if (chdir(args_list[1]) != 0) {		// change directory of prompt also
+		if (chdir(args_list[1]) != 0) {	
 			printf("chdir system_call error\n");
 		}
-        buf = (char*)calloc(300,sizeof(char));
-        setenv("PWD",getcwd(buf,300),1);	
+		
+		// set new current directory - this change directory of prompt also
+		setenv("PWD",get_current_dir_name(),1);
 	}
-	printf("Return 1 in cd\n");
-	free(buf);
 	free(args_list);
 	return 1;
 }
@@ -261,6 +261,11 @@ int shell_environ(char** args_list){
         for (i=0; *(environ+i)!=NULL; i++) {
             printf("%s\n", *(environ+i));
         }
+		/*
+		printf("PATH : %s\n", getenv("PATH"));
+   		printf("HOME : %s\n", getenv("HOME"));
+   		printf("ROOT : %s\n", getenv("ROOT"));
+		*/
 	}
 	printf("Return 1 in environ\n");
 	return 1;
@@ -313,6 +318,8 @@ int shell_pause(char** args_list) {
 handle quit() & exit()
 */
 int shell_exit(char** args_list) {
+	//free(shell);
+	free(environ);
 	free(args_list);
 	return 0;
 }

@@ -68,10 +68,10 @@ int main(int argc, char** argv) {
 		if (args_list[0] == NULL) {
 			continue;
 		}
-		printf("Shell exec\n");
-		printf("Arg list in main: %s\n", args_list[0]);
+		printf("Arg list in main: %s %s\n", args_list[0], args_list[1]);
 		status = shell_execute(args_list);
 		printf("Shell exec completed\n");
+		printf("\n");
 	}
 	
 	return 0;

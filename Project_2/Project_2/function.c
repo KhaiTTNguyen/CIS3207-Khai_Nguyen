@@ -152,23 +152,88 @@ pipe()
 */
 
 
-/*
 
-*/
+/*----------------------------------------------shell_cd---------------------------------------------*/
 int shell_cd(char** args_list) {
-	if (*(args_list+1) == NULL) {
+	char* buf;
+	if(*(args_list+2)!=NULL){
+        printf("Invalid arguments.");
+	} else if (args_list[1] == NULL) {
 		printf("no directory specified\n");
-	}
-	else {
-		if (chdir(*(args_list+1)) != 0) {		// change directory of prompt also
+	} else if(is_dir(*(args_list+1))!=1){
+        printf("Invalid directory: %s\n",*(args_list+1));
+    } else {
+		if (chdir(args_list[1]) != 0) {		// change directory of prompt also
 			printf("chdir system_call error\n");
 		}
+        buf = (char*)calloc(300,sizeof(char));
+        setenv("PWD",getcwd(buf,300),1);	
 	}
-	// getcwd
 	printf("Return 1 in cd\n");
+	free(buf);
+	free(args_list);
 	return 1;
 }
 
+/*----------------------------------------------shell_ls---------------------------------------------*/
+/* returns 1 if path_name represents a directory, 0 if it isn't */
+int is_dir(char *path_name) {
+    struct stat buff;
+    if (stat(path_name, &buff) < 0){
+        fprintf(stderr, "stat: %s\n", strerror(errno));
+        return 0;
+    }
+    return S_ISDIR(buff.st_mode);
+}
+
+int shell_ls(char** args_list) {
+	
+	char * cur_dir; 
+	// more than 1 arguments 
+	printf("Arg2 is %s\n", args_list[2]);
+	if (args_list[2] != NULL){
+		printf("Invalid arguments.\n");
+
+	} else {
+		DIR* dir_p;
+        struct dirent *entry;
+		
+		// 0 argument
+		if (args_list[1] == NULL || args_list[1] == " ")  {
+			cur_dir = (char*)get_current_dir_name();
+			printf("Current dir is %s\n", cur_dir);
+			dir_p = opendir(cur_dir);
+			free(cur_dir); 
+        // 1 argument
+		} else {
+			// not valid dir
+			if (is_dir(args_list[1]) != 1){
+				printf("Invalid directory: %s\n", args_list[1]);
+				free(args_list);
+				return 1;
+			} else {
+				dir_p = opendir(args_list[1]);
+			}
+		}
+
+		// start reading dir
+		while((entry = readdir(dir_p))!=NULL){
+            if(strcmp(entry->d_name,".")==0) continue;
+            if(strcmp(entry->d_name,"..")==0) continue;
+            printf("%s\t",entry->d_name);
+        }
+        puts("");
+        closedir(dir_p);
+	}
+
+	/* Deallocate allocated memory */
+	free(args_list);
+	return 1;
+}
+
+
+
+/*----------------------------------------------shell_clr---------------------------------------------*/
 int shell_clr(char** args_list){
 	printf("\033[h\033[2j");
 	return 1;
@@ -198,82 +263,6 @@ int shell_environ(char** args_list){
         }
 	}
 	printf("Return 1 in environ\n");
-	return 1;
-}
-
-/*
-output redirection
-dir can take 0 or 1 arguments.
-if 0, the directory to be printed will be the current working
-directory
-use system call get_current_dir_name() (don�t forget to free
-	afterwards though!it allocates memory!)
-	if 1, use the passed in argument as the directory name.
-		don�t forget to error check!lots can go wrong here		// check can open dir or not
-
-
-		char dirname[2] = "/"; // name of directory
-dir* dir = opendir(dirname); // error-check this
-struct dirent* s; // directory entry
-while ((s = readdir(dir)) != null) { // get contents
-	printf("%s\t", s->name); // print name of dirent
-}
-
-
-*/
-/*----------------------------------------------shell_ls---------------------------------------------*/
-/* returns 1 if path_name represents a directory, 0 if it isn't */
-int is_dir(char *path_name) {
-    struct stat buff;
-    if (stat(path_name, &buff) < 0){
-        fprintf(stderr, "stat: %s\n", strerror(errno));
-        return 0;
-    }
-    return S_ISDIR(buff.st_mode);
-}
-
-int shell_ls(char** args_list) {
-	// more than 1 arguments 
-	printf("Arg2 is %s\n", args_list[2]);
-	if (args_list[2] != NULL){
-		printf("Invalid arguments.\n");
-
-	} else {
-		DIR *dir_p;
-        struct dirent *entry;
-		
-		// 0 argument
-		printf("Taking args_1\n");
-		if (args_list[1] == NULL || args_list[1] == " ")  {
-			char * cur_dir = (char*)get_current_dir_name();
-			printf("Getting cur dir\n");
-			printf("Current dir is %s\n", cur_dir);
-			dir_p = opendir(cur_dir);
-			printf("Done get cur dir\n");
-        // 1 argument
-		} else {
-			// not valid dir
-			if (is_dir(args_list[1]) != 1){
-				printf("Invalid directory: %s\n", args_list[1]);
-				free(args_list);
-				return 1;
-			} else {
-				dir_p = opendir(args_list[1]);
-			}
-		}
-
-		printf("Start reading dir\n");
-		while((entry = readdir(dir_p))!=NULL){
-            if(strcmp(entry->d_name,".")==0) continue;
-            if(strcmp(entry->d_name,"..")==0) continue;
-            printf("%s\t",entry->d_name);
-        }
-        puts("");
-        closedir(dir_p);
-	}
-
-	/* Deallocate allocated memory */
-   	free(args_list);
 	return 1;
 }
 

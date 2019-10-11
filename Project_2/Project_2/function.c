@@ -37,8 +37,20 @@ int shell_execute(char** args_list) {
 	input file
 	output file
 	*/
-	
+	size_t find_index = 0; // index to catch ">>" ">" "<" "|" "&"
+	size_t redir_in_index = 0; // input redir
+	size_t redir_out_index = 0; // output redir
 
+	pid_t pid_read = -1;
+	pid_t pid_write = -1;
+
+	for (find_index = 0; *(args_list + find_index)!=NULL; find_index++){
+		if (/* condition */)
+		{
+			/* code */
+		}
+		
+	}
 	// check if file exists
 	// identify built-ins
 	char* builtin_cmds[] = { "cd", "clr", "dir", "environ", "echo", "help", "pause", "exit" };
@@ -257,12 +269,7 @@ int shell_environ(char** args_list){
 	if ( *(args_list+1)!= NULL) {
 		printf("Invalid! No arguments for \"environ\"\n");
 	}
-	else {
-		size_t i;
-        // for (i=0; *(environ+i)!=NULL; i++) {
-        //     printf("%s\n", *(environ+i));
-        // }
-		
+	else {	
 		printf("PWD : %s\n", getenv("PWD"));
 		printf("PATH : %s\n", getenv("PATH"));
    		printf("HOME : %s\n", getenv("HOME"));
@@ -275,6 +282,8 @@ int shell_environ(char** args_list){
 
 
 /*
+Name: shell_echo 
+Description: prints out the arguments given back out to the screen.
 output redirection
 */
 int shell_echo(char** args_list) {
@@ -285,9 +294,6 @@ int shell_echo(char** args_list) {
 	call builtin 
 	when funct returns, restore stdout using 
 	
-
-echo is very simple, just print out the arguments given back
-out to the screen.
 	*/
 /*
 	int saved_stdout = dup(1);

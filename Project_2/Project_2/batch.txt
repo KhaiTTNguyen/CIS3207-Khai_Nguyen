@@ -1,0 +1,8 @@
+cd ..
+cd
+dir
+echo "Moving out!"
+cd ..
+help
+dir
+environ 

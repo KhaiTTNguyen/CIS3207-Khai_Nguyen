@@ -122,7 +122,7 @@ int shell_execute(char** args_list) {
 		*(args_list + in_redir_indx) = NULL;
 	}
 
-	// identify built-ins
+	/*-------------------------------------------shell_built_ins-------------------------------------------*/
 	char* builtin_cmds[] = { "cd", "clr", "dir", "environ", "echo", "help", "pause", "exit" };
 	void (*builtin_func[]) (char**, struct exec_context*) = { &shell_cd, &shell_clr, &shell_ls, &shell_environ, &shell_echo, &shell_help, &shell_pause, &shell_exit };
 	// detect which builtin to use
@@ -199,7 +199,7 @@ int exec_pipe(char **args_list, int p_indx){
 void shell_cd(char** args_list, struct exec_context* curr_contextP) {
 
 	if(*(args_list+2)!=NULL){
-        printf("Invalid arguments.\n");
+        printf("Invalid arguments in \"cd\".\n");
 	} else if (args_list[1] == NULL) {
 		printf("No directory specified\n");
 	} else if(is_dir(*(args_list+1))!=1){
@@ -216,7 +216,11 @@ void shell_cd(char** args_list, struct exec_context* curr_contextP) {
 /*----------------------------------------------shell_ls---------------------------------------------*/
 /* returns 1 if path_name represents a directory, 0 if it isn't */
 int is_dir(char *path_name) {
-    struct stat buff;
+    if (path_name == NULL){
+		return 1;
+	}
+
+	struct stat buff;
     if (stat(path_name, &buff) < 0){
         fprintf(stderr, "stat: %s\n", strerror(errno));
         return 0;
@@ -227,40 +231,36 @@ int is_dir(char *path_name) {
 void shell_ls(char** args_list, struct exec_context* curr_contextP) {
 
 	char * cur_dir; 
-	// more than 1 arguments 
+	// more than 1 arguments -- for I/O redirection, already erase the symbol
 	if (args_list[2] != NULL){
-		printf("Invalid arguments.\n");
+		printf("Invalid arguments in \"dir\".\n");
 	} else {
 		DIR* dir_p;
         struct dirent *entry;
-		
-		// 0 argument
-		if (args_list[1] == NULL || args_list[1] == " ")  {
-			cur_dir = (char*)get_current_dir_name();
-			printf("Current dir is %s\n", cur_dir);
-			dir_p = opendir(cur_dir);
-			free(cur_dir); 
-        // 1 argument
-		} else {
-			// not valid dir
-			if (is_dir(args_list[1]) != 1){
+		if (is_dir(args_list[1]) != 1){
 				printf("Invalid directory: %s\n", args_list[1]);
 				free(args_list);
-				exit(EXIT_FAILURE); 		// testing
+		} else {
+			// 0 argument
+			if (args_list[1] == NULL || args_list[1] == " ")  {
+				cur_dir = (char*)get_current_dir_name();
+				dir_p = opendir(cur_dir);
+				free(cur_dir); 
+			// 1 argument
 			} else {
 				dir_p = opendir(args_list[1]);
 			}
+			// start reading dir
+			while((entry = readdir(dir_p))!=NULL){
+				if(strcmp(entry->d_name,".")==0) continue;
+				if(strcmp(entry->d_name,"..")==0) continue;
+				printf("%s\t",entry->d_name);
+			}
+			puts("");
+			closedir(dir_p);
 		}
-
-		// start reading dir
-		while((entry = readdir(dir_p))!=NULL){
-            if(strcmp(entry->d_name,".")==0) continue;
-            if(strcmp(entry->d_name,"..")==0) continue;
-            printf("%s\t",entry->d_name);
-        }
-        puts("");
-        closedir(dir_p);
 	}
+	free(args_list);
 }
 
 
@@ -278,8 +278,7 @@ void shell_clr(char** args_list, struct exec_context* curr_contextP){
 void shell_environ(char** args_list, struct exec_context* curr_contextP){
 	if ( *(args_list+1)!= NULL) {
 		printf("Invalid! No arguments for \"environ\"\n");
-	}
-	else {	
+	} else {	
 		printf("PWD : %s\n", getenv("PWD"));
 		printf("PATH : %s\n", getenv("PATH"));
    		printf("HOME : %s\n", getenv("HOME"));

@@ -1,8 +1,2 @@
-vc142.pdb	function.obj	vc142.idb	Project_2.pdb	main.obj	Project_2.tlog	Project_2.log	
-vc142.pdb	function.obj	vc142.idb	Project_2.pdb	main.obj	Project_2.tlog	Project_2.log	
-Invalid arguments.
-Hello Khai 
-PWD : /home/khaing/Documents/CIS_3207/CIS3207-Khai_Nguyen/Project_2/Project_2/
-PATH : /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-HOME : /home/khaing
-ROOT : (null)
+Ext is .txt
+myshell	Project_2.vcxproj.filters	Debug	function.c	take_hello	main.c	Project_2.vcxproj.user	batch.txt	Makefile	.vs	.batch.txt.swp	Project_2.vcxproj	bultin1.PNG	hello.c	myshell.o	hello	take_hello.c	builtin2.PNG	header.h	function.o	Untitled 1.odt	output.txt	.~lock.Untitled 1.odt#	Project_2.sln	

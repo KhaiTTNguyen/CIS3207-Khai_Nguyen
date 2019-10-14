@@ -1,0 +1,49 @@
+Usage guide
+
+List of built-ins includes:
+
+    "cd" - change directory
+
+$ cd ..
+$ cd [folder]
+
+    "clr" - clear screen
+
+$ clr
+
+    "dir" - list files and directories
+
+$ dir
+$ dir [folder]
+$ dir [folder] > out.txt
+$ dir [folder] >> out.txt
+
+    "environ" - list enviroment variables
+
+$ environ 
+$ environ > out.txt
+$ environ >> out.txt
+
+    "echo" - prints argument of "echo" back to console
+
+$ echo [message]
+$ echo [message] > out.txt
+
+    "help" - display usage guide
+
+$ help
+$ help > out.txt
+
+    "pause" - pause the shell till user press enter
+
+$ pause
+
+    "exit" - exit the shell
+
+$ exit
+
+The shell can also accomodate external commands
+
+$ ./hello
+$ ./take_hello
+$ ./hello | ./take_hello

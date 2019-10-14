@@ -301,8 +301,26 @@ void shell_echo(char** args_list) {
 output redirection
 */
 void shell_help(char** args_list) {
-	//.....
-	
+	FILE * fp = fopen("guide.txt", "r");
+	if (fp == NULL){
+		printf("Cannot open file guide.txt");
+	} else {
+		size_t read_status = 1;
+		while(!feof(fp) && read_status == 1){
+			/*-------------------- read cmd ------------------------*/
+			// calloc() initialzes pointers to 0 or NULL, better than malloc()
+			char* line = (char*)calloc(LINE_LENGTH, sizeof(char));
+			if (line == NULL) {
+				printf("Mem_allocation failed. \n");
+			}
+			// start read each line - stop @ "\n" or "EOF"
+			else if (fgets(line, LINE_LENGTH, fp) == NULL){
+				printf("Done!");
+			}
+			printf("%s",line);
+		}
+	}
+	fclose(fp);
 }
 
 void shell_pause(char** args_list) {

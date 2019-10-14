@@ -2,47 +2,80 @@
 Project 2: Linux Shell
 
 ## Introduction
-
-### For users
-
-Here are the list of functions & usage guide
-### For collaborators
+This is a model of a Linux shell that has basic builtin commands and the functionality to execute external commands
 
 ## Design
-The project is broken down into:
+The shell program is broken down into:
 - main.c
 - function.c
 - header.h
-- config.h
+- Makefile
 
-## Testing 
-### Procedure
-- Compare behaviour with actual shell
-- Execute a batch-file with invalid cmds
+## Guide
+### For collaborators
+Check out file "Program_Description"
 
-### Checkmarks
-* test built ins
-- ls -la mydir
+### For users (mainly)
 
-* test I/O redirection
-- greet < names.txt
-- <<
-- >
-- >> 
-"cd >>" cannot exec
-" ls >>" need output file
+#### Requirements
+- Understanding of system_calls fork(), exec(), wait(), dup(). Familiarity with linux "man" page
+- Knowledge of file descriptors, file access to build I/O redirection, pip
 
-* test pipe()
-- catch error "| ls"
+#### Usage guide 
+List of built-ins includes:
+- "cd" - change directory
+```bash
+$ cd ..
+$ cd [folder]
+```
 
-* test run in background &
+- "clr" - clear screen
+```bash
+$ clr
+```
 
-* test make file
+- "dir" - list files and directories 
+```bash
+$ dir
+$ dir [folder]
+$ dir [folder] > out.txt
+$ dir [folder] >> out.txt
+```
 
-## Learning 
-- system design
-- git branch
+- "environ" - list enviroment variables
+```bash
+$ environ 
+$ environ > out.txt
+$ environ >> out.txt
+```
+- "echo" - prints argument of "echo" back to console
+```bash
+$ echo [message]
+$ echo [message] > out.txt
+```
 
+- "help" - display usage guide
+```bash
+$ help
+$ help > out.txt
+```
+
+- "pause" - pause the shell till user press enter
+```bash
+$ pause
+```
+
+- "exit" - exit the shell
+```bash
+$ exit
+```
+
+The shell can also accomodate external commands
+```bash
+$ ./hello
+$ ./take_hello
+$ ./hello | ./take_hello
+```
 # Contributors
 Khai Nguyen: khainguyen@temple.edu
 

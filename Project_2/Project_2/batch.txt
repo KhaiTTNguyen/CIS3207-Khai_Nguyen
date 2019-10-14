@@ -1,7 +1,7 @@
 cd ..
 cd
 dir
-echo "Moving out!"
+echo "Moving out!" &
 cd ..
 help
 dir

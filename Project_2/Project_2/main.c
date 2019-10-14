@@ -61,7 +61,6 @@ int main(int argc, char** argv) {
 		return EXIT_SUCCESS;
 	} 
 	
-s
 	/*------------------------------------regular shell loop-------------------------------------*/
 	int status = 1;	// determines whether continue to exec or not
 	while (status) {
@@ -79,6 +78,7 @@ s
 		// stop @ "\n" or "EOF"
 		if (fgets(cmd_string, LINE_LENGTH, stdin) == NULL){
 			printf("Read line error\n");
+			printf("cmd str is %s\n", cmd_string);
 			return -1;
 		}
 

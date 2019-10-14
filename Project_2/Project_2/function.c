@@ -26,10 +26,6 @@ File descriptor
 */
 
 int shell_execute(char** args_list) {	
-
-	struct exec_context curr_context = { 0, 0, 0, 0, 0 };
-	struct exec_context* curr_contextP = &curr_context;
-
 	size_t find_index = 0; // index to catch ">>" ">" "<" "|" "&"
 	size_t out_redir_indx = 0;
     size_t in_redir_indx = 0;
@@ -82,6 +78,7 @@ int shell_execute(char** args_list) {
 		if(strcmp("<",*(args_list+find_index))==0){
             in_redir_indx = find_index;
             int fd_read;
+			printf("Reach here");
             if((fd_read=open(*(args_list+find_index+1), O_RDONLY)==-1)){
                 printf("File %s could not be open",*(args_list+find_index+1));
             } else {   
@@ -124,11 +121,11 @@ int shell_execute(char** args_list) {
 
 	/*-------------------------------------------shell_built_ins-------------------------------------------*/
 	char* builtin_cmds[] = { "cd", "clr", "dir", "environ", "echo", "help", "pause", "exit" };
-	void (*builtin_func[]) (char**, struct exec_context*) = { &shell_cd, &shell_clr, &shell_ls, &shell_environ, &shell_echo, &shell_help, &shell_pause, &shell_exit };
+	void (*builtin_func[]) (char**) = { &shell_cd, &shell_clr, &shell_ls, &shell_environ, &shell_echo, &shell_help, &shell_pause, &shell_exit };
 	// detect which builtin to use
 	for (int i = 0; i < NUM_BUILT_INS; i++) {
 		if (strcmp(args_list[0], builtin_cmds[i]) == 0) {
-			(*builtin_func[i])(args_list, curr_contextP);
+			(*builtin_func[i])(args_list);
 			if(pid_write == 0 || pid_read == 0) { 	// end child of read/write
                 exit(EXIT_SUCCESS);
 			} else {
@@ -196,7 +193,7 @@ int exec_pipe(char **args_list, int p_indx){
 }
 
 /*----------------------------------------------shell_cd---------------------------------------------*/
-void shell_cd(char** args_list, struct exec_context* curr_contextP) {
+void shell_cd(char** args_list) {
 
 	if(*(args_list+2)!=NULL){
         printf("Invalid arguments in \"cd\".\n");
@@ -228,7 +225,7 @@ int is_dir(char *path_name) {
     return S_ISDIR(buff.st_mode);
 }
 
-void shell_ls(char** args_list, struct exec_context* curr_contextP) {
+void shell_ls(char** args_list) {
 
 	char * cur_dir; 
 	// more than 1 arguments -- for I/O redirection, already erase the symbol
@@ -266,7 +263,7 @@ void shell_ls(char** args_list, struct exec_context* curr_contextP) {
 
 
 /*----------------------------------------------shell_clr---------------------------------------------*/
-void shell_clr(char** args_list, struct exec_context* curr_contextP){
+void shell_clr(char** args_list){
 	if(*(args_list+1)!=NULL){
         printf("Invalid arguments for \"clr\".");
     } else {
@@ -275,7 +272,7 @@ void shell_clr(char** args_list, struct exec_context* curr_contextP){
 }
 
 /*----------------------------------------------shell_environ---------------------------------------------*/
-void shell_environ(char** args_list, struct exec_context* curr_contextP){
+void shell_environ(char** args_list){
 	if ( *(args_list+1)!= NULL) {
 		printf("Invalid! No arguments for \"environ\"\n");
 	} else {	
@@ -293,7 +290,7 @@ Name: shell_echo
 Description: prints out the arguments given back out to the screen.
 output redirection
 */
-void shell_echo(char** args_list, struct exec_context* curr_contextP) {
+void shell_echo(char** args_list) {
 	for(size_t i = 1;*(args_list + i) != NULL; i++){
         printf("%s ",*(args_list + i));
     }
@@ -303,12 +300,12 @@ void shell_echo(char** args_list, struct exec_context* curr_contextP) {
 /*
 output redirection
 */
-void shell_help(char** args_list, struct exec_context* curr_contextP) {
+void shell_help(char** args_list) {
 	//.....
 	
 }
 
-void shell_pause(char** args_list, struct exec_context* curr_contextP) {
+void shell_pause(char** args_list) {
 //remember, all pause needs to do is pause the shell until the
 //user presses enter.
 //you can use getchar() or c++�s std::cin.get() in a loop until
@@ -325,7 +322,7 @@ void shell_pause(char** args_list, struct exec_context* curr_contextP) {
 /*
 handle quit() & exit()
 */
-void shell_exit(char** args_list, struct exec_context* curr_contextP) {
+void shell_exit(char** args_list) {
 	for (int i = 0; i < LINE_LENGTH; i++){
 		free(args_list[i]);
 	}

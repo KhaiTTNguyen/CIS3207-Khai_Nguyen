@@ -3,14 +3,10 @@
 
 #include "header.h"
 
-#define LINE_LENGTH 100
 
-char **environ;
 // char *shell = "/home/khaing/Documents/CIS_3207/CIS3207-Khai_Nguyen/Project_2/Project_2/myshell";
 
 int main(int argc, char** argv) {
-	environ;
-	shell;
 	putenv("PWD=/home/khaing/Documents/CIS_3207/CIS3207-Khai_Nguyen/Project_2/Project_2/");
 
 	//#### redirect stdin to a file to take in "a file of commands"
@@ -22,7 +18,6 @@ int main(int argc, char** argv) {
 	*/
 
 	// shell loop
-	size_t len=strlen(shell);
 	
 	int status = 1;	// determines whether continue to exec or not
 	while (status) {
@@ -30,7 +25,8 @@ int main(int argc, char** argv) {
 		printf("%s> ", prompt);
 
 		/*-------------------- read cmd ------------------------*/
-		char* cmd_string = (char*)malloc(sizeof(char) * LINE_LENGTH);
+		// calloc() initialzes pointers to 0 or NULL, better than malloc()
+		char* cmd_string = (char*)calloc(LINE_LENGTH, sizeof(char));
 
 		if (cmd_string == NULL) {
 			printf("Mem_allocation failed. \n");
@@ -44,14 +40,14 @@ int main(int argc, char** argv) {
 
 
 		/*-------------------- parse cmd ------------------------*/
-		char** args_list = (char**)malloc(sizeof(char*) * LINE_LENGTH);
-		int index = 0;
-		char* token;
-
+		char** args_list = (char**)calloc(LINE_LENGTH, sizeof(char*));
 		if (args_list == NULL) {
 			fprintf(stderr, "Mem_allocation failed. \n");
 			return -1;
 		}
+
+		int index = 0;
+		char* token;
 
 		/* get the first token */
 		token = strtok(cmd_string, DELIMITERS);
@@ -69,11 +65,13 @@ int main(int argc, char** argv) {
 		if (args_list[0] == NULL) {
 			continue;
 		}
-		printf("Arg list in main: %s %s\n", args_list[0], args_list[1]);
-		status = shell_execute(args_list);
-		printf("Shell exec completed\n");
-		printf("\n");
+
+		if(strcmp("./myshell",*args_list) == 0){
+            // status = myshell(args_list);
+        }
+        else
+            status = shell_execute(args_list);
 	}
 	
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -19,172 +19,198 @@ for each function:
 */
 
 /*
-description: take in args_list & execute
-input: char** arg_list
-output: (int) status
+File descriptor
+0	Standard input	stdin
+1	Standard output	stdout
+2	Standard error	stderr
 */
-int shell_execute(char** args_list) {
-	
-	/*
-	categorize tokens
-	a command to be executed
-	arguments to the command
-	bash commands
-	<>
-	>>
-	|
-	& 
-	input file
-	output file
-	*/
-	size_t find_index = 0; // index to catch ">>" ">" "<" "|" "&"
-	size_t redir_in_index = 0; // input redir
-	size_t redir_out_index = 0; // output redir
 
+int shell_execute(char** args_list) {	
+
+	struct exec_context curr_context = { 0, 0, 0, 0, 0 };
+	struct exec_context* curr_contextP = &curr_context;
+
+	size_t find_index = 0; // index to catch ">>" ">" "<" "|" "&"
+	size_t out_redir_indx = 0;
+    size_t in_redir_indx = 0;
+	// process IDs 
 	pid_t pid_read = -1;
 	pid_t pid_write = -1;
 
 	for (find_index = 0; *(args_list + find_index)!=NULL; find_index++){
-		if (/* condition */)
-		{
-			/* code */
+		if(strcmp(">",*(args_list+find_index))==0){
+			out_redir_indx = find_index;
+			int fd_trunc = 0;
+			if((fd_trunc = open(*(args_list+find_index+1), O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH))==-1){
+				printf("File %s could not be open",*(args_list+find_index+1));
+			} else {
+				if((pid_write = fork()) < 0){
+					printf("Error fork in \">\"! \n");
+				} else if (pid_write == 0){		// child
+                    dup2(fd_trunc,STDOUT_FILENO);
+                } else {	// parent
+					close(fd_trunc);
+					if(pid_read == 0) { // close remaning reading child process
+						exit(EXIT_SUCCESS);
+					} else {
+						return wait(NULL);
+					}
+				}
+			}
 		}
 		
+		if(strcmp(">>",*(args_list + find_index))==0){
+			out_redir_indx = find_index;
+			int fd_append;
+            if((fd_append = open(*(args_list+find_index+1),O_WRONLY | O_APPEND | O_CREAT ,S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH))==-1){
+                printf("File %s could not be open",*(args_list+find_index+1));
+            } else {
+                if((pid_write = fork()) < 0){
+                    puts("Error fork in \">>\"! \n");
+                } else if(pid_write == 0){
+                    dup2(fd_append,STDOUT_FILENO);
+                } else {
+                    close(fd_append);
+                    if(pid_read == 0)
+                        exit(EXIT_SUCCESS);
+                    else
+                        return wait(NULL);
+                } 
+            }
+		}	
+
+		if(strcmp("<",*(args_list+find_index))==0){
+            in_redir_indx = find_index;
+            int fd_read;
+            if((fd_read=open(*(args_list+find_index+1), O_RDONLY)==-1)){
+                printf("File %s could not be open",*(args_list+find_index+1));
+            } else {   
+                if((pid_read = fork()) < 0){
+                    puts("Error fork in \"<\"! \n");
+                } else if(pid_read == 0){
+                    dup2(fd_read,STDIN_FILENO);
+                } else {
+                    close(fd_read);
+                    if(pid_write == 0) {
+                        exit(EXIT_SUCCESS);
+                    } else {
+                        return wait(NULL);
+					}
+				}   
+            }   
+        }
+
+		if(strcmp("|",*(args_list + find_index))==0){
+			pid_t pidT;
+            if((pidT = fork()) < 0){
+                printf("Error fork in \"|\"! \n");
+            } else if(pidT == 0){
+                exec_pipe(args_list,find_index); //function for pipe redirection
+                exit(EXIT_SUCCESS);
+            } else{
+                return wait(NULL); // returns the process ID of the terminated child
+            }
+		}	
 	}
-	// check if file exists
+
+	// make compatible with non-special character case
+	if((out_redir_indx != 0 && in_redir_indx == 0) 
+	|| (out_redir_indx != 0 && out_redir_indx < in_redir_indx)) {
+		*(args_list + out_redir_indx) = NULL;
+	} else if((in_redir_indx != 0 && out_redir_indx == 0) 
+	|| (in_redir_indx != 0 && in_redir_indx < out_redir_indx)) {
+		*(args_list + in_redir_indx) = NULL;
+	}
+
 	// identify built-ins
 	char* builtin_cmds[] = { "cd", "clr", "dir", "environ", "echo", "help", "pause", "exit" };
-	int (*builtin_func[]) (char**) = { &shell_cd, &shell_clr, &shell_ls, &shell_environ, &shell_echo, &shell_help, &shell_pause, &shell_exit };
-
-	 // detect which builtin to use
+	void (*builtin_func[]) (char**, struct exec_context*) = { &shell_cd, &shell_clr, &shell_ls, &shell_environ, &shell_echo, &shell_help, &shell_pause, &shell_exit };
+	// detect which builtin to use
 	for (int i = 0; i < NUM_BUILT_INS; i++) {
 		if (strcmp(args_list[0], builtin_cmds[i]) == 0) {
-			return (*builtin_func[i])(args_list);
+			(*builtin_func[i])(args_list, curr_contextP);
+			if(pid_write == 0 || pid_read == 0) { 	// end child of read/write
+                exit(EXIT_SUCCESS);
+			} else {
+                return 1;
+			}
 		}
 	}
 
-	// if doesnot match the builtins, start normal execution
-	return 1;
-		//shell_non_built_ins(args_list);
-}
-//
-//int shell_non_built_ins(char** args_list) {
-//	
-//	 you can figure out if the file exists in a particular directory by trying to open the file.
-// 	signal invalid cmd 
-//	 if the open fails, then the file does not exist.
-//
-//
-//	int pid = fork();
-//
-//	 catch fork error  
-//	if (pid < 0) {
-//		puts("fork failed");
-//		return 1;
-//	}
-//
-//	 fork sucessful, continue  
-//	if (pid == 0) { // child    
-//	 use exec to launch external command    
-//		puts("executing command");
-//		........
-//
-//		 find the full path name for the file
-//		 launch the executable file with the specified parameters using
-//		 the execvp command and the argv array
-//		 replace args_list[0] = <fullpathnameofcommand>;
-//
-//		 i/o redirection
-//		 pipe()
-//		 background exec
-//
-//		 creat output file
-//		int outfile = open("output.txt", o_wronly | o_creat | o_trunc, s_irwxu | s_irwxg | s_irwxo);
-//		 replace stdout with output file    
-//		dup2(outfile, 1); // 1 --> file descriptor for stdout    
-//		close(outfile); // close duplicate file descriptor, since we don't need it anymore    
-//		 execvp with the given command line arguments!    
-//		if (execvp(args_list[0], args_list) < 0) {
-//			perror("could not execute command");
-//			exit(1);
-//		}    // program execution should never reach here, since exec overwrites the code and data    puts("you'll never see me!");  }
-//
-//	}
-//	else { // parent
-//		 handle & --> back to shell immediately
-//		waitpid(pid, null, 0);
-//		puts("done waiting!");
-//	}
-//}
-
-/*
-i/o redirection(&file){
-every process
-with 3 default file descriptors
- here�s how you can handle output redirection for these commands:
-1 save the file descriptor for stdout using dup()
-2 open the output file(with the proper modes for either > or>>)
-3 redirect stdout to freshly opened file
-4 call the built - in function(whose output will now go to the file)
-5 when the function returns, restore stdout using the saved file
-descriptor.
-
-
- save stdout by creating a duplicate
-int saved_stdout = dup(1);
- open file
-int file_desc = open("filename", flags);
- redirect stdout to file
-dup2(file_desc, 1);
- close duplicate file desc
-close(file_desc);
- make built-in call
-echo(args);
- restore stdout after returning from function call
-dup2(saved_stdout, 1);
- close duplicate file
-close(saved_stdout);
-
-
-}
-*/
-
-/*
- catch error "| ls"
-pipe()
-	2 channels
-	read
-	write
-	process 1 (close read)
-	check pipeandexec.c on canvas
-	09/24 ppt slides
-	while (1) { char *cmd = getcmd(); int retval = fork(); if (retval == 0) { // this is the child process // setup the child�s process environment here // e.g., where is standard i/o, how to handle signals? exec(cmd); // exec does not return if it succeeds printf(�error: could not execute %s\n�, cmd); exit(1); } else { // this is the parent process; wait for child to finish int pid = retval; wait(pid); } }
+	/*-------------------------------------------shell_non_built_ins-------------------------------------------*/
+	pid_t pid;
+    if((pid = fork()) < 0){
+        printf("Error fork in \"exec non-builtins\" \n");
+    } else if (pid == 0){	// child
+        if(strcmp("&",*(args_list + find_index - 1))==0) {
+            *(args_list + find_index -1) = NULL;
+		}	
+        if(execvp(args_list[0],args_list) < 0){
+            printf("Not a valid command: %s\n",*args_list);
+            exit(EXIT_FAILURE);
+        }
+    } else {	// parent
+        if(pid_write == 0 || pid_read == 0){
+            exit(EXIT_SUCCESS);
+        } else {
+            if(strcmp("&",*(args_list+find_index-1)) != 0){
+                return wait(NULL);
+			}
+        }
+    }
 }
 
-*/
 
+int exec_pipe(char **args_list, int p_indx){
+	// an array containing the input and output file descriptors
+  	// pipe_file_descs[0] -> read from this
+  	// pipe_file_descs[1] -> write to this 
+  	int pipe_file_descs[2];	
+	pid_t pid_P = 0;
+	
+	// create pipe
+	if (pipe(pipe_file_descs) == -1){
+		perror("Failed to create pipe!");
+		return EXIT_FAILURE;
+	}
 
+    if((pid_P = fork()) < 0){
+        puts("Error fork");
+    } else if (pid_P == 0){ 		// child
+        close(pipe_file_descs[0]);
+        dup2(pipe_file_descs[1],1);
+		// erase "|" symbol
+        *(args_list + p_indx) = NULL;
+        shell_execute(args_list);		
+       	exit(EXIT_SUCCESS);
+    } else { 	// parent
+        close(pipe_file_descs[1]);
+        dup2(pipe_file_descs[0],0);
+        args_list = args_list + p_indx + 1;
+        shell_execute(args_list);
+        
+        wait(NULL);
+        exit(EXIT_SUCCESS);
+    }
+    return 1;
+}
 
 /*----------------------------------------------shell_cd---------------------------------------------*/
-int shell_cd(char** args_list) {
-	if(*(args_list+2)!=NULL){
-        printf("Invalid arguments.");
-	} else if (args_list[1] == NULL) {
-		printf("%s\n",getenv("PWD"));
+void shell_cd(char** args_list, struct exec_context* curr_contextP) {
 
-		printf("no directory specified\n");
+	if(*(args_list+2)!=NULL){
+        printf("Invalid arguments.\n");
+	} else if (args_list[1] == NULL) {
+		printf("No directory specified\n");
 	} else if(is_dir(*(args_list+1))!=1){
         printf("Invalid directory: %s\n",*(args_list+1));
     } else {
-		if (chdir(args_list[1]) != 0) {	
+		if (chdir(*(args_list+1)) != 0) {	
 			printf("chdir system_call error\n");
 		}
-		
 		// set new current directory - this change directory of prompt also
 		setenv("PWD",get_current_dir_name(),1);
 	}
-	free(args_list);
-	return 1;
 }
 
 /*----------------------------------------------shell_ls---------------------------------------------*/
@@ -198,14 +224,12 @@ int is_dir(char *path_name) {
     return S_ISDIR(buff.st_mode);
 }
 
-int shell_ls(char** args_list) {
-	
+void shell_ls(char** args_list, struct exec_context* curr_contextP) {
+
 	char * cur_dir; 
 	// more than 1 arguments 
-	printf("Arg2 is %s\n", args_list[2]);
 	if (args_list[2] != NULL){
 		printf("Invalid arguments.\n");
-
 	} else {
 		DIR* dir_p;
         struct dirent *entry;
@@ -222,7 +246,7 @@ int shell_ls(char** args_list) {
 			if (is_dir(args_list[1]) != 1){
 				printf("Invalid directory: %s\n", args_list[1]);
 				free(args_list);
-				return 1;
+				exit(EXIT_FAILURE); 		// testing
 			} else {
 				dir_p = opendir(args_list[1]);
 			}
@@ -237,35 +261,21 @@ int shell_ls(char** args_list) {
         puts("");
         closedir(dir_p);
 	}
-
-	/* Deallocate allocated memory */
-	free(args_list);
-	return 1;
 }
 
 
 
 /*----------------------------------------------shell_clr---------------------------------------------*/
-int shell_clr(char** args_list){
-	printf("\033[H\033[J");
-	return 1;
+void shell_clr(char** args_list, struct exec_context* curr_contextP){
+	if(*(args_list+1)!=NULL){
+        printf("Invalid arguments for \"clr\".");
+    } else {
+		printf("\033[H\033[J");
+	}
 }
 
 /*----------------------------------------------shell_environ---------------------------------------------*/
-/*
-output redirection
-prints out the environment variables.
-
-to get an environment variable in c, use the system call
-�getenv().
-example : to get �user� environment variables, use
-	getenv(�user�)
-	you do not need to implement all the environment variables
-	that env does; only print out the ones you think are the most
-	beneficial for the user to know.
-
-*/
-int shell_environ(char** args_list){
+void shell_environ(char** args_list, struct exec_context* curr_contextP){
 	if ( *(args_list+1)!= NULL) {
 		printf("Invalid! No arguments for \"environ\"\n");
 	}
@@ -276,8 +286,6 @@ int shell_environ(char** args_list){
    		printf("ROOT : %s\n", getenv("ROOT"));
 		
 	}
-	printf("Return 1 in environ\n");
-	return 1;
 }
 
 
@@ -286,39 +294,22 @@ Name: shell_echo
 Description: prints out the arguments given back out to the screen.
 output redirection
 */
-int shell_echo(char** args_list) {
-	/* 
-	save file descriptor for stdout using dup()
-	open output file (with proper modes for> or >>
-	redirect stdout to freshly opened file
-	call builtin 
-	when funct returns, restore stdout using 
-	
-	*/
-/*
-	int saved_stdout = dup(1);
-	int file_desc = open("file_name", flags);
-	dup2(file_desc, 1);
-	close(file_desc);
-
-	echo(&args);*/
-
-	for(size_t i=1;*(args_list+i)!=NULL;++i){
-        printf("%s ",*(args_list+i));
+void shell_echo(char** args_list, struct exec_context* curr_contextP) {
+	for(size_t i = 1;*(args_list + i) != NULL; i++){
+        printf("%s ",*(args_list + i));
     }
     puts("");
-	free(args_list);
-	return 1;
 }
 
 /*
 output redirection
 */
-int shell_help(char** args_list) {
-	return 1;
+void shell_help(char** args_list, struct exec_context* curr_contextP) {
+	//.....
+	
 }
 
-int shell_pause(char** args_list) {
+void shell_pause(char** args_list, struct exec_context* curr_contextP) {
 //remember, all pause needs to do is pause the shell until the
 //user presses enter.
 //you can use getchar() or c++�s std::cin.get() in a loop until
@@ -326,7 +317,7 @@ int shell_pause(char** args_list) {
 	while (1){
 		char c = getchar();
 		if (c == '\n'){
-			return 1;
+			break;
 		}
 	}
 }
@@ -335,13 +326,14 @@ int shell_pause(char** args_list) {
 /*
 handle quit() & exit()
 */
-int shell_exit(char** args_list) {
-	//free(shell);
-	free(environ);
+void shell_exit(char** args_list, struct exec_context* curr_contextP) {
+	for (int i = 0; i < LINE_LENGTH; i++){
+		free(args_list[i]);
+	}
 	free(args_list);
-	return 0;
-}
 
+	exit(EXIT_SUCCESS);
+}
 
 /*--------------------supplements-------------------------*/
 

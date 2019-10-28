@@ -1,0 +1,45 @@
+port 80 --> http
+
+Client
+nc 127.0.0.1 8888
+
+hello 
+hello OK
+
+helo
+helo MISSPELLED
+
+--------------------------
+Server
+
+
+--------------------------
+loads dictionary
+waits for connections
+file descripter represent a pipe/file
+
+
+create a socket -- fd for network connection
+
+
+Design:
+main thread produce sockets
+put on queue
+worker threads pull those socket off the queue
+
+example code in textbook for Producer/Consumer problems
+handle critcal sections
+
+
+critical section = queue
+need mutex locks
+
+signal & condition variable 
+empty queue --- tell hungry worker threads to "rest" when queue empty --> not wasting CPU resource
+
+
+worker threads write to -->> log_queue --> logger_thread read this - write to log file
+-----------------------------
+unordered Set -- C++
+
+check a word in a dictionary --> binary search --> see if my word is aphabetically lower or larger

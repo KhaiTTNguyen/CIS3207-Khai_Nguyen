@@ -15,6 +15,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h> // for size_t
+#include <pthread.h>
+#include<sys/socket.h>
+#include<arpa/inet.h> //inet_addr
+#include<unistd.h>
 
 using namespace std;
 
@@ -23,7 +27,18 @@ using namespace std;
 #define DELIMITERS " \t\r\n\a"
 #define NUM_BUILT_INS 8 	// 8 built-in functions
 #define LINE_LENGTH 100
+#define N_THREADS 5
 
+// pthread_mutex_init(&)
+
+// declare 
+// mutexes
+extern pthread_mutex_t mutex;
+// condition variables
+extern pthread_cond_t fill;
+extern pthread_cond_t empty;
+
+extern set<string> word_dictionary;
 
 // struct exec_context {
 // 	int out_redir_trunc_indx;
@@ -34,7 +49,9 @@ using namespace std;
 // };
 
 // Fucntion declarations
-set<string> load_dictionary(void);
-
+set<string> load_dictionary(char * fileArg);
+void spawn_worker_threads();
+void addSocketToBuffer(int socket);
+void * workerThread(void * arg);
 
 #endif

@@ -4,8 +4,21 @@
 
 #include "header.h"
 
-int main()
-{
+// declare 
+// mutexes
+pthread_mutex_t mutex;
+// condition variables
+pthread_cond_t fill;
+pthread_cond_t empty;
+set<string> word_dictionary;
+
+int main (int argc, char *argv[]){
+    // initialize
+    // init mutex lock
+    pthread_mutex_init(&mutex, NULL);
+    // init condition variable - to sleep & wake threads
+    // pthread_cond_init(&fill, NULL);
+    // pthread_cond_init(&empty, NULL);
 
     vector<string> msg {"Hello", "C", "World", "from", "VS Code!"};
 
@@ -15,15 +28,17 @@ int main()
     }
     cout << endl;
 
-
+    if (argv[1] ==  NULL){
+        argv[1] = "dictionary.txt";
+    } 
     /*
     // Read dict file into a Set
     */
     // declaring set 
-    set<string> word_dict = load_dictionary();
+    word_dictionary = load_dictionary(argv[1]);
     
     // cout << "\nThe elements in set2 are: "; 
-    // for (auto it = word_dict.begin(); it != word_dict.end(); it++){ 
+    // for (auto it = word_dictionary.begin(); it != word_dictionary.end(); it++){ 
     //     cout << *it << " "; 
     // }
 
@@ -33,28 +48,68 @@ int main()
         encapsulate this thread-spawning inside its own function
         // code provided in slide
     */
+    spawn_worker_threads();
+    printf("Spawning done\n");
 
+    //==========================================Initialize network connection==============================================================
+    int socket_desc, new_socket, c;
+    struct sockaddr_in server , client;
+    char *message;
+    //Create socket [create active socket descriptor]
+    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    if (socket_desc == -1){
+        printf("Could not create socket");
+    }
+    
+    // in case there is an existing server socket - reuse it
+    // if not, when recreating socket with same code, bind error happens, only after 30-60 seconds a new socket is created successfully.
+    int yes=1;
+    if (setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
 
-    /*
-        // Initialize network connection
-        // (code provided)
+    //Prepare the sockaddr_in structure
+    // port number req's
+    // cant be negative
+    // smaller than unsigned short
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = INADDR_ANY;
+    server.sin_port = htons( 8888 );
 
-        // network connect setup (sit in a while loop)
-        // while(1){
-        //     accept() - to get a new socket/fd (block main thread while it waits)
-        //     Error check socket __DEC32_SUBNORMAL_MIN__
-        // }    
-    */
+    //Bind [connect the server’s socket address to the socket descriptor]
+    if( bind(socket_desc,(struct sockaddr*)&server, sizeof(server)) < 0){
+        puts("bind failed");
+        close(socket_desc);
+        return 1;
+    }
+    puts("bind done");
+    //Listen [converts the active socket to a LISTENING socket; can accept connections]
+    listen(socket_desc, 3);
+    // Accept an incoming connection; create a new CONNECTED descriptor
+    puts("Waiting for incoming connections...");
 
+    // One client connects - create a socket -- fd for network connection
+    while(1){
+        c = sizeof(struct sockaddr_in);
+        new_socket = accept(socket_desc, (struct sockaddr*)&client, (socklen_t*)&c);
+        if (new_socket<0){
+            perror("accept failed");
+            return 1;
+        }
+        printf("New socket added is: %d\n", new_socket);
+        puts("Connection accepted");
+        // put socket desc on connection-queue (CIRCULAR BUFFER - in text book)
+    }
+   //============================================Network set up done============================================================
+   
    /*
-    // Waiting for clients to connect
-        // -----infinite loop----- 
-    // accept() on the socket connection - get new socket desc
-    // error check socket desc
+
     // put socket desc on connection-queue (CIRCULAR BUFFER - in text book)
     
 
-    // need enqeue( -check if queue full- ) & dedqueue( - check if queue empty- ) --- keep in mind this is Producer/Consumer
+    // need enqeue( -check if queue full- ) 
+    // & dedqueue( - check if queue empty- ) --- keep in mind this is Producer/Consumer
     // code in slides
    */
 
@@ -68,6 +123,16 @@ int main()
     1) accept and distribute connection requests from clients, 
     2) construct a log file of all spell check activities.
    */
+
+
+  //-------------------------------Make main() process wait for thread-----------------------------
+//      for(int j=0; j < N_THREADS; j++){
+//       pthread_join( thread_id[j], NULL); 
+//    }
+  
+   /* Now that all threads are complete I can print the final result.     */
+   /* Without the join I could be printing a value before all the threads */
+   /* have been completed.   */ 
   return 0;
 }
 
@@ -84,7 +149,7 @@ int main()
 // race conditions - multiple threads access the queue - use mutex lock to enforce mutual exclusion
 
 // if queue is empty --> worker thread sleep
-// if queue is full --> main thread 
+// if queue is full --> main thread sleep
 // ---> use "conditional variables" & "signals" to block thread when it not needed (NO SEMAPHORES)
 
 // "conditional variable" -- asynchronous
@@ -105,14 +170,11 @@ int main()
 // Design:
 // main thread 
 // 1. initialize/- loads dictionary (C++ set), sit and wait for connections
-// 2.  create/spawn other threads -- read Pthread library
+// 2. create/spawn other threads -- read Pthread library
 // 3. Initialize
 // 4. Wait for connection - while loop
 // 5. One client connects - create a socket -- fd for network connection
-// - put on queue
-
-
-// load _dict() -- pass using pointer
+// 6. Put connection on queue
 
 
 // ------------------------------

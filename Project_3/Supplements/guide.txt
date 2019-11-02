@@ -14,19 +14,23 @@ Server
 
 
 --------------------------
-loads dictionary
+loads dictionary()
 waits for connections
-file descripter represent a pipe/file
-
-
-create a socket -- fd for network connection
+create a socket -- fd each network_connection/Client
 
 
 Design:
-main thread produce sockets
-put on queue
+main thread produce sockets - from "clients"
+put socket_descriptor on connection_queue
 worker threads pull those socket off the queue
+------------
+1. main thread (accept connections & produce sockets)
+2. connection queue
+3. worker thread 
+4. log queue
+5. logger_thread
 
+------------
 example code in textbook for Producer/Consumer problems
 handle critcal sections
 
@@ -43,3 +47,42 @@ worker threads write to -->> log_queue --> logger_thread read this - write to lo
 unordered Set -- C++
 
 check a word in a dictionary --> binary search --> see if my word is aphabetically lower or larger
+
+
+
+
+
+Test plan
+1. change dictionary 
+create dictionary file with 1 word --> all words should be misspelled except for that one
+
+2. Change port
+
+
+./server 8000 mydict.txt 
+./server mydict.txt
+./server 8000
+
+3. test is_word_in_dictionary()
+take a word, compare with datastructure
+
+
+4. test networking code
+
+5. Test multithreading
+    have 2 clients connect to your server
+
+6. Test proper mutual exclusion
+- duplicate server response/log entry - 2 or more threads read from same index of the queue?
+- loss of a log entry / client request 
+- invalid server response / log entry - from a thread accessing an invalid element in queue
+- seg fault...
+- g++ -g -Wall -o server broken_server.cpp -lpthread
+    -g : debug
+    -Wall print 
+
+    $ valgrind ./server
+
+
+pthread_cond_signal(&empty)
+pthread_mutex_unlock(mutex)

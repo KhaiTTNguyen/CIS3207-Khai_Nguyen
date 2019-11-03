@@ -51,13 +51,54 @@ void put(int value, circular_buffer* connection_queue) {
     connection_queue->count++;
 }
 
-
-void addSocketToBuffer(int socket){
-    pthread_mutex_lock(&mutex); // aquire lock
-    // add socket to queue here
-    // code in slide - cacreful
-    pthread_mutex_unlock(&mutex); // release lock
+int get(circular_buffer* connection_queue){
+    int tmp = connection_queue->buffer[connection_queue->use_ptr];
+    connection_queue->use_ptr = (connection_queue->use_ptr + 1) % QUEUE_CAPACITY;
+    connection_queue->count--;
+    return tmp;
 }
+
+void addSocketToQueue(int socket, circular_buffer* connection_queue_Ptr){
+    pthread_mutex_lock(&mutex_conn); // aquire lock
+    
+    while (connection_queue_Ptr->count == QUEUE_CAPACITY){
+        // block thread if buffer is full
+        pthread_cond_wait(&empty_conn, &mutex_conn); 
+    }
+    // add socket to queue
+    put(socket, connection_queue_Ptr);
+    printf("Socket added is %d\n", socket);
+
+    pthread_cond_signal(&fill_conn);
+    pthread_mutex_unlock(&mutex_conn); // release lock
+}
+
+int removeSocketFromQueue(circular_buffer* connection_queue_Ptr){
+    pthread_mutex_lock(&mutex_conn);
+    while (connection_queue_Ptr->count == 0){
+        pthread_cond_wait(&fill_conn, &mutex_conn);
+    }
+    int tmp_socket = get(connection_queue_Ptr);
+    pthread_cond_signal(&empty_conn);
+    pthread_mutex_unlock(&mutex_conn);
+    printf("Socket removed is %d\n", tmp_socket);
+    return tmp_socket; 
+}
+
+
+// void add_word_to_logQueue(string word, circular_buffer* log_queue_Ptr){
+//     pthread_mutex_lock(&mutex_log); // aquire lock
+    
+//     while (log_queue_Ptr->count == QUEUE_CAPACITY){
+//         // block thread if buffer is full
+//         pthread_cond_wait(&empty_log, &mutex_log); 
+//     }
+//     // add socket to queue
+//     put(word, log_queue_Ptr);
+
+//     pthread_cond_signal(&fill_log);
+//     pthread_mutex_unlock(&mutex_log); // release lock
+// }
 
 void spawn_worker_threads(){
     // array which holds worker threads
@@ -69,17 +110,11 @@ void spawn_worker_threads(){
             exit(1);
         }
     }
-
-    // main() process dont have to wait for threads, since main will be in an infinite-loop
-    // DELETE THIS WHEN workerThread() is ready
-    // for(int j=0; j < N_THREADS; j++){
-    //     pthread_join(threads[j], NULL); 
-    // }
 }
 
-// bool is_word_in_dictionary(string word){
-//     // return
-// }
+bool is_word_in_dictionary(string word){
+    return true;
+}
 
 // // NASTY BUG IN HERE
 /*
@@ -89,25 +124,33 @@ a potential buffer overflow that can occur! Can you spot it?
 write your finished code.
 */
 void * workerThread(void * arg){
-//     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
-//     while (1)
-//     {
-//         int fd = removeSocketFromQueue(); // if no socket --> sleep thread
-//         while (/*read word/buffer success*/){
-//             bool wasFound = is_word_in_dictionary(word);
-//             if (wasFound){
-//                 strcat(word, "OK\n");
-//             } else {
-//                 strcat(word, "MISSPELLED\n");
-//             }
-//             write(fd, word, strlen(word) + 1);
-//             add_to_log_queue(word);     // if log queue is full -- have to handle
-//             //......
-//         }
-        
-//     }
-//     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
-    printf("Worker thread created!\n");
+    // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
+    while (1){  // keep thread alive
+        int fd = removeSocketFromQueue(connection_queue_Ptr); // if no socket --> sleep thread
+        char* buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
+        printf("%d sockets exist\n", connection_queue_Ptr->count);
+        printf("Char * before read is: %s\n", buffer);
+        while (read(fd, buffer, MAX_WORD_SIZE) > 0){
+            std::string word(buffer); // create "string" from "char*" 
+            printf("Char * is: %s\n", buffer);
+            free(buffer);
+            buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
+            // bool wasFound = is_word_in_dictionary(word);
+            // if (wasFound){
+            //     strcat(word, "OK\n");
+            // } else {
+            //     strcat(word, "MISSPELLED\n");
+            // }
+            // error check
+            // write(fd, word, strlen(word) + 1);
+            // //add_to_log_queue(word);     // if log queue is full -- have to handle
+            // //......
+        }
+        close(fd);
+        printf("Worker thread finished 1 word!\n");
+    }
+    // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
+    printf("Worker thread died!\n");
 }
 
 

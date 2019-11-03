@@ -4,26 +4,31 @@
 
 #include "header.h"
 
-// declare 
 // mutexes
-pthread_mutex_t mutex;
+pthread_mutex_t mutex_conn;
+pthread_mutex_t mutex_log;
+
 // condition variables
-pthread_cond_t fill;
-pthread_cond_t empty;
+pthread_cond_t fill_conn;
+pthread_cond_t empty_conn;
+pthread_cond_t fill_log;
+pthread_cond_t empty_log;
+
 set<string> word_dictionary; // worker threads only read "dictionary", no need for lock protection.
 
 circular_buffer* connection_queue_Ptr;
 
 int main (int argc, char *argv[]){
-    // initialize
-    // init mutex lock
-    pthread_mutex_init(&mutex, NULL);
-    // init condition variable - to sleep & wake threads
-    // pthread_cond_init(&fill, NULL);
-    // pthread_cond_init(&empty, NULL);
 
-    // circular_buffer connection_queue = { {0,0,0,0,0}, 0, 0, 0};
+    // mutex lock
+    pthread_mutex_init(&mutex_conn, NULL);
+    // condition variable - to sleep & wake threads
+    pthread_cond_init(&fill_conn, NULL);
+    pthread_cond_init(&empty_conn, NULL);
+    pthread_cond_init(&fill_log, NULL);
+    pthread_cond_init(&empty_log, NULL);
 
+    // circular connection wait_queue
     circular_buffer connection_queue = { {0}, 0, 0, 0};;
     connection_queue_Ptr = &connection_queue;
 
@@ -40,10 +45,7 @@ int main (int argc, char *argv[]){
     if (argv[1] ==  NULL){
         argv[1] = "dictionary.txt";
     } 
-    /*
-    // Read dict file into a Set
-    */
-    // declaring set 
+    /* Read dict file into a Set */
     word_dictionary = load_dictionary(argv[1]);
     
     // cout << "\nThe elements in set2 are: "; 
@@ -51,8 +53,7 @@ int main (int argc, char *argv[]){
     //     cout << *it << " "; 
     // }
 
-    /*
-        initialize thread_spool
+    /*  initialize thread_spool
         Don’t forget to spawn the logger thread too!
     */
     spawn_worker_threads();
@@ -61,55 +62,55 @@ int main (int argc, char *argv[]){
     printf("Spawning done\n");
 
     //==========================================Initialize network connection==============================================================
-    // int socket_desc, new_socket, c;
-    // struct sockaddr_in server , client;
-    // char *message;
-    // //Create socket [create active socket descriptor]
-    // socket_desc = socket(AF_INET , SOCK_STREAM , 0);
-    // if (socket_desc == -1){
-    //     printf("Could not create socket");
-    // }
+    int socket_desc, new_socket, c;
+    struct sockaddr_in server , client;
+    char *message;
+    //Create socket [create active socket descriptor]
+    socket_desc = socket(AF_INET , SOCK_STREAM , 0);
+    if (socket_desc == -1){
+        printf("Could not create socket");
+    }
     
-    // // in case there is an existing server socket - reuse it
-    // // if not, when recreating socket with same code, bind error happens, only after 30-60 seconds a new socket is created successfully.
-    // int yes=1;
-    // if (setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
-    //     perror("setsockopt");
-    //     exit(1);
-    // }
+    // in case there is an existing server socket - reuse it
+    // if not, when recreating socket with same code, bind error happens, only after 30-60 seconds a new socket is created successfully.
+    int yes=1;
+    if (setsockopt(socket_desc, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
 
-    // //Prepare the sockaddr_in structure
-    // // port number req's
-    // // cant be negative
-    // // smaller than unsigned short
-    // server.sin_family = AF_INET;
-    // server.sin_addr.s_addr = INADDR_ANY;
-    // server.sin_port = htons( 8888 );
+    //Prepare the sockaddr_in structure
+    // port number req's
+    // cant be negative
+    // smaller than unsigned short
+    server.sin_family = AF_INET;
+    server.sin_addr.s_addr = INADDR_ANY;
+    server.sin_port = htons( 8888 );
 
-    // //Bind [connect the server’s socket address to the socket descriptor]
-    // if( bind(socket_desc,(struct sockaddr*)&server, sizeof(server)) < 0){
-    //     puts("bind failed");
-    //     close(socket_desc);
-    //     return 1;
-    // }
-    // puts("bind done");
-    // //Listen [converts the active socket to a LISTENING socket; can accept connections]
-    // listen(socket_desc, 3);
-    // // Accept an incoming connection; create a new CONNECTED descriptor
-    // puts("Waiting for incoming connections...");
+    //Bind [connect the server’s socket address to the socket descriptor]
+    if( bind(socket_desc,(struct sockaddr*)&server, sizeof(server)) < 0){
+        puts("bind failed");
+        close(socket_desc);
+        return 1;
+    }
+    puts("bind done");
+    //Listen [converts the active socket to a LISTENING socket; can accept connections]
+    listen(socket_desc, 3);
+    // Accept an incoming connection; create a new CONNECTED descriptor
+    puts("Waiting for incoming connections...");
 
-    // // One client connects - create a socket -- fd for network connection
-    // while(1){
-    //     c = sizeof(struct sockaddr_in);
-    //     new_socket = accept(socket_desc, (struct sockaddr*)&client, (socklen_t*)&c);
-    //     if (new_socket<0){
-    //         perror("accept failed");
-    //         return 1;
-    //     }
-    //     printf("New socket added is: %d\n", new_socket);
-    //     puts("Connection accepted");
-    //     // put socket desc on connection-queue (CIRCULAR BUFFER - in text book)
-    // }
+    // One client connects - create a socket -- fd for network connection
+    while(1){
+        c = sizeof(struct sockaddr_in);
+        new_socket = accept(socket_desc, (struct sockaddr*)&client, (socklen_t*)&c);
+        if (new_socket<0){
+            perror("accept failed");
+            return 1;
+        }
+        printf("New socket added is: %d\n", new_socket);
+        puts("Connection accepted");
+        addSocketToQueue(new_socket, connection_queue_Ptr);
+    }
    //============================================Network set up done============================================================
    
    /*

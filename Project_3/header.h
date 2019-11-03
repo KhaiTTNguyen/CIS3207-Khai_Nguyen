@@ -28,6 +28,7 @@ using namespace std;
 #define NUM_BUILT_INS 8 	// 8 built-in functions
 #define LINE_LENGTH 100
 #define N_THREADS 5
+#define QUEUE_CAPACITY 5
 
 // pthread_mutex_init(&)
 
@@ -40,18 +41,21 @@ extern pthread_cond_t empty;
 
 extern set<string> word_dictionary;
 
-// struct exec_context {
-// 	int out_redir_trunc_indx;
-// 	int out_redir_append_indx;
-//     int in_redir_indx;
-//     int pipe_indx;
-//     int backgroundRun_indx;
-// };
+struct circular_buffer {
+	int buffer[QUEUE_CAPACITY];
+    int fill_ptr;
+    int use_ptr;
+    int count;
+};
+
+extern circular_buffer* connection_queue_Ptr;
 
 // Fucntion declarations
 set<string> load_dictionary(char * fileArg);
 void spawn_worker_threads();
 void addSocketToBuffer(int socket);
 void * workerThread(void * arg);
+
+void put(int value, circular_buffer* connection_queue);
 
 #endif

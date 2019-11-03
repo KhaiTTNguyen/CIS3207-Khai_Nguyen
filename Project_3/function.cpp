@@ -45,6 +45,13 @@ set<string> load_dictionary(char * fileArg){
     return word_dict;
 }
 
+void put(int value, circular_buffer* connection_queue) {
+    connection_queue->buffer[connection_queue->fill_ptr] = value;
+    connection_queue->fill_ptr = (connection_queue->fill_ptr + 1) % QUEUE_CAPACITY;
+    connection_queue->count++;
+}
+
+
 void addSocketToBuffer(int socket){
     pthread_mutex_lock(&mutex); // aquire lock
     // add socket to queue here
@@ -63,10 +70,11 @@ void spawn_worker_threads(){
         }
     }
 
+    // main() process dont have to wait for threads, since main will be in an infinite-loop
     // DELETE THIS WHEN workerThread() is ready
-    for(int j=0; j < N_THREADS; j++){
-        pthread_join(threads[j], NULL); 
-    }
+    // for(int j=0; j < N_THREADS; j++){
+    //     pthread_join(threads[j], NULL); 
+    // }
 }
 
 // bool is_word_in_dictionary(string word){

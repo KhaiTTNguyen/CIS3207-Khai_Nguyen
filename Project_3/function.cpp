@@ -11,6 +11,22 @@
     // Ask for port number
     // if none is provided - use DEFAULT_PORT
     */
+
+bool isNumber(char * number){
+    int i = 0;
+
+    //checking for negative numbers
+    if (*number == '-'){
+        return false;
+    }
+    for (; *number != 0; number++){
+        if (!isdigit(*number)){
+            return false;
+        }
+    }
+    return true;
+}
+
 unordered_set<string> load_dictionary(char * fileArg){
 
     unordered_set<string> word_dict;
@@ -82,7 +98,7 @@ void addSocketToQueue(int socket, circular_buffer* connection_queue_Ptr){
     }
     // add socket to queue
     put(socket, connection_queue_Ptr);
-    printf("Socket added is %d\n", socket);
+    // printf("Socket added is %d\n", socket);
 
     pthread_cond_signal(&fill_conn);
     pthread_mutex_unlock(&mutex_conn); // release lock
@@ -96,7 +112,7 @@ int removeSocketFromQueue(circular_buffer* connection_queue_Ptr){
     int tmp_socket = get(connection_queue_Ptr);
     pthread_cond_signal(&empty_conn);
     pthread_mutex_unlock(&mutex_conn);
-    printf("Socket removed is %d\n", tmp_socket);
+    // printf("Socket removed is %d\n", tmp_socket);
     return tmp_socket; 
 }
 
@@ -110,8 +126,7 @@ void add_word_to_logQueue(string word, log_circular_buffer* log_queue_Ptr){
     }
     // add socket to queue
     put_log(word, log_queue_Ptr);
-    printf("Word added to logQueue\n");
-
+    
     pthread_cond_signal(&fill_log);
     pthread_mutex_unlock(&mutex_log); // release lock
 }
@@ -122,7 +137,6 @@ char* remove_word_from_logQueue(log_circular_buffer* log_queue_Ptr){
         pthread_cond_wait(&fill_log, &mutex_log);
     }
     string word = get_log(log_queue_Ptr);
-    printf("Word removed from logQueue\n");
     // convert string to char*
     char* toWrite = (char *)malloc(word.size() + 1);
     memcpy(toWrite, word.c_str(), word.size() + 1);
@@ -152,10 +166,15 @@ void spawn_worker_threads(){
 }
 
 int is_word_in_dictionary(string word){
-    if ( word_dictionary.find(word) != word_dictionary.end() ){
+    // cout << "\nThe elements in set are: "; 
+    // for (auto it = word_dictionary.begin(); it != word_dictionary.end(); it++){ 
+    //     cout << *it << " "; 
+    // }
+
+    if ( word_dictionary.count(word) > 0 ){
 		return 1; // true
     } else {
-        return 1; // false
+        return 0; // false
     }
 }
 
@@ -170,14 +189,11 @@ void * workerThread(void * arg){
     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
     while (1){  // keep thread alive
         int fd = removeSocketFromQueue(connection_queue_Ptr); // if no socket --> sleep thread
-        char* buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
-        printf("Char * before read is: %s\n", buffer);
-        while (read(fd, buffer, MAX_WORD_SIZE) > 0){
-            printf("%d sockets exist in connection_queue\n", connection_queue_Ptr->count);
-        
-            std::string word(buffer); // create "string" from "char*" 
-            printf("Char * is: %s\n", buffer);
-
+        char buffer[MAX_WORD_SIZE];
+        bzero(buffer,MAX_WORD_SIZE);
+        while (read(fd, buffer, MAX_WORD_SIZE ) > 0){
+            string word = buffer; // create "string" from "char*" 
+            
             int wasFound = is_word_in_dictionary(word);
             // printf("Was found = %d\n", wasFound);
             char * writeBack = NULL;
@@ -191,17 +207,16 @@ void * workerThread(void * arg){
             if (write(fd, writeBack, strlen(writeBack) + 1) < 0) {	
 			    printf("write system_call error\n");
             }
-            free(buffer);
+
             free(writeBack);
-            buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
+            bzero(buffer,MAX_WORD_SIZE);
             
             // add to log queue
-            cout<<"Word is "<<word<<endl;
             add_word_to_logQueue(word, log_queue_Ptr);     // if log queue is full -- have to handle
             
         }
         close(fd);
-        printf("Worker thread finished 1 word!\n");
+        printf("One connection closed!\n");
     }
     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
     printf("Worker thread died!\n");
@@ -219,14 +234,13 @@ void * logThread(void *arg){
     
     while(1){ // keep log thread alive
         // remove string from buffer
-        printf("%d words exist in logQueue\n", log_queue_Ptr->count);
+        // printf("%d words exist in logQueue\n", log_queue_Ptr->count);
         char *toWrite = remove_word_from_logQueue(log_queue_Ptr);
         FILE *fPtr;
         if( (fPtr = fopen("LOG.txt", "a")) == NULL) {
             printf("Error opening file!\n");
         }
-        
-        printf("%s written\n", toWrite);
+        printf("Word to log: %s", toWrite);
         fprintf(fPtr, "Word to checked was: %s", toWrite);
         free(toWrite);
         fclose(fPtr);

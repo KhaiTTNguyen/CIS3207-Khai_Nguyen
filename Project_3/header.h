@@ -65,6 +65,7 @@ extern circular_buffer* connection_queue_Ptr;
 extern log_circular_buffer* log_queue_Ptr;
 
 // Fucntion declarations
+bool isNumber(char * number);
 unordered_set<string> load_dictionary(char * fileArg);
 void spawn_worker_threads();
 void addSocketToQueue(int socket, circular_buffer* connection_queue_Ptr);

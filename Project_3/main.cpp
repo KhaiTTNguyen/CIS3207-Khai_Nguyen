@@ -36,16 +36,28 @@ int main (int argc, char *argv[]){
     connection_queue_Ptr = &connection_queue;
     log_queue_Ptr = &log_queue;
 
-    if (argv[1] ==  NULL){
-        argv[1] = "dictionary.txt";
-    } 
+    int port_no = 8888;
+    char * fileName = "dictionary.txt";
+
+    if (argc >= 2) {
+        for (int i; i < argc; i++){
+            if (strcmp(argv[i], "*.txt") == 0){
+                fileName = argv[i];    
+            }
+            if (isNumber(argv[i])){
+                port_no = atoi(argv[i]);
+            }
+        }
+    }
+
     /* Read dict file into a Set */
-    word_dictionary = load_dictionary(argv[1]);
+    word_dictionary = load_dictionary(fileName);
     
     // cout << "\nThe elements in set2 are: "; 
     // for (auto it = word_dictionary.begin(); it != word_dictionary.end(); it++){ 
     //     cout << *it << " "; 
     // }
+
 
     /*  initialize thread_spool
         Don’t forget to spawn the logger thread too!
@@ -58,10 +70,10 @@ int main (int argc, char *argv[]){
     //==========================================Initialize network connection==============================================================
     int socket_desc, new_socket, c;
     struct sockaddr_in server , client;
-    char *message;
+
     //Create socket [create active socket descriptor]
     socket_desc = socket(AF_INET , SOCK_STREAM , 0);
-    if (socket_desc == -1){
+    if (socket_desc < 0){
         printf("Could not create socket");
     }
     
@@ -79,7 +91,7 @@ int main (int argc, char *argv[]){
     // smaller than unsigned short
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
-    server.sin_port = htons( 8888 );
+    server.sin_port = htons( port_no );
 
     //Bind [connect the server’s socket address to the socket descriptor]
     if( bind(socket_desc,(struct sockaddr*)&server, sizeof(server)) < 0){

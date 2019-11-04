@@ -110,6 +110,7 @@ void add_word_to_logQueue(string word, log_circular_buffer* log_queue_Ptr){
     }
     // add socket to queue
     put_log(word, log_queue_Ptr);
+    printf("Word added to logQueue\n");
 
     pthread_cond_signal(&fill_log);
     pthread_mutex_unlock(&mutex_log); // release lock
@@ -121,13 +122,13 @@ char* remove_word_from_logQueue(log_circular_buffer* log_queue_Ptr){
         pthread_cond_wait(&fill_log, &mutex_log);
     }
     string word = get_log(log_queue_Ptr);
-    
+    printf("Word removed from logQueue\n");
     // convert string to char*
     char* toWrite = (char *)malloc(word.size() + 1);
     memcpy(toWrite, word.c_str(), word.size() + 1);
 
-    pthread_cond_signal(&empty_conn);
-    pthread_mutex_unlock(&mutex_conn);
+    pthread_cond_signal(&empty_log);
+    pthread_mutex_unlock(&mutex_log);
     return toWrite; 
 }
 
@@ -172,7 +173,7 @@ void * workerThread(void * arg){
         char* buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
         printf("Char * before read is: %s\n", buffer);
         while (read(fd, buffer, MAX_WORD_SIZE) > 0){
-            printf("%d sockets exist\n", connection_queue_Ptr->count);
+            printf("%d sockets exist in connection_queue\n", connection_queue_Ptr->count);
         
             std::string word(buffer); // create "string" from "char*" 
             printf("Char * is: %s\n", buffer);
@@ -195,7 +196,7 @@ void * workerThread(void * arg){
             buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
             
             // add to log queue
-            cout<<"Word is"<<word<<endl;
+            cout<<"Word is "<<word<<endl;
             add_word_to_logQueue(word, log_queue_Ptr);     // if log queue is full -- have to handle
             
         }
@@ -213,7 +214,7 @@ char* concat(const char *s1, const char *s2){
     return result;
 }
 
-void* logThread(void *arg){
+void * logThread(void *arg){
     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
     
     while(1){ // keep log thread alive
@@ -221,10 +222,11 @@ void* logThread(void *arg){
         printf("%d words exist in logQueue\n", log_queue_Ptr->count);
         char *toWrite = remove_word_from_logQueue(log_queue_Ptr);
         FILE *fPtr;
-        if( (fPtr = fopen("LOG.txt", "w")) == NULL) {
+        if( (fPtr = fopen("LOG.txt", "a")) == NULL) {
             printf("Error opening file!\n");
         }
-
+        
+        printf("%s written\n", toWrite);
         fprintf(fPtr, "Word to checked was: %s", toWrite);
         free(toWrite);
         fclose(fPtr);

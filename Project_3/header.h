@@ -28,8 +28,8 @@ using namespace std;
 #define DELIMITERS " \t\r\n\a"
 #define NUM_BUILT_INS 8 	// 8 built-in functions
 #define LINE_LENGTH 100
-#define N_THREADS 5
-#define QUEUE_CAPACITY 5
+#define N_THREADS 2
+#define QUEUE_CAPACITY 1
 #define MAX_WORD_SIZE 100 // logest word is pneumonoultramicroscopicsilicovolcanoconiosis - 45 lettters
 // pthread_mutex_init(&)
 
@@ -78,8 +78,9 @@ void put_log(string value, log_circular_buffer* log_queue_Ptr);
 string get_log(log_circular_buffer* log_queue_Ptr);
 
 int is_word_in_dictionary(string word);
+char * concat(const char *s1, const char *s2);
 
 void * workerThread(void * arg);
-char * concat(const char *s1, const char *s2);
+void* logThread(void *arg);
 
 #endif

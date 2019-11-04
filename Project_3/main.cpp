@@ -30,18 +30,11 @@ int main (int argc, char *argv[]){
     pthread_cond_init(&empty_log, NULL);
 
     // circular connection wait_queue
-    circular_buffer connection_queue = { {0}, 0, 0, 0};;
+    circular_buffer connection_queue = { {0}, 0, 0, 0};
+    log_circular_buffer log_queue = {{""}, 0, 0, 0};
+
     connection_queue_Ptr = &connection_queue;
-
-    put(6, connection_queue_Ptr);
-    put(66, connection_queue_Ptr);
-    put(6666, connection_queue_Ptr);
-    put(89, connection_queue_Ptr);
-
-    for (int i = 0; i < QUEUE_CAPACITY; i++){
-        printf("Pos %d in buffer has value %d\n", i, connection_queue_Ptr->buffer[i]);
-    }
-
+    log_queue_Ptr = &log_queue;
 
     if (argv[1] ==  NULL){
         argv[1] = "dictionary.txt";

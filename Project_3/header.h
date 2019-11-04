@@ -69,10 +69,13 @@ unordered_set<string> load_dictionary(char * fileArg);
 void spawn_worker_threads();
 void addSocketToQueue(int socket, circular_buffer* connection_queue_Ptr);
 int removeSocketFromQueue(circular_buffer* connection_queue_Ptr);
-
+void add_word_to_logQueue(string word, log_circular_buffer* log_queue_Ptr);
+char* remove_word_from_logQueue(log_circular_buffer* log_queue_Ptr);
 
 void put(int value, circular_buffer* connection_queue);
 int get(circular_buffer* connection_queue);
+void put_log(string value, log_circular_buffer* log_queue_Ptr);
+string get_log(log_circular_buffer* log_queue_Ptr);
 
 int is_word_in_dictionary(string word);
 

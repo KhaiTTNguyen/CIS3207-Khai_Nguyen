@@ -58,6 +58,21 @@ int get(circular_buffer* connection_queue){
     return tmp;
 }
 
+void put_log(string value, log_circular_buffer* log_queue_Ptr) {
+    log_queue_Ptr->buffer[log_queue_Ptr->fill_ptr] = value;
+    log_queue_Ptr->fill_ptr = (log_queue_Ptr->fill_ptr + 1) % QUEUE_CAPACITY;
+    log_queue_Ptr->count++;
+}
+
+
+string get_log(log_circular_buffer* log_queue_Ptr){
+    string tmp = log_queue_Ptr->buffer[log_queue_Ptr->use_ptr];
+    log_queue_Ptr->use_ptr = (log_queue_Ptr->use_ptr + 1) % QUEUE_CAPACITY;
+    log_queue_Ptr->count--;
+    return tmp;
+}
+/*----------------------------For worker thread--------------------------------------*/
+
 void addSocketToQueue(int socket, circular_buffer* connection_queue_Ptr){
     pthread_mutex_lock(&mutex_conn); // aquire lock
     
@@ -85,20 +100,36 @@ int removeSocketFromQueue(circular_buffer* connection_queue_Ptr){
     return tmp_socket; 
 }
 
-
-// void add_word_to_logQueue(string word, circular_buffer* log_queue_Ptr){
-//     pthread_mutex_lock(&mutex_log); // aquire lock
+/*----------------------------For log thread--------------------------------------*/
+void add_word_to_logQueue(string word, log_circular_buffer* log_queue_Ptr){
+    pthread_mutex_lock(&mutex_log); // aquire lock
     
-//     while (log_queue_Ptr->count == QUEUE_CAPACITY){
-//         // block thread if buffer is full
-//         pthread_cond_wait(&empty_log, &mutex_log); 
-//     }
-//     // add socket to queue
-//     put(word, log_queue_Ptr);
+    while (log_queue_Ptr->count == QUEUE_CAPACITY){
+        // block thread if buffer is full
+        pthread_cond_wait(&empty_log, &mutex_log); 
+    }
+    // add socket to queue
+    put_log(word, log_queue_Ptr);
 
-//     pthread_cond_signal(&fill_log);
-//     pthread_mutex_unlock(&mutex_log); // release lock
-// }
+    pthread_cond_signal(&fill_log);
+    pthread_mutex_unlock(&mutex_log); // release lock
+}
+
+char* remove_word_from_logQueue(log_circular_buffer* log_queue_Ptr){
+    pthread_mutex_lock(&mutex_log);
+    while (log_queue_Ptr->count == 0){
+        pthread_cond_wait(&fill_log, &mutex_log);
+    }
+    string word = get_log(log_queue_Ptr);
+    
+    // convert string to char*
+    char* toWrite = (char *)malloc(word.size() + 1);
+    memcpy(toWrite, word.c_str(), word.size() + 1);
+
+    pthread_cond_signal(&empty_conn);
+    pthread_mutex_unlock(&mutex_conn);
+    return toWrite; 
+}
 
 void spawn_worker_threads(){
     // array which holds worker threads
@@ -109,6 +140,13 @@ void spawn_worker_threads(){
             printf("Error: Failed to create thread\n");
             exit(1);
         }
+    }
+
+    // encap logger thread in here 
+    pthread_t logger_thread;
+    if(pthread_create(&logger_thread,NULL,logThread,NULL) != 0){
+        printf("Error: Failed to create thread\n");
+        exit(1);
     }
 }
 
@@ -132,14 +170,15 @@ void * workerThread(void * arg){
     while (1){  // keep thread alive
         int fd = removeSocketFromQueue(connection_queue_Ptr); // if no socket --> sleep thread
         char* buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
-        // printf("%d sockets exist\n", connection_queue_Ptr->count);
         printf("Char * before read is: %s\n", buffer);
         while (read(fd, buffer, MAX_WORD_SIZE) > 0){
+            printf("%d sockets exist\n", connection_queue_Ptr->count);
+        
             std::string word(buffer); // create "string" from "char*" 
             printf("Char * is: %s\n", buffer);
 
             int wasFound = is_word_in_dictionary(word);
-            printf("Was found = %d\n", wasFound);
+            // printf("Was found = %d\n", wasFound);
             char * writeBack = NULL;
             if (wasFound){
                 writeBack = concat(buffer, "OK\n");
@@ -154,8 +193,11 @@ void * workerThread(void * arg){
             free(buffer);
             free(writeBack);
             buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
-            // add_to_log_queue(word);     // if log queue is full -- have to handle
-            // //......
+            
+            // add to log queue
+            cout<<"Word is"<<word<<endl;
+            add_word_to_logQueue(word, log_queue_Ptr);     // if log queue is full -- have to handle
+            
         }
         close(fd);
         printf("Worker thread finished 1 word!\n");
@@ -171,13 +213,21 @@ char* concat(const char *s1, const char *s2){
     return result;
 }
 
-// void *logThread(void *arg){
-//     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
+void* logThread(void *arg){
+    // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
     
-//     while(1){
-//         // remove string from buffer
-//         if( (fPtr = fopen("LOG.txt", "w")) == NULL) {
-//             printf("Error opening file!\n");
-//         }
-//     }
-// }
+    while(1){ // keep log thread alive
+        // remove string from buffer
+        printf("%d words exist in logQueue\n", log_queue_Ptr->count);
+        char *toWrite = remove_word_from_logQueue(log_queue_Ptr);
+        FILE *fPtr;
+        if( (fPtr = fopen("LOG.txt", "w")) == NULL) {
+            printf("Error opening file!\n");
+        }
+
+        fprintf(fPtr, "Word to checked was: %s", toWrite);
+        free(toWrite);
+        fclose(fPtr);
+    }
+    printf("Logger thread died!\n");
+}

@@ -14,9 +14,10 @@ pthread_cond_t empty_conn;
 pthread_cond_t fill_log;
 pthread_cond_t empty_log;
 
-set<string> word_dictionary; // worker threads only read "dictionary", no need for lock protection.
+unordered_set<string> word_dictionary; // worker threads only read "dictionary", no need for lock protection.
 
 circular_buffer* connection_queue_Ptr;
+log_circular_buffer* log_queue_Ptr;
 
 int main (int argc, char *argv[]){
 

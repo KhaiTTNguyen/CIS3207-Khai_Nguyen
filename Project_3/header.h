@@ -19,6 +19,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h> //inet_addr
 #include <unistd.h>
+#include <unordered_set>
 
 using namespace std;
 
@@ -44,7 +45,7 @@ extern pthread_cond_t fill_log;
 extern pthread_cond_t empty_log;
 
 
-extern set<string> word_dictionary;
+extern unordered_set<string> word_dictionary;
 
 struct circular_buffer {
 	int buffer[QUEUE_CAPACITY];
@@ -53,10 +54,18 @@ struct circular_buffer {
     int count;
 };
 
+struct log_circular_buffer {
+	string buffer[QUEUE_CAPACITY];
+    int fill_ptr;
+    int use_ptr;
+    int count;
+};
+
 extern circular_buffer* connection_queue_Ptr;
+extern log_circular_buffer* log_queue_Ptr;
 
 // Fucntion declarations
-set<string> load_dictionary(char * fileArg);
+unordered_set<string> load_dictionary(char * fileArg);
 void spawn_worker_threads();
 void addSocketToQueue(int socket, circular_buffer* connection_queue_Ptr);
 int removeSocketFromQueue(circular_buffer* connection_queue_Ptr);
@@ -65,9 +74,9 @@ int removeSocketFromQueue(circular_buffer* connection_queue_Ptr);
 void put(int value, circular_buffer* connection_queue);
 int get(circular_buffer* connection_queue);
 
-
-bool is_word_in_dictionary(string word);
+int is_word_in_dictionary(string word);
 
 void * workerThread(void * arg);
+char * concat(const char *s1, const char *s2);
 
 #endif

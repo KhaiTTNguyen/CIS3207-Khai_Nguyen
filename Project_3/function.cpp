@@ -11,10 +11,10 @@
     // Ask for port number
     // if none is provided - use DEFAULT_PORT
     */
-set<string> load_dictionary(char * fileArg){
+unordered_set<string> load_dictionary(char * fileArg){
 
-    set<string> word_dict;
-    set<string>::iterator it = word_dict.begin(); 
+    unordered_set<string> word_dict;
+    unordered_set<string>::iterator it = word_dict.begin(); 
 
     // Ask for dictionary file
     // if none is provided - use DEFAULT_DICTIONARY     
@@ -112,8 +112,12 @@ void spawn_worker_threads(){
     }
 }
 
-bool is_word_in_dictionary(string word){
-    return true;
+int is_word_in_dictionary(string word){
+    if ( word_dictionary.find(word) != word_dictionary.end() ){
+		return 1; // true
+    } else {
+        return 1; // false
+    }
 }
 
 // // NASTY BUG IN HERE
@@ -128,22 +132,29 @@ void * workerThread(void * arg){
     while (1){  // keep thread alive
         int fd = removeSocketFromQueue(connection_queue_Ptr); // if no socket --> sleep thread
         char* buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
-        printf("%d sockets exist\n", connection_queue_Ptr->count);
+        // printf("%d sockets exist\n", connection_queue_Ptr->count);
         printf("Char * before read is: %s\n", buffer);
         while (read(fd, buffer, MAX_WORD_SIZE) > 0){
             std::string word(buffer); // create "string" from "char*" 
             printf("Char * is: %s\n", buffer);
-            free(buffer);
-            buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
-            // bool wasFound = is_word_in_dictionary(word);
-            // if (wasFound){
-            //     strcat(word, "OK\n");
-            // } else {
-            //     strcat(word, "MISSPELLED\n");
-            // }
+
+            int wasFound = is_word_in_dictionary(word);
+            printf("Was found = %d\n", wasFound);
+            char * writeBack = NULL;
+            if (wasFound){
+                writeBack = concat(buffer, "OK\n");
+            } else {
+                writeBack = concat(buffer, "MISSPELLED\n");
+            }
+
             // error check
-            // write(fd, word, strlen(word) + 1);
-            // //add_to_log_queue(word);     // if log queue is full -- have to handle
+            if (write(fd, writeBack, strlen(writeBack) + 1) < 0) {	
+			    printf("write system_call error\n");
+            }
+            free(buffer);
+            free(writeBack);
+            buffer = (char*)calloc(MAX_WORD_SIZE, sizeof(char));
+            // add_to_log_queue(word);     // if log queue is full -- have to handle
             // //......
         }
         close(fd);
@@ -153,6 +164,12 @@ void * workerThread(void * arg){
     printf("Worker thread died!\n");
 }
 
+char* concat(const char *s1, const char *s2){
+    char *result = (char*)malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
 
 // void *logThread(void *arg){
 //     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()

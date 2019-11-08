@@ -1,0 +1,80 @@
+create dirs
+remove dir
+
+create files
+remove filesopen filesclose files
+
+navigate through dir hierarchy
+ls & cd
+
+
+take the cd parsing --> implement getline - check fpr builtins
+
+-----------------
+in virtual machine
+virtual disk = giant file
+ubuntu.vdi - virtual disk image
+-----------------
+
+
+ create a data structure to mamage 
+
+ main memory/RAM is splited into fixed size pages --> need to pick a block & write to 
+
+2 things to create
+
+1. directory entry - structure
+every directory has at least 2 dir --> ( . & .. )
+    first structure = the directory entry of itself
+    second structure = dir entry of parent 
+
+struct dir entry (w/ metadata) {
+     name of dir   \ (ROOT)
+     size --- number of elements
+     starting block - go to block 3 - open up 
+     
+ }
+
+
+
+|   |   |   |   |   |
+|   |   |   |   |   |
+
+
+2. linkedlist to navigate a file
+    3->6->5->NULL
+--> so, create a linkedlist
+need to make the linkedlist persistent 
+
+find free block 
+
+
+xxd - hex dump - encode binary to ASCII
+
+
+reading a block:
+- when I runout this block 
+- how to know where is next block to go
+
+
+
+
+
+
+Note:
+in your library, you are not allowed to create any "real" files on the Linux file system itself.
+Instead, you have to use the provided helper functions and store all the data that you need on the virtual disk.
+
+ the virtual disk has 16,384 blocks, and each block holds 4KB
+
+
+ files are stored in a directory and on the virtual disk. 
+ In addition, your file system does not have to store more than 256 files (of course, you can create and delete files, 
+ and deleted files do not count against this 256 file limit
+
+
+ out of the 16384 blocks available on disk, 
+ only 8,192 must be reserved as data blocks. 
+ That is, you have ample of space to store your meta-information. 
+ 
+ --> The maximum file size is 32 megabytes = 32,000 KB (all 8,192 data blocks, each with 4KB).

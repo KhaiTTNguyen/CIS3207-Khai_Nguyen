@@ -94,6 +94,22 @@ int close_disk()
 }
 
 
+
+/*
+Create a directory with the name name. 
+returns zero on success, 
+-1 if an error occurred. 
+Failure:
+1. when the directory with name already exists), 
+2. when the file name is too long (it exceeds 15 characters for the directory name), 
+3. when there are already 256 files present in the directory.
+*/
+int fs_mkdir(char *name){
+  return 0;
+}
+
+
+
 /*
 
 */
@@ -150,15 +166,81 @@ int block_read(int block, char *buf)
   return 0;
 }
 
+// FAT 0, 1 or -1 (end of file)
+
 
 /*
  (in this case, name is a path to the file that is to be opened, including the actual filename part of the path) 
 The file specified by name is opened for reading and writing, 
-If successful, fs_open returns a non-negative integer, which is a file descriptor that can be used to subsequently access this file. Note that the same file (file with the same name) can be opened multiple times. When this happens, your file system is supposed to provide multiple, independent file descriptors. Your library must support a maximum of 64 file descriptors that can be open simultaneously. fs_open returns -1 on failure. It is a failure when the file with name cannot be found (i.e., it has not been created previously or is already deleted). It is also a failure when there are already 64 file descriptors active. When a file is opened, the file offset (seek pointer) is set to 0 (the beginning of the file).
 
-return the file descriptor corresponding to this file 
+Note that the same file (file with the same name) can be opened multiple times. --> provide multiple, independent file descriptors.
+
+must support a maximum of 64 file descriptors that can be open simultaneously. f
+
+Failure: 
+1. when the file with name cannot be found (i.e., it has not been created previously or is already deleted). 
+2. when there are already 64 file descriptors active. 
+When a file is opened, the file offset (seek pointer) is set to 0 (the beginning of the file).
+
+return the file descriptor corresponding to this file, -1 on failure.  
 */
 
 int fs_open(char *name){
   return 0;
 }
+
+
+/*
+The file descriptor "fildes" is closed. 
+A closed file descriptor can no longer be used to access the corresponding file. 
+
+return 0 on success. 
+In case the file descriptor fildes does not exist or is not open, the function returns -1.
+*/
+
+int fs_close(int fildes){
+  return 0;
+}
+
+
+/*
+Creates a new file with name name in your file system (name is the path to the file including the name of the file itself). 
+The file is initially empty. 
+The maximum length for a file name is 15 characters (this is also the maximum length of a directory name). 
+Also, there can be at most 256 files in the directory. 
+
+Return 0 if success
+-1 on failure. 
+Failure: 
+1. when the file with name already exists (using the full path specified in name), 
+2. when the file name is too long (it exceeds 15 characters for the directory name and 15 characters for the name of the file), 
+3. when there are already 256 files present in the specified directory. 
+Note that to access a file that is created, it has to be subsequently opened.
+*/
+
+int fs_create(char *name){
+  return 0;
+}
+
+
+/*
+This function deletes the file with the path and name name from the directory of your file system 
+and frees all data blocks and meta-information that correspond to that file. 
+
+The file that is being deleted must not be open. 
+That is, there cannot be any open file descriptor that refers to the file name. 
+When the file is open at the time that fs_delete is called, the call fails and the file is not deleted. 
+
+return 0 on success, 
+-1 on failure. 
+
+Failure
+1. when the file with name does not exist. 
+2. when the file is currently open (i.e., there exists at least one open file descriptor that is associated with this file).
+*/
+
+int fs_delete(char *name){
+  return 0;
+}
+
+

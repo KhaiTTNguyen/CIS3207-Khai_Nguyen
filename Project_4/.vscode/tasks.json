@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "launch",
+        "type": "shell",
+        "command": "g++",
+        "args": ["-g", "-o", "mydisk", "main.c", "disk.c"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }
+
+
+
+  

@@ -90,11 +90,24 @@ string get_log(log_circular_buffer* log_queue_Ptr){
 /*----------------------------For worker thread--------------------------------------*/
 
 void addSocketToQueue(int socket, circular_buffer* connection_queue_Ptr){
-    pthread_mutex_lock(&mutex_conn); // aquire lock
+    pthread_mutex_lock(&mutex_conn); // aquire LOCK
     
+    /*
+    here we use WHILE instead of IF because, in case there are multiple producers,
+
+    when "this" producer produces till full - it sleeps (wait)
+    then consumers jumps in to eat the buff - at the end of each eat --> signal producer
+    "this" producer wakes, but only READY TO RUN, not running
+
+    if there is another producer sneaks in acquire the lock,
+     it will produce till full
+    
+    then the when comes the turn of the "awaken" "this" consumer to run, the buffer is already FULL..
+    --> use WHILE to recheckc if the buffer is full or not
+    */
     while (connection_queue_Ptr->count == QUEUE_CAPACITY){
         // block thread if buffer is full
-        pthread_cond_wait(&empty_conn, &mutex_conn); 
+        pthread_cond_wait(&empty_conn, &mutex_conn); // when wait, release LOCK
     }
     // add socket to queue
     put(socket, connection_queue_Ptr);
@@ -178,6 +191,51 @@ int is_word_in_dictionary(string word){
     }
 }
 
+int read_line(int fd, void *buffer, int n) {
+    int numRead;                    /* # of bytes fetched by last read() */
+    int total_read;                     /* Total bytes read so far */
+    char *buf;
+    char letter;
+    
+    if (n <= 0 || buffer == NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+    
+    buf = (char*)buffer;                      
+    total_read = 0;
+    for (;;) {
+        numRead = read(fd, &letter, 1);
+        if (letter == '\n'){
+            break;
+        }
+
+        if (numRead == -1) {
+            if (errno == EINTR) {      /* Interrupted --> restart read() */
+                continue;
+            } else {
+                return -1;              /* Some other error */
+            }
+        } else if (numRead == 0) {      /* EOF */
+            if (total_read == 0){           /* No bytes read; return 0 */
+                return 0;
+            } else {                        /* Some bytes read; add '\0' */
+	            break;
+            }
+        } else {                        /* 'numRead' must be 1 if we get here */
+            if (total_read < n - 1) {      /* Discard those after (n - 1) bytes */
+                total_read++;
+                *buf++ = letter;
+            }
+        }
+    }
+
+    *buf = '\0';
+    // printf("Total read is %d\n",total_read);
+    return total_read;
+}
+
+
 // // NASTY BUG IN HERE
 /*
 Also, keep in mind that in the worker thread example, there is
@@ -189,28 +247,34 @@ void * workerThread(void * arg){
     // assert(ptr != NULL);  // put in gcc - no debug --> get rid of all assert()
     while (1){  // keep thread alive
         int fd = removeSocketFromQueue(connection_queue_Ptr); // if no socket --> sleep thread
-        char buffer[MAX_WORD_SIZE];
-        bzero(buffer,MAX_WORD_SIZE);
-        while (read(fd, buffer, MAX_WORD_SIZE ) > 0){
+        char *buffer = (char*) calloc(MAX_WORD_SIZE, sizeof(char));
+        // printf("Char before read %s", buffer);
+        // printf("newline\n");
+        int bytes_read = 0;
+        while (bytes_read = read_line(fd, buffer, MAX_WORD_SIZE ) > 0){
             string word = buffer; // create "string" from "char*" 
-            
+            // printf("Char after read %s", buffer);
+            // printf("newline\n");
+            // printf("Bytes read were: %d\n", bytes_read);
             int wasFound = is_word_in_dictionary(word);
             // printf("Was found = %d\n", wasFound);
-            char * writeBack = NULL;
+            char * writeBack = (char*) calloc(MAX_WORD_SIZE, sizeof(char));
             if (wasFound){
-                writeBack = concat(buffer, "OK\n");
+                writeBack = concat(buffer, " OK\n");
             } else {
-                writeBack = concat(buffer, "MISSPELLED\n");
+                writeBack = concat(buffer, " MISSPELLED\n");
             }
-
+            
+            printf("Write back is %s\n", writeBack);
             // error check
-            if (write(fd, writeBack, strlen(writeBack) + 1) < 0) {	
+            if (write(fd, writeBack, MAX_WORD_SIZE) < 0) {	
 			    printf("write system_call error\n");
             }
 
             free(writeBack);
-            bzero(buffer,MAX_WORD_SIZE);
-            
+            free(buffer);
+            char *buffer = (char*) calloc(MAX_WORD_SIZE, sizeof(char));
+            // printf("Char after deallocated %s\n", buffer);
             // add to log queue
             add_word_to_logQueue(word, log_queue_Ptr);     // if log queue is full -- have to handle
             
@@ -223,7 +287,7 @@ void * workerThread(void * arg){
 }
 
 char* concat(const char *s1, const char *s2){
-    char *result = (char*)malloc(strlen(s1) + strlen(s2) + 1); // +1 for the null-terminator
+    char *result = (char*)calloc(strlen(s1) + strlen(s2) + 1, sizeof(char)); // +1 for the null-terminator
     strcpy(result, s1);
     strcat(result, s2);
     return result;
@@ -240,8 +304,8 @@ void * logThread(void *arg){
         if( (fPtr = fopen("LOG.txt", "a")) == NULL) {
             printf("Error opening file!\n");
         }
-        printf("Word to log: %s", toWrite);
-        fprintf(fPtr, "Word to checked was: %s", toWrite);
+        printf("Word to log: %s\n", toWrite);
+        fprintf(fPtr, "Word to checked was: %s\n", toWrite);
         free(toWrite);
         fclose(fPtr);
     }

@@ -42,6 +42,10 @@ int make_disk(char *name)
 
 /*
 You need to open the disk and then load the meta-information that is necessary to handle the file system operations 
+
+“mount disk” (open the drive file 
+and read the information from boot block
+
 returns 0 on success, and -1 when the disk disk_name could not be opened or when the disk does not contain a valid file system 
 */
 int open_disk(char *name)
@@ -158,7 +162,7 @@ int block_read(int block, char *buf)
     return -1;
   }
 
-  if (read(handle, buf, BLOCK_SIZE) < 0) {
+  if (read(handle, buf, BLOCK_SIZE) < 0) {    // read 1 BLOCK --> grab BLOCK_SIZE
     perror("block_read: failed to read");
     return -1;
   }
@@ -219,6 +223,10 @@ Note that to access a file that is created, it has to be subsequently opened.
 */
 
 int fs_create(char *name){
+  
+  /*
+  int fd = open("foo", O_CREAT|O_WRONLY|O_TRUNC,S_IRUSR|S_IWUSR);
+  */
   return 0;
 }
 

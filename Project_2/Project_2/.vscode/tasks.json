@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "launch",
+        "type": "shell",
+        "command": "g++",
+        "args": ["-g", "-o", "myshell", "main.c", "function.c"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+  }

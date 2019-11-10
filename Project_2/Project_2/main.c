@@ -1,5 +1,6 @@
 // Khai Nguyen
 // Filename: main.c
+#include <iostream>
 
 #include "header.h"
 
@@ -78,7 +79,6 @@ int main(int argc, char** argv) {
 		// stop @ "\n" or "EOF"
 		if (fgets(cmd_string, LINE_LENGTH, stdin) == NULL){
 			printf("Read line error\n");
-			printf("cmd str is %s\n", cmd_string);
 			return -1;
 		}
 

@@ -174,14 +174,14 @@ int exec_pipe(char **args_list, int p_indx){
     if((pid_P = fork()) < 0){
         puts("Error fork");
     } else if (pid_P == 0){ 		// child
-        close(pipe_file_descs[0]);
+        close(pipe_file_descs[0]); 	// close read to write
         dup2(pipe_file_descs[1],1);
 		// erase "|" symbol
         *(args_list + p_indx) = NULL;
         shell_execute(args_list);		
        	exit(EXIT_SUCCESS);
     } else { 	// parent
-        close(pipe_file_descs[1]);
+        close(pipe_file_descs[1]);	// close write to read
         dup2(pipe_file_descs[0],0);
         args_list = args_list + p_indx + 1;
         shell_execute(args_list);

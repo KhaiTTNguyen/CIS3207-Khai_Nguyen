@@ -13,7 +13,7 @@ The shell program is broken down into:
 
 ## Guide
 ### For collaborators
-Check out file "Program_Description"
+Check out file "Program_Description.odt"
 
 ### For users (mainly)
 

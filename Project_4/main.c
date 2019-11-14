@@ -2,8 +2,7 @@
 // Filename: main.c
 // Usage: build main program
 
-#include "disk.h"
-
+#include "header.h"
 
 int main (int argc, char *argv[]){
     printf("Main running\n");

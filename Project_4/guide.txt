@@ -24,15 +24,23 @@ ubuntu.vdi - virtual disk image
 2 things to create
 
 1. directory entry - structure
+A logical directory, such as a file table, which lists the files and directories in your file system, 
+represents  which directory that files in your file system are located in, 
+and contains some other basic information/metadata
+
+- Accessing a file is conducted by searching the entries on this table.
+
+
 every directory has at least 2 dir --> ( . & .. )
     first structure = the directory entry of itself
     second structure = dir entry of parent 
 
 struct dir entry (w/ metadata) {
-     name of dir   \ (ROOT)
+     name of file/dir   \ (ROOT)
+     name of parent dir
      size --- number of elements
-     starting block - go to block 3 - open up 
-     
+     if a file: starting block - go to block 3 - open up 
+     if a dir:pointers to sub dirs
  }
 
 
@@ -40,8 +48,11 @@ struct dir entry (w/ metadata) {
 |   |   |   |   |   |
 |   |   |   |   |   |
 
+space for the root directory is allocated statically, when the disk is formatted; there is thus a finite upper limit on the number of files that can appear in the root directory. 
+
 
 2. linkedlist to navigate a file
+    A series of blocks, which contain the contents of the files
     3->6->5->NULL
 --> so, create a linkedlist
 need to make the linkedlist persistent 
@@ -78,3 +89,18 @@ Instead, you have to use the provided helper functions and store all the data th
  That is, you have ample of space to store your meta-information. 
  
  --> The maximum file size is 32 megabytes = 32,000 KB (all 8,192 data blocks, each with 4KB).
+
+How to keep track of which blocks are free vs. which blocks are used by a file
+
+How to store the pointers for files that span multiple blocks
+
+
+
+mkfs() to make a file system
+mount() - made fs accessible
+take an existing directory as a target mount point 
+and paste a new file system onto the directory tree at that point
+
+prompt> mount -t ext3 /dev/sda1 /home/users
+
+Calculating parameters: http://elm-chan.org/docs/fat_e.html#fat_dir

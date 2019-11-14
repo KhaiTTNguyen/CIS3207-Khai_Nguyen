@@ -25,6 +25,7 @@ typedef struct Dir_Entry{
     uint32_t size; /*in bytes*/
     unsigned int offset; // current offset
     
+    // parent dir
     
 } Dir_Entry;
 

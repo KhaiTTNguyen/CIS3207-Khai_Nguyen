@@ -21,7 +21,7 @@ ubuntu.vdi - virtual disk image
 
  main memory/RAM is splited into fixed size pages --> need to pick a block & write to 
 
-2 things to create
+3 things to create
 
 1. directory entry - structure
 A logical directory, such as a file table, which lists the files and directories in your file system, 
@@ -38,11 +38,14 @@ every directory has at least 2 dir --> ( . & .. )
 struct dir entry (w/ metadata) {
      name of file/dir   \ (ROOT)
      name of parent dir
-     size --- number of elements
+     size (file) --- number of dirs (dirs) 
      if a file: starting block - go to block 3 - open up 
      if a dir:pointers to sub dirs
  }
 
+
+start of dir : block 7 
+block 7 contains all info about that file
 
 
 |   |   |   |   |   |
@@ -51,13 +54,30 @@ struct dir entry (w/ metadata) {
 space for the root directory is allocated statically, when the disk is formatted; there is thus a finite upper limit on the number of files that can appear in the root directory. 
 
 
-2. linkedlist to navigate a file
+2. FAT / linkedlist to navigate a file
     A series of blocks, which contain the contents of the files
     3->6->5->NULL
 --> so, create a linkedlist
 need to make the linkedlist persistent 
 
 find free block 
+
+FAT - shows index for blocks from start to end of file system
+how big is each entry, = unsigned short (since max only have 8192)
+
+SIZE of FAT = (size of 1 entry) = unsigned_short * 8192 = 16,382 bytes ---> calcuate # of blocks to allocate: 16,382 bytes / BLOCK_SIZE
+
+
+3. superblock
+how "magic nuber" is used?
+- hardcode data region
+
+4. Data region
+8192 blocks 
+
+5. Metadata - FAT & entries
+
+separate/hardcoded regions for each region
 
 
 xxd - hex dump - encode binary to ASCII
@@ -104,3 +124,22 @@ and paste a new file system onto the directory tree at that point
 prompt> mount -t ext3 /dev/sda1 /home/users
 
 Calculating parameters: http://elm-chan.org/docs/fat_e.html#fat_dir
+
+
+
+
+Try read_block() / write_block()
+get ready: FAT 
+
+
+mount() & umount())
+dont want to constantly write to a file
+
+--> write to runtime stack & 
+mount()
+    load FAT to a globally access table FAT table
+    
+    update in program
+
+umount() 
+    update virtual disk with newstate of FAT --> find the offset 

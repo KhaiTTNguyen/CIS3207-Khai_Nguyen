@@ -101,6 +101,14 @@ int close_disk()
 each write not only has to write data to disk but has to first decide
 which block to allocate to the file and thus update other structures of the
 disk accordingly 
+
+write data
+----
+if need extra
+update FAT
+update dir entry (file.size)
+update offset
+
 */
 
 int block_write(int block, char *buf)
@@ -115,7 +123,7 @@ int block_write(int block, char *buf)
     return -1;
   }
 
-  if (lseek(handle, block * BLOCK_SIZE, SEEK_SET) < 0) {  //
+  if (lseek(handle, block * BLOCK_SIZE, SEEK_SET) < 0) {  // fix offset of "handle"/disk file
     perror("block_write: failed to lseek");
     return -1;
   }

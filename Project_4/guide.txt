@@ -143,3 +143,42 @@ mount()
 
 umount() 
     update virtual disk with newstate of FAT --> find the offset 
+
+
+
+
+
+
+
+
+
+
+
+
+chunk
+
+
+need num dirents
+
+struct dirent * block = NULL 
+
+
+need
+sizeof(unint16_t) * DISK_BLOCKS/
+write FAt by BLOCK_chunk 
+
+write_fat(){
+    char * fat_ptr = (char*) FAT; //--> same region of mem, slicing by cahr vs unint16_t
+    int block_index = 1; /// where FAT starts
+    int total = DISK_BLOCKS * sizeof(unint16_t);
+    while (total > 0){
+        block_write(block_index, fat_ptr);
+        total -= BLOCK_SIZE;
+        fat_ptr += BLOCK_SIZE;
+        block_index++;
+    }
+}
+
+read_fat(){
+
+}

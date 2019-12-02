@@ -6,6 +6,9 @@ Below are the operational functions for the file system
 #include "header.h" // cotaining disk.h
 
 superblock * disk_superblock;
+  // initialize the FAT
+uint16_t FAT[NUM_DATA_BLOCKS] = {0};
+
 /*
 This function creates a fresh (and empty) file system on the virtual disk with name disk_name. 
 As part of this function, you should first invoke make_disk(disk_name) to create a new disk. 
@@ -47,12 +50,11 @@ int make_fs(char *disk_name){
   }
 
   memset(temp_mem, 0, BLOCK_SIZE);
-
   // initialize the FAT
-  uint16_t FAT[NUM_DATA_BLOCKS] = {0};
+
   // Write out fat_length  blank FAT blocks starting at fat_start
   for (uint16_t k = my_superblock.fat_start; k < my_superblock.fat_length + my_superblock.fat_start; k++) {
-      if (block_write(k, temp_mem) < 0) { 
+      if (write_fat() < 0) { 
           perror("Error while writing to disk");
       }
   }

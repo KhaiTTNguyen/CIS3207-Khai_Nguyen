@@ -5,119 +5,86 @@ Below are the operational functions for the file system
 
 #include "header.h" // cotaining disk.h
 
-/*-------------------------content of header.h------------------------*/
-// Khai Nguyen
-// Filename: header.h
-// Usage to build class and declare functions
-
-
-#include "disk.h"
-
-#include <stdint.h>     // unit32_t = unsigned int // 4 bytes
-#include <sys/types.h>
-
-#define FILENAME_LENGTH 15 
-#define EXTENSION_LENGTH 3
-
-#define NUM_DATA_BLOCKS DISK_BLOCKS/2
-
-
-typedef struct superblock {
-    // description of disk layout
-    int blocksize;
-    int de_start;
-    int de_length;       // track end of dir_entries    
-    int fat_start;
-    int fat_length;      // track end of FAT
-    int db_start;
-    int valid_files;       // count num valid files
-    struct timespec access_time;
-} superblock;
-
-
-typedef struct Dir_Entry{
-    char name[FILENAME_LENGTH]; /*15 bytes*/
-    char ext[EXTENSION_LENGTH]; /*extension of file, 3 bytes*/
-    
-    int modified_time; /* Hours*10000 + minute*100 + second*/
-    int modified_date; /*Year*100 + Month*10 + Day */
-    unsigned int start_block; /*start block in FAT*/
-    uint32_t size; /*in bytes*/
-    unsigned int offset; // current offset - due to written/read last time
-    
-    unsigned int valid; 
-    // parent dir
-
-} Dir_Entry;
-
-/*-------------------------end of content of header.h------------------------*/
-
-
 superblock * disk_superblock;
 /*
 This function creates a fresh (and empty) file system on the virtual disk with name disk_name. 
-As part of this function, you should first invoke make_disk(disk_name) to create a new disk. Then, open this disk and write/initialize the necessary meta-information for your file system so that it can be later used (mounted). The function returns 0 on success, and -1 when the disk disk_name could not be created, opened, or properly initialized.
+As part of this function, you should first invoke make_disk(disk_name) to create a new disk. 
+
+Then, open this disk and write/initialize the necessary meta-information for your file system so that it can be later used (mounted). 
+STATIC calls
+
+The function returns 0 on success, and -1 when the disk disk_name could not be created, opened, or properly initialized.
 */
 
 /* call this ONCE ONLY */
 
 int make_fs(char *disk_name){
-    // create disk
-    make_disk();
-
-    open_disk();
-    
-    // initialize superblock
-    // write content of SUPERBLOCK to 1st block on disk
-    superblock my_superblock = { 
-        .....
-    };
-
-    // write the contents of the SUPER BLOCK to the first block on the disk.
-    // Write to the disk
-    char temp_mem[BLOCK_SIZE];
-    memset(temp_mem, 0, BLOCK_SIZE);
-    memcpy(temp_mem, &my_superblock, sizeof(superblock));
-    
-    if (dwrite(0, temp_mem) < 0) { 
-        perror("Error while writing to disk"); 
-    }
-
-    // initialize the FAT
-    int FAT[NUM_DATA_BLOCKS] = {0};
-    // Write out fat_length  blank FAT blocks starting at fat_start
-    for (int k = my_superblock.fat_start; k < my_superblock.fat_length + my_superblock.fat_start; k++) {
-        if (dwrite(k, temp_mem) < 0) { 
-            perror("Error while writing to disk");
-        }
-    }
-
-    // write the root directory entry.
-    Dir_Entry root;
-    
-    memset(temp_mem, 0, BLOCK_SIZE);
-  // Fill the buffer with 4 dirents
-  for (int i = 0; i < 4 ; i ++) {
-    memcpy(temp_mem + i * sizeof(Dir_Entry), &root, sizeof(Dir_Entry));
+  // create disk
+  // make_disk();
+  if (open_disk("Test_Disk") < 0){
+    printf("disk opened\n");
+    return -1;
   }
 
-  // Write out this blank directory entry as many time as we need to
-  for (int j = my_superblock.de_start; j < my_superblock.de_length + my_superblock.de_start; j++) {
-    if (dwrite(j, temp_mem) < 0) { 
-        perror("Error while writing to disk"); 
-    }
-  } 
+  // initialize superblock
+  // write content of SUPERBLOCK to 1st block on disk
+  superblock my_superblock;  
+  my_superblock.blocksize = BLOCK_SIZE; // int blocksize;   
+  my_superblock.bps = 512; // 512 bytes/sector
+  my_superblock.spb = 8;    // 8 sector/cluster
+  my_superblock.fat_start = 1;          // int fat_start;
+  my_superblock.fat_length = DISK_BLOCKS; // int fat_length;     
+  my_superblock.DE_start = my_superblock.fat_length + 1;  //int DE_start, in block number;
+  my_superblock.DataRegion_start = BLOCK_SIZE * 8192; // in block number;  
 
-    close_disk();
-    return 0;
+  // write the contents of the SUPER BLOCK to the first block on the disk.
+  char temp_mem[BLOCK_SIZE];
+  memset(temp_mem, 0, BLOCK_SIZE);
+  memcpy(temp_mem, &my_superblock, sizeof(superblock));
+  
+  if (block_write(0, temp_mem) < 0) {   // write to 1st block
+      perror("Error while writing to disk"); 
+  }
+
+  memset(temp_mem, 0, BLOCK_SIZE);
+
+  // initialize the FAT
+  uint16_t FAT[NUM_DATA_BLOCKS] = {0};
+  // Write out fat_length  blank FAT blocks starting at fat_start
+  for (uint16_t k = my_superblock.fat_start; k < my_superblock.fat_length + my_superblock.fat_start; k++) {
+      if (block_write(k, temp_mem) < 0) { 
+          perror("Error while writing to disk");
+      }
+  }
+
+  memset(temp_mem, 0, BLOCK_SIZE);
+  // write the root directory entry.
+  Dir_Entry root;
+  
+  memset(temp_mem, 0, BLOCK_SIZE);
+
+// Write out this blank directory entry as many time as we need to
+for (int j = my_superblock.DE_start; j < my_superblock.DE_length + my_superblock.DE_start; j++) {
+  if (dwrite(j, temp_mem) < 0) { 
+      perror("Error while writing to disk"); 
+  }
+} 
+
+  close_disk();
+  return 0;
 }
 
+
+
 /*
+Load structures into RAM
 
 This function mounts a file system that is stored on a virtual disk with name disk_name. 
 With the mount operation, a file system becomes "ready for use." 
 You need to open the disk and then load the meta-information that is necessary to handle the file system operations that are discussed below. 
-The function returns 0 on success, and -1 when the disk disk_name could not be opened or when the disk does not contain a valid file system (that you previously created with make_fs).
+
+The function returns 0 on success, and -1 when the disk disk_name could not be opened or when the disk does not contain a valid file system 
+(that you previously created with make_fs).
 
 */
 
@@ -128,7 +95,7 @@ The function returns 0 on success, and -1 when the disk disk_name could not be o
 int mount_fs(char *disk_name){
     // load the necessary data stuctures from
     // the virtual disk into your program’s memory.
-    open_disk();
+    open_disk(/* from 3600mkfs.c*/);
 
     char superblock_data[BLOCK_SIZE];
     if (dread(0, superblock_data) < 0) { 
@@ -153,7 +120,7 @@ write that entry back onto the disk
 before you close.
 */
 int umount_fs(char *disk_name){
-    fprintf("unmounting\n");
+    printf("unmounting\n");
     write_block(0, disk_superblock);
     
     disk_close();

@@ -7,7 +7,7 @@ all: myfilesystem
 
 # define a target to link the application
 #
-myserver: main.c function.c 
+myfilesystem: main.c function.c disk.c
 	g++ main.c function.c disk.c -o myfilesystem 
 
 # define a target to clean the directory

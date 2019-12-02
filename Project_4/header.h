@@ -16,41 +16,22 @@
 
 #define NUM_DATA_BLOCKS DISK_BLOCKS/2
 
-// vcb structure
-typedef struct superblock {
-//   // a magic number of identity of your disk
-//   int magic;
 
-    // description of disk layout
-    int blocksize;
-    int de_start;
-    int de_length;       // track end of dir_entries    
-    int fat_start;
-    int fat_length;      // track end of FAT
-    int db_start;
-    int valid_files;       // count num valid files
-    // meta data for root dir
-    //   uid_t user;
-    //   gid_t group;
-    //   mode_t mode;
-    struct timespec access_time;
-} superblock;
 
 
 typedef struct Dir_Entry{
     char name[FILENAME_LENGTH]; /*15 bytes*/
     char ext[EXTENSION_LENGTH]; /*extension of file, 3 bytes*/
-    
-    int modified_time; /* Hours*10000 + minute*100 + second*/
-    int modified_date; /*Year*100 + Month*10 + Day */
-    unsigned int start_block; /*start in FAT*/
-    uint32_t size; /*in bytes*/
-    unsigned int offset; // current offset - due to written/read last time
-    
-    unsigned int valid; 
-    // parent dir
 
+    uint16_t start_block; /*start block # in FAT*/
+    uint16_t size; /*in bytes*/
+    uint16_t offset; // current offset - due to written/read last time
+    
+    uint16_t file_type; //is it file or directory
+    // parent dir
 } Dir_Entry;
+
+
 
 /*
 A zero, indicating that the block is free.
@@ -59,7 +40,20 @@ value is the next block in a file.
 A -1, indicating that the indexed block is the last block in a
 sequence.
 */
-int FAT[NUM_DATA_BLOCKS];
+uint16_t FAT[NUM_DATA_BLOCKS];
+
+// description of disk layout
+// total 
+typedef struct superblock {
+    uint16_t blocksize;  // 2 bytes = uint16_t
+    uint16_t bps; /* 2 bytes ,bytes per sector, 512 bytes */
+    uint8_t spb; /*1 byte, sector per cluster, 8 sector/cluster */
+    uint16_t fat_start;
+    uint16_t fat_length;      // track end of FAT
+    uint16_t DE_start;
+    int DataRegion_start;
+} superblock;
+
 
 
 

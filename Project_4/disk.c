@@ -48,6 +48,8 @@ and read the information from boot block
 
 returns 0 on success, and -1 when the disk disk_name could not be opened or when the disk does not contain a valid file system 
 */
+
+/* open a virtual disk (file) - attach to a file descriptor */
 int open_disk(char *name)
 {
   int f;
@@ -123,11 +125,13 @@ int block_write(int block, char *buf)
     return -1;
   }
 
+  // move seeker to that "block" number
   if (lseek(handle, block * BLOCK_SIZE, SEEK_SET) < 0) {  // fix offset of "handle"/disk file
     perror("block_write: failed to lseek");
     return -1;
   }
 
+  // only write to taht specific block
   if (write(handle, buf, BLOCK_SIZE) < 0) {
     perror("block_write: failed to write");
     return -1;
@@ -136,9 +140,8 @@ int block_write(int block, char *buf)
   return 0;
 }
 
-/*
+/* read a block of size BLOCK_SIZE from disk   */
 
-*/
 int block_read(int block, char *buf)
 {
   if (!active) {

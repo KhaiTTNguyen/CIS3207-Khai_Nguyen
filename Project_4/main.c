@@ -5,6 +5,12 @@
 #include "header.h"
 
 int main (int argc, char *argv[]){
-    printf("Main running\n");
+    // if (make_disk("Test_Disk") < 0){
+    //     printf("Error creating disk\n");
+    //     return -1;
+    // }
+
+    if (open_disk("Test_Disk") < 0){
+    printf("disk created\n");
     return 0;
 }

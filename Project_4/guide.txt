@@ -167,7 +167,7 @@ need
 sizeof(unint16_t) * DISK_BLOCKS/
 write FAt by BLOCK_chunk 
 
-write_fat(){
+int write_fat(){
     char * fat_ptr = (char*) FAT; //--> same region of mem, slicing by cahr vs unint16_t
     int block_index = 1; /// where FAT starts
     int total = DISK_BLOCKS * sizeof(unint16_t);
@@ -177,8 +177,64 @@ write_fat(){
         fat_ptr += BLOCK_SIZE;
         block_index++;
     }
+    return 0;
 }
 
-read_fat(){
-
+int read_fat(){
+    char * fat_ptr = (char*) FAT; //--> same region of mem, slicing by cahr vs unint16_t
+    int block_index = 1; /// where FAT starts
+    int total = DISK_BLOCKS * sizeof(unint16_t);
+    while (total > 0){
+        block_read(block_index, fat_ptr);
+        total -= BLOCK_SIZE;
+        fat_ptr += BLOCK_SIZE;
+        block_index++;
+    }
+    return 0;
 }
+
+
+
+memeory padding for structures{
+    char a;
+    int b;
+}
+[a   ] [bbbb] [c   ]
+[ac  ] [bbbb]
+
+--> total 4 + 4 = 8 bytes
+
+
+
+
+
+
+
+
+LEARNT
+-----------------
+When you say char str2 [] = "Hello", you are creating a string literal and putting it in the array during its definition. 
+It is ok to not give a size, as the array calculates it and appends a '\0' to it. 
+You cannot reassign anything to that array without resizing it. That is why str2 = "four" will not work. 
+
+
+char * str1;
+str1 = "Hello1";
+str1 = "new string";
+
+// but not this
+char str2 [] = "hello"; --- static
+str2 = "four";
+
+// or this
+char str3 [];
+str3 = "hello";
+str3 = "hello";
+
+
+
+statically on the stack, simply: int a = 10
+Dynamically on the heap, using either calloc() & free()
+
+
+easier to initialize structure rather than [structure pointer]

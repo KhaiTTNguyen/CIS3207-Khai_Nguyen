@@ -5,10 +5,6 @@ Below are the operational functions for the file system
 
 #include "header.h" // cotaining disk.h
 
-superblock * disk_superblock;
-  // initialize the FAT
-uint16_t FAT[NUM_DATA_BLOCKS] = {0};
-
 /*
 This function creates a fresh (and empty) file system on the virtual disk with name disk_name. 
 As part of this function, you should first invoke make_disk(disk_name) to create a new disk. 
@@ -24,10 +20,14 @@ The function returns 0 on success, and -1 when the disk disk_name could not be c
 int make_fs(char *disk_name){
   // create disk
   // make_disk();
+  printf("About to open disk\n");
+
   if (open_disk("Test_Disk") < 0){
-    printf("disk opened\n");
+    printf("disk can't be opened\n");
     return -1;
   }
+
+  printf("Disk opened\n");
 
   // initialize superblock
   // write content of SUPERBLOCK to 1st block on disk
@@ -36,47 +36,67 @@ int make_fs(char *disk_name){
   my_superblock.bps = 512; // 512 bytes/sector
   my_superblock.spb = 8;    // 8 sector/cluster
   my_superblock.fat_start = 1;          // int fat_start;
-  my_superblock.fat_length = DISK_BLOCKS; // int fat_length;     
-  my_superblock.DE_start = my_superblock.fat_length + 1;  //int DE_start, in block number;
-  my_superblock.DataRegion_start = BLOCK_SIZE * 8192; // in block number;  
+  my_superblock.fat_length = (DISK_BLOCKS * sizeof(uint16_t)) / BLOCK_SIZE; // in unit of blocks    
+  my_superblock.DE_start = 1 + my_superblock.fat_length;  //int DE_start, in block number;
+  my_superblock.DataRegion_start = NUM_DATA_BLOCKS; // in block number;  
 
   // write the contents of the SUPER BLOCK to the first block on the disk.
   char temp_mem[BLOCK_SIZE];
   memset(temp_mem, 0, BLOCK_SIZE);
   memcpy(temp_mem, &my_superblock, sizeof(superblock));
-  
+
   if (block_write(0, temp_mem) < 0) {   // write to 1st block
       perror("Error while writing to disk"); 
   }
 
   memset(temp_mem, 0, BLOCK_SIZE);
-  // initialize the FAT
-
-  // Write out fat_length  blank FAT blocks starting at fat_start
-  for (uint16_t k = my_superblock.fat_start; k < my_superblock.fat_length + my_superblock.fat_start; k++) {
-      if (write_fat() < 0) { 
-          perror("Error while writing to disk");
-      }
-  }
-
-  memset(temp_mem, 0, BLOCK_SIZE);
-  // write the root directory entry.
-  Dir_Entry root;
+  /*-------------------------initialize the FAT-------------------------*/
   
-  memset(temp_mem, 0, BLOCK_SIZE);
+  // Write out fat_length  blank FAT blocks starting at fat_start
+  // for (uint16_t k = my_superblock.fat_start; k < my_superblock.fat_start + my_superblock.fat_length; k++) {
+  //     if (block_write(k, temp_mem) < 0) { 
+  //         perror("Error while writing to disk");
+  //     }
+  // }
+  printf("Start writing FAT\n");
+  uint16_t temp_FAT[DISK_BLOCKS];
+  for (uint16_t i = 0; i < DISK_BLOCKS; ++i){
+    temp_FAT[i] = 0xAAAA;
+  }
+  printf("Done filing FAT\n");
+  
+  write_fat(&temp_FAT[0]);
+  printf("Done writing FAT\n");
 
-// Write out this blank directory entry as many time as we need to
-for (int j = my_superblock.DE_start; j < my_superblock.DE_length + my_superblock.DE_start; j++) {
-  if (dwrite(j, temp_mem) < 0) { 
+  /*-------------------------initialize ROOT Dir Entry-------------------------*/
+  memset(temp_mem, 0, BLOCK_SIZE);
+  printf("Start writing Dir\n");
+  
+  Dir_Entry root; //= (Dir_Entry *) calloc(1, sizeof(Dir_Entry));
+  root.file_type = 0; // directory
+  //memcpy(root->name, "ROOT", strlen("ROOT") + 1);
+  strcpy(root.name, "ROOT");
+  printf("name copied\n");
+  root.start_block = my_superblock.fat_start + my_superblock.fat_length;
+
+  printf("prepare to copy\n");
+  
+
+  // copy ROOT to buffer
+  memcpy(temp_mem, &root, sizeof(Dir_Entry));
+  
+  printf("temp_mem is %s\n", &temp_mem);
+
+  printf("root start block is %d\n", root.start_block);
+  if (block_write(root.start_block, temp_mem) < 0) {   // write to start block of Dir_Entry
       perror("Error while writing to disk"); 
   }
-} 
 
+  printf("Disk close\n");
+  
   close_disk();
   return 0;
 }
-
-
 
 /*
 Load structures into RAM
@@ -97,35 +117,91 @@ The function returns 0 on success, and -1 when the disk disk_name could not be o
 int mount_fs(char *disk_name){
     // load the necessary data stuctures from
     // the virtual disk into your program’s memory.
-    open_disk(/* from 3600mkfs.c*/);
+    
+    // NEED THIS
+    if (open_disk(disk_name) < 0){
+      printf("Disk could not be opened\n");
+      return -1;
+    }
 
+    /* ---------------------read superblock---------------------*/
     char superblock_data[BLOCK_SIZE];
-    if (dread(0, superblock_data) < 0) { 
-        fprintf(stderr, "dread failed for block 0\n"); 
+    if (block_read(0, superblock_data) < 0) { 
+        fprintf(stderr, "block_read failed for block 0\n"); 
+        return -1;
     }
     
-    disk_superblock = calloc(1, sizeof(superblock));
-    memcpy(disk_superblock, &superblock_data, sizeof(superblock));
+    disk_superblock = (superblock*) calloc(1, sizeof(superblock));
+    memcpy(disk_superblock, &superblock_data, sizeof(superblock)); // copy to global variables 
 
+    printf("BLOCKSIZE: %i\n", disk_superblock->blocksize); 
+    printf("DE_START: %i\n", disk_superblock->DE_start); 
+    //printf("DE_LENGTH: %i\n", disk_superblock->DE_length); 
+    printf("FAT_START: %i\n", disk_superblock->fat_start); 
+    printf("FAT_LENGTH: %i\n", disk_superblock->fat_length); 
+    printf("DB_START: %i\n", disk_superblock->DataRegion_start); 
+
+
+    /*-------------------read FAT-------------------------*/
     // Get FAT Entries // create a temporary FAT table and pass it around with a pointer during run time
+    // copy to the operating FAT in memmory
+    if (read_fat() < 0){
+      printf("Cannot read FAT data in\n");
+      return -1;
+    }
 
+    printf("FAT on memmory is:\n");
+    for (int i = 0; i < 10; i++){
+      printf("Read FAT is %d\n",FAT[i]);
+    }
+    
+    /*-------------------read Dir_Entry-------------------------*/
+    // for (int j = disk_superblock->DE_start; j < disk_superblock->DE_start + disk_superblock->DE_length; j++) {
+    
+    // struct dirent * root_entry_ptr = root_entry; // keep the beginning of Dir_Entries
+    int num_dirents_per_block = BLOCK_SIZE / sizeof(Dir_Entry);
+    printf("numdirents/block is %d\n", num_dirents_per_block);
+    root_entry = (Dir_Entry*) calloc(num_dirents_per_block, sizeof(Dir_Entry));  // so that equals BLOCK_SIZE
+
+    if (block_read(disk_superblock->DE_start, (char*) root_entry) < 0) { 
+        perror("Error while reading from disk"); 
+        return -1;
+    }
+
+    printf("root entry read is %s\n", root_entry->name);
     return 0;
 }
 
 
 /*
-This function unmounts your file system from a virtual disk with name disk_name. As part of this operation, you need to write back all meta-information so that the disk persistently reflects all changes that were made to the file system (such as new files that are created, data that is written, ...). 
-You should also close the disk. 
-The function returns 0 on success, and -1 when the disk disk_name could not be closed or when data could not be written to the disk (this should not happen). If there are any open file descriptors (that point to files in the file system that is about to be unmounted), umount_fs will close them.
+This function unmounts your file system from a virtual disk with name disk_name. 
+As part of this operation, you need to write back all meta-information so that the disk persistently 
+reflects all changes that were made to the file system (such as new files that are created, data that is written, ...). 
 
-write that entry back onto the disk
-before you close.
+You should also close the disk. 
+
+The function returns 0 on success, and -1 when the disk disk_name could not be closed or when data could not be written to the disk (this should not happen). If there are any open file descriptors (that point to files in the file system that is about to be unmounted), umount_fs will close them.
 */
 int umount_fs(char *disk_name){
     printf("unmounting\n");
-    write_block(0, disk_superblock);
+    /*-----------------Write super block----------------*/
+
+    char superblock_data[BLOCK_SIZE];
+    memcpy(&superblock_data, disk_superblock, sizeof(superblock)); // copy to global variables 
+    if (block_read(0, superblock_data) < 0) { 
+        fprintf(stderr, "block_write failed for block 0\n"); 
+        return -1;
+    }
     
-    disk_close();
+    /*-----------------Write FAT----------------*/
+    if (write_fat(&FAT[0]) < 0){
+      printf("Cannot write FAT data in\n");
+      return -1;
+    }
+
+    /*-----------------Write Dir Entries----------------*/
+    // seems like we need dir_length
+    close_disk();
 
     return 0;
 }
@@ -145,18 +221,19 @@ int fs_mkdir(char *name){ // same as creating a file
   // check if name length is valid
   
   // check if number of files <= 256
-    int full = 1;
-    Dir_Entry * temp = calloc(1, sizeof(Dir_Entry));   // fix this
-    for (int i = 0; i < disk_superblock->de_length; i++){
-      // locate position of dir_entry
+    // /*--------------------------------------------------------------------*/
+    // int full = 1;
+    // Dir_Entry * temp = calloc(1, sizeof(Dir_Entry));   // fix this
+    // for (int i = 0; i < disk_superblock->de_length; i++){
+    //   // locate position of dir_entry
       
-      // check valid 
-      if (temp->valid == 0) {
-        full = 0;
-        break;
-      }
-    }
-
+    //   // check valid 
+    //   if (temp->valid == 0) {
+    //     full = 0;
+    //     break;
+    //   }
+    // }
+    /*--------------------------------------------------------------------*/
     // check if there are available dir_entry
 
 
@@ -240,17 +317,19 @@ int fs_create(char *name){
 
     // create a new dir_entry
     int full = 1; // check if need more blocks
-    Dir_Entry * temp = calloc(1, sizeof(Dir_Entry));   // fix this
-    for (int i = 0; i < disk_superblock->de_length; i++){
-      // locate position of dir_entry
-      
-      // check valid 
-      if (temp->valid == 0) {
-        full = 0;
-        break;
-      }
-    }
+    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   // fix this
 
+    //------------------------------------------------------------    
+    // for (int i = 0; i < disk_superblock->de_length; i++){
+    //   // locate position of dir_entry
+      
+    //   // check valid 
+    //   if (temp->valid == 0) {
+    //     full = 0;
+    //     break;
+    //   }
+    // }
+    //------------------------------------------------------------
     // check if there are available dir_entry
 
 
@@ -291,7 +370,7 @@ int fs_delete(char *name){
     // find dir_entry location - check if file exist
     // create a new dir_entry
     int full = 1; // check if need more blocks
-    Dir_Entry * temp = calloc(1, sizeof(Dir_Entry));   // fix this
+    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   // fix this
     
     // mark FAT entry as unused
     unsigned int current_index = temp->start_block;
@@ -305,7 +384,8 @@ int fs_delete(char *name){
          FAT[current_index] = 0;
     }
     // Decrease the number of valid files on the disk
-    disk_superblock->valid_files--;
+    
+    //disk_superblock->valid_files--;
 
     return 0;
 }
@@ -329,10 +409,11 @@ int fs_read(int fildes, void *buf, size_t nbyte){
     // grab the file dir_entry 
 
     // get FAT entry from first block / current_index
-    int current_index = ...; 
+    
+    // int current_index = ...; 
     while (nbyte > 0) {
         char current_buffer[BLOCK_SIZE];
-        block_read(start_of_data_region + current_FAT_index, current_buffer);
+        // block_read(start_of_data_region + current_FAT_index, current_buffer);
 
         memcpy(buf, current_buffer, BLOCK_SIZE);
 
@@ -341,7 +422,7 @@ int fs_read(int fildes, void *buf, size_t nbyte){
         if (EOF) {
             break;
         } else {
-            current_index = FAT[current_index];
+            // current_index = FAT[current_index];
         }
     }
     return 0;
@@ -368,14 +449,14 @@ int fs_write(int fildes, void *buf, size_t nbyte){
     // grab the file dir_entry 
 
     // get FAT entry from first block / current_index
-    int current_index = ...; 
+    int current_index = 0; ///EDITTING 
     while (nbyte > 0) {
         char current_buffer[BLOCK_SIZE];
-        block_read(start_of_data_region + current_FAT_index, current_buffer);
+        //block_read(disk_superblock->DataRegion_start + current_FAT_index, current_buffer);
 
         memcpy(buf, current_buffer, BLOCK_SIZE);
 
-        block_write(start_of_data_region + current_FAT_index, current_buffer);
+        // block_write(start_of_data_region + current_FAT_index, current_buffer);
 
         buf = buf + BLOCK_SIZE;
 
@@ -404,7 +485,7 @@ int fs_get_filesize(int fildes){
     // check if file exists
     
     // grab the file dir_entry 
-    Dir_Entry * temp = calloc(1, sizeof(Dir_Entry));
+    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));
     return temp->size;
 }
 
@@ -423,7 +504,7 @@ int fs_lseek(int fildes, off_t offset){
 
     // check if offset > file size
 
-    Dir_Entry * temp = calloc(1, sizeof(Dir_Entry));   
+    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   
 
     // change start_block to offset
     temp->start_block = offset;
@@ -447,7 +528,7 @@ int fs_truncate(int fildes, off_t length){
     // check if file exists
     
     // grab the file dir_entry 
-    Dir_Entry * temp = calloc(1, sizeof(Dir_Entry));   // fix this
+    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   // fix this
     
     // If length > file_size, throw an error
     if (length > temp->size) {
@@ -457,7 +538,7 @@ int fs_truncate(int fildes, off_t length){
 
     /* clear all FAT entrie for file after "length" */
     // get FAT entry from first block / current_index
-    int current_index = ...;  // index at "length"
+    int current_index = 0;  //............. index at "length"
 
     int new_end_index = current_index;
 
@@ -472,12 +553,13 @@ int fs_truncate(int fildes, off_t length){
 
     char current_buffer[BLOCK_SIZE];
     // zero out the blocks after "length"
-    block_read(start_of_data_region + new_end_index, current_buffer);
+    //block_read(start_of_data_region + new_end_index, current_buffer);
 
-    memset(...);
+    // NEED THIS
+    // memset(...);
 
 
-    block_write(start_of_data_region + new_end_index, current_buffer);    
+    // block_write(start_of_data_region + new_end_index, current_buffer);    
 
     // Update size metadata
     

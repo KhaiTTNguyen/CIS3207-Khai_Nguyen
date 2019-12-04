@@ -36,6 +36,38 @@ int read_fat(){
 }
 
 
+/*
+ * searches FAT to find the next available slot,
+ * return the corresponding index into the FAT array.
+ */
+int create_FAT_entry() {
+
+    int i;
+    int found = 0;
+    for (i = 0; i < DISK_BLOCKS; i++) {
+        if (FAT[i] == 0) {
+        found = 1; 
+        break;
+        }
+    }
+
+    if (!found){
+        return -1;
+    } 
+
+    printf("crating fat entry\n");
+
+    FAT[i] = -1;
+
+    // Zero out the data
+    char* zero_buff = (char*) alloca(BLOCK_SIZE);
+    printf("writing to block %i in DaReg\n", disk_superblock->DataRegion_start + i);
+    block_write(disk_superblock->DataRegion_start + i, zero_buff);
+
+    return i;
+}
+
+
 /* takes an index for a directory entry 
 and finds that directory entry on disk. 
  */
@@ -51,3 +83,21 @@ void read_dirent(int index, Dir_Entry* de, superblock* disk_v) {
 
   memcpy(de, block_buffer + (index % num_dirents_per_block) * sizeof(Dir_Entry), sizeof(Dir_Entry));
 }
+
+/* This function takes an index into the directory entries and a dirent struct
+ * and updates the dirent at that index to the one given.
+ */
+void update_dirent(int index, Dir_Entry* de, superblock* disk_v) {
+    int num_dirents_per_block = BLOCK_SIZE / sizeof(Dir_Entry);
+    int block_index = disk_v->DE_start + (index / num_dirents_per_block);
+
+    // Get the block in which the dirent resides
+    char block_buffer[BLOCK_SIZE];
+    block_read(block_index, block_buffer);
+
+    // Overwrite the correct dirent
+    memcpy(block_buffer + (index % num_dirents_per_block) * sizeof(Dir_Entry), de, sizeof(Dir_Entry));
+
+    // Write the block back to disk
+    block_write(block_index, block_buffer);
+} 

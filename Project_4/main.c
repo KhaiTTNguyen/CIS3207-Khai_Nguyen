@@ -18,6 +18,7 @@ int main (int argc, char *argv[]){
 
     if (make_fs("Test_Disk") < 0){
         printf("Filesys cant be made\n");
+        return -1;
     }
 
     printf("Filesys made\n");
@@ -26,8 +27,22 @@ int main (int argc, char *argv[]){
 
     if (mount_fs("Test_Disk") < 0){
         printf("Filesys cant be mounted\n");
+        return -1;
     }
 
     printf("Filesys mounted\n");
+
+    if (fs_create("file1.txt") < 0){
+        printf("Fiel cant be created\n");
+        return -1;
+    }
+    printf("file1_created\n");
+
+    if (umount_fs("Test_Disk") < 0){
+        printf("FILEsys cant be umounted\n");
+        return -1;
+    }
+    printf("FS umounted\n");
+
     return 0;
 }

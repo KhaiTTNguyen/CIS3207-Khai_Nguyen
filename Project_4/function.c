@@ -29,6 +29,8 @@ int make_fs(char *disk_name){
 
   printf("Disk opened\n");
 
+
+  
   // initialize superblock
   // write content of SUPERBLOCK to 1st block on disk
   superblock my_superblock;  
@@ -38,9 +40,11 @@ int make_fs(char *disk_name){
   my_superblock.fat_start = 1;          // int fat_start;
   my_superblock.fat_length = (DISK_BLOCKS * sizeof(uint16_t)) / BLOCK_SIZE; // in unit of blocks    
   my_superblock.DE_start = 1 + my_superblock.fat_length;  //int DE_start, in block number;
+  my_superblock.DE_length = (DISK_BLOCKS/2 - 1 - my_superblock.fat_length) / sizeof(Dir_Entry) ; // number of Dir_Entries allowed
   my_superblock.DataRegion_start = NUM_DATA_BLOCKS; // in block number;  
   my_superblock.max_num_files = 256;
 
+  printf("Starting to write supper block\n");
   // write the contents of the SUPER BLOCK to the first block on the disk.
   char temp_mem[BLOCK_SIZE];
   memset(temp_mem, 0, BLOCK_SIZE);
@@ -61,8 +65,13 @@ int make_fs(char *disk_name){
   // }
   printf("Start writing FAT\n");
   uint16_t temp_FAT[DISK_BLOCKS];
-  for (uint16_t i = 0; i < DISK_BLOCKS; ++i){
-    temp_FAT[i] = 0xAAAA;
+  
+  for (uint16_t i = 0; i < 1 + my_superblock.fat_length + 1; ++i){ // units of blocks
+    temp_FAT[i] = -1;
+  }
+
+  for (uint16_t i = 1 + my_superblock.fat_length + 1; i < DISK_BLOCKS; ++i){
+    temp_FAT[i] = 0x00;
   }
   printf("Done filing FAT\n");
   
@@ -75,11 +84,10 @@ int make_fs(char *disk_name){
   
   Dir_Entry root; //= (Dir_Entry *) calloc(1, sizeof(Dir_Entry));
   root.file_type = 0; // directory
-  //memcpy(root->name, "ROOT", strlen("ROOT") + 1);
   strcpy(root.name, "ROOT");
   printf("name copied\n");
   root.start_block = my_superblock.fat_start + my_superblock.fat_length;
-
+  root.occupied = 1;
   printf("prepare to copy\n");
   
 
@@ -92,10 +100,10 @@ int make_fs(char *disk_name){
   if (block_write(root.start_block, temp_mem) < 0) {   // write to start block of Dir_Entry
       perror("Error while writing to disk"); 
   }
-
-  printf("Disk close\n");
   
   close_disk();
+  printf("Disk close\n");
+  
   return 0;
 }
 
@@ -137,7 +145,7 @@ int mount_fs(char *disk_name){
 
     printf("BLOCKSIZE: %i\n", disk_superblock->blocksize); 
     printf("DE_START: %i\n", disk_superblock->DE_start); 
-    //printf("DE_LENGTH: %i\n", disk_superblock->DE_length); 
+    printf("DE_LENGTH: %i\n", disk_superblock->DE_length); 
     printf("FAT_START: %i\n", disk_superblock->fat_start); 
     printf("FAT_LENGTH: %i\n", disk_superblock->fat_length); 
     printf("DB_START: %i\n", disk_superblock->DataRegion_start); 
@@ -171,6 +179,9 @@ int mount_fs(char *disk_name){
     }
 
     printf("root entry read is %s\n", root_entry->name);
+    printf("root entry occupied: %i\n", root_entry->occupied);
+    printf("root entry start block: %i\n", root_entry->start_block);
+
     return 0;
 }
 
@@ -315,49 +326,60 @@ Note that to access a file that is created, it has to be subsequently opened.
 
 int fs_create(char *name){
     // check if exceed 256 files
+    if (disk_superblock->max_num_files == 0){
+      fprintf(stderr, "Reached maximum num of files\n");
+      return -1;
+    }
 
     // check if meets maximum length filename
-
+    
     // create a new dir_entry
     if (strrchr(name, '/') > name) {  // find last '/'
       fprintf(stderr, "Unable to create on a multilevel dir\n");
       return -1;
     }
-
-    // find unused dirent
+    printf("Find unused dirent\n");
+    // -------------------find an unused dirent-------------------------
     int full = 1; // check if need more blocks
-    //------------------------------------------------------------    
-    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   // fix this
-    for (int i = 0; i < disk_superblock->DE_length; i++){
-      // locate position of dir_entry
-      
+    Dir_Entry * temp = (Dir_Entry *) alloca(sizeof(Dir_Entry));   // fix this
+    printf("dirent allocated\n");
+    int i;
+    for (i = 0; i < disk_superblock->DE_length; i++){
+      read_dirent(i, temp, disk_superblock); // read dirent at "i" to "temp" Dir_Entry
       // check valid 
+      printf("dirent read\n");
       if (temp->occupied == 0) {
         full = 0;
         break;
       }
     }
-
+    
     // Throw error if all dirents full
     if (full == 1) {
       fprintf(stderr, "There are no more available dirents\n");
       return -1;
     }
 
+    printf("Start writing new dirent\n");
     //------------------------------------------------------------
-    // check if there are available dir_entry
-
-  
-    // update name
-    // set time & date
-    // set start_block
-    // set size
-    // set offset
-    // set temp->valid = 1
-
-    // disk_vcb->valid_files++;
+    // fill an unoccupied Dir_Entry
+    printf("Dirent name is %s\n", temp->name);
+    temp->occupied = 1;
+    temp->size = 0;
     
-   return 0;
+    temp->file_type = 1;  // this is a file
+    memcpy(temp->name, name, strlen(name) + 1);
+    temp->start_block = create_FAT_entry(); /*start block # in FAT*/
+    printf("FAT info written\n");
+
+    update_dirent(i, temp, disk_superblock);
+
+    printf("new dirent info written\n");
+
+    disk_superblock->max_num_files--;
+    printf("Done writing dirent\n");
+
+    return 0;
 }
 
 

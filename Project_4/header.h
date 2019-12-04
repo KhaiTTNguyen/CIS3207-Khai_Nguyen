@@ -18,6 +18,7 @@
 #define EXTENSION_LENGTH 3
 
 #define NUM_DATA_BLOCKS DISK_BLOCKS/2
+#define MAX_NUM_FILES 256
 
 typedef struct Dir_Entry{
     char name[FILENAME_LENGTH]; /*15 bytes*/
@@ -35,11 +36,11 @@ typedef struct superblock {
     uint16_t bps; /* 2 bytes ,bytes per sector, 512 bytes */
     uint16_t spb; /*2 bytes, sector per cluster, 8 sector/cluster */
     uint16_t fat_start;
-    uint16_t fat_length;      // track end of FAT
-    uint16_t DE_start;
-    uint16_t DE_length;
+    uint16_t fat_length;      // track end of FAT, in units of blocks
+    uint16_t DE_start;          
+    uint16_t DE_length;        // number of Dir_Entries allowed
     uint16_t DataRegion_start;
-    uint16_t max_num_files;
+    uint16_t valid_files;
 } superblock;
 
 extern superblock * disk_superblock;
@@ -56,6 +57,8 @@ sequence.
 int make_fs(char *disk_name);
 int mount_fs(char *disk_name);
 int umount_fs(char *disk_name);
+
+int fs_open(char *name);
 
 int write_fat(uint16_t * FAT);
 int read_fat();

@@ -42,7 +42,7 @@ int make_fs(char *disk_name){
   my_superblock.DE_start = 1 + my_superblock.fat_length;  //int DE_start, in block number;
   my_superblock.DE_length = (DISK_BLOCKS/2 - 1 - my_superblock.fat_length) / sizeof(Dir_Entry) ; // number of Dir_Entries allowed
   my_superblock.DataRegion_start = NUM_DATA_BLOCKS; // in block number;  
-  my_superblock.max_num_files = 256;
+  my_superblock.valid_files = 1;
 
   printf("Starting to write supper block\n");
   // write the contents of the SUPER BLOCK to the first block on the disk.
@@ -149,7 +149,7 @@ int mount_fs(char *disk_name){
     printf("FAT_START: %i\n", disk_superblock->fat_start); 
     printf("FAT_LENGTH: %i\n", disk_superblock->fat_length); 
     printf("DB_START: %i\n", disk_superblock->DataRegion_start); 
-    printf("max_nam_files: %i\n", disk_superblock->max_num_files); 
+    printf("valid_files: %i\n", disk_superblock->valid_files); 
 
 
     /*-------------------read FAT-------------------------*/
@@ -282,12 +282,28 @@ return the file descriptor corresponding to this file, -1 on failure.
 int fs_open(char *name){
     // check if file exists
     
-    // grab the file dir_entry 
+    // check if there has bene 64 file descriptors active
 
+    // grab the file dir_entry 
+    int rem_files = disk_superblock->valid_files;
+
+    // Loop through dirents, looking for the valid dirent with a matching name
+    for (int i = 0; i < disk_superblock->DE_length && rem_files > 0; i++) {
+      Dir_Entry * tmp = (Dir_Entry *) alloca(sizeof(Dir_Entry));
+      read_dirent(i, tmp, disk_superblock);
+      if ((tmp->occupied == 1) && (strcmp(name, tmp->name) == 0)) {
+        int fd = open(name, O_CREAT|O_WRONLY|O_TRUNC,S_IRUSR|S_IWUSR); // needs error check
+        return fd;
+      } else if (tmp->occupied) {
+        rem_files--;
+      }
+    }
+
+    fprintf(stderr, "Could not find specified file: %s", name); 
+    return -1;
+    
     // get FAT entry from first block / current_index
     
-    int fd = open(name, O_CREAT|O_WRONLY|O_TRUNC,S_IRUSR|S_IWUSR); // needs error check
-    return fd;
 }
 
 
@@ -326,13 +342,17 @@ Note that to access a file that is created, it has to be subsequently opened.
 
 int fs_create(char *name){
     // check if exceed 256 files
-    if (disk_superblock->max_num_files == 0){
+    if (disk_superblock->valid_files == MAX_NUM_FILES){
       fprintf(stderr, "Reached maximum num of files\n");
       return -1;
     }
 
     // check if meets maximum length filename
-    
+    if (strlen(name) > FILENAME_MAX){
+      fprintf(stderr, "File name exceed max limit\n");
+      return -1;
+    }
+
     // create a new dir_entry
     if (strrchr(name, '/') > name) {  // find last '/'
       fprintf(stderr, "Unable to create on a multilevel dir\n");
@@ -376,7 +396,7 @@ int fs_create(char *name){
 
     printf("new dirent info written\n");
 
-    disk_superblock->max_num_files--;
+    disk_superblock->valid_files++;
     printf("Done writing dirent\n");
 
     return 0;
@@ -429,9 +449,11 @@ int fs_delete(char *name){
 
 
 /*
-This function attempts to read nbyte bytes of data from the file referenced by the descriptor fildes into the buffer pointed to by buf. The function assumes that the buffer buf is large enough to hold at least nbyte bytes. 
+This function attempts to read nbyte bytes of data from the file referenced by the descriptor fildes into the buffer pointed to by buf. 
+The function assumes that the buffer buf is large enough to hold at least nbyte bytes. 
 
 When the function attempts to read past the end of the file, it reads all bytes until the end of the file. 
+
 Return: the number of bytes that were actually read 
 This number could be smaller than nbyte when attempting to read past the end of the file (when trying to read while the file pointer is at the end of the file, the function returns zero). 
 
@@ -444,6 +466,7 @@ int fs_read(int fildes, void *buf, size_t nbyte){
     // check if file exists
     
     // grab the file dir_entry 
+    
 
     // get FAT entry from first block / current_index
     

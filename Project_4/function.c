@@ -39,6 +39,7 @@ int make_fs(char *disk_name){
   my_superblock.fat_length = (DISK_BLOCKS * sizeof(uint16_t)) / BLOCK_SIZE; // in unit of blocks    
   my_superblock.DE_start = 1 + my_superblock.fat_length;  //int DE_start, in block number;
   my_superblock.DataRegion_start = NUM_DATA_BLOCKS; // in block number;  
+  my_superblock.max_num_files = 256;
 
   // write the contents of the SUPER BLOCK to the first block on the disk.
   char temp_mem[BLOCK_SIZE];
@@ -46,7 +47,7 @@ int make_fs(char *disk_name){
   memcpy(temp_mem, &my_superblock, sizeof(superblock));
 
   if (block_write(0, temp_mem) < 0) {   // write to 1st block
-      perror("Error while writing to disk"); 
+    perror("Error while writing to disk"); 
   }
 
   memset(temp_mem, 0, BLOCK_SIZE);
@@ -140,6 +141,7 @@ int mount_fs(char *disk_name){
     printf("FAT_START: %i\n", disk_superblock->fat_start); 
     printf("FAT_LENGTH: %i\n", disk_superblock->fat_length); 
     printf("DB_START: %i\n", disk_superblock->DataRegion_start); 
+    printf("max_nam_files: %i\n", disk_superblock->max_num_files); 
 
 
     /*-------------------read FAT-------------------------*/
@@ -201,6 +203,7 @@ int umount_fs(char *disk_name){
 
     /*-----------------Write Dir Entries----------------*/
     // seems like we need dir_length
+
     close_disk();
 
     return 0;
@@ -316,23 +319,35 @@ int fs_create(char *name){
     // check if meets maximum length filename
 
     // create a new dir_entry
-    int full = 1; // check if need more blocks
-    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   // fix this
+    if (strrchr(name, '/') > name) {  // find last '/'
+      fprintf(stderr, "Unable to create on a multilevel dir\n");
+      return -1;
+    }
 
+    // find unused dirent
+    int full = 1; // check if need more blocks
     //------------------------------------------------------------    
-    // for (int i = 0; i < disk_superblock->de_length; i++){
-    //   // locate position of dir_entry
+    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   // fix this
+    for (int i = 0; i < disk_superblock->DE_length; i++){
+      // locate position of dir_entry
       
-    //   // check valid 
-    //   if (temp->valid == 0) {
-    //     full = 0;
-    //     break;
-    //   }
-    // }
+      // check valid 
+      if (temp->occupied == 0) {
+        full = 0;
+        break;
+      }
+    }
+
+    // Throw error if all dirents full
+    if (full == 1) {
+      fprintf(stderr, "There are no more available dirents\n");
+      return -1;
+    }
+
     //------------------------------------------------------------
     // check if there are available dir_entry
 
-
+  
     // update name
     // set time & date
     // set start_block

@@ -35,3 +35,19 @@ int read_fat(){
     return 0;
 }
 
+
+/* takes an index for a directory entry 
+and finds that directory entry on disk. 
+ */
+void read_dirent(int index, Dir_Entry* de, superblock* disk_v) {
+  // Get the block number where we will find the directory entry,
+  // there are num_dirents_per_block
+  int num_dirents_per_block = BLOCK_SIZE / sizeof(Dir_Entry);
+  int block_index = disk_v->DE_start + (index / num_dirents_per_block);
+
+  // Get the block data
+  char block_buffer[BLOCK_SIZE];
+  block_read(block_index, block_buffer);
+
+  memcpy(de, block_buffer + (index % num_dirents_per_block) * sizeof(Dir_Entry), sizeof(Dir_Entry));
+}

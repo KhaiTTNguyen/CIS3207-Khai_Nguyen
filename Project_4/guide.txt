@@ -238,3 +238,4 @@ Dynamically on the heap, using either calloc() & free()
 
 
 easier to initialize structure rather than [structure pointer]
+use static assignment to READ / WRITE from disk

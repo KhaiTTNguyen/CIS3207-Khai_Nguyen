@@ -25,8 +25,9 @@ typedef struct Dir_Entry{
 
     uint16_t start_block; /*start block # in FAT*/
     uint16_t size; /*in bytes*/
-    // uint16_t offset; // current offset - due to written/read last time
+    // uint16_t offset; // current offset - due to written/read last time   
     uint16_t file_type; //file = 1, directory = 0
+    uint16_t occupied;
     // parent dir
 } Dir_Entry;
 
@@ -39,7 +40,9 @@ typedef struct superblock {
     uint16_t fat_start;
     uint16_t fat_length;      // track end of FAT
     uint16_t DE_start;
+    uint16_t DE_length;
     uint16_t DataRegion_start;
+    uint16_t max_num_files;
 } superblock;
 
 extern superblock * disk_superblock;

@@ -280,19 +280,22 @@ return the file descriptor corresponding to this file, -1 on failure.
 */
 
 int fs_open(char *name){
-    // check if file exists
     
-    // check if there has bene 64 file descriptors active
+    // check if there has been 64 file descriptors active
+    if(total_fd == 64){
+      fprintf(stderr, "Maximum file descriptors reached"); 
+      return -1;
+    }
 
-    // grab the file dir_entry 
     int rem_files = disk_superblock->valid_files;
-
+    // grab the file dir_entry 
     // Loop through dirents, looking for the valid dirent with a matching name
     for (int i = 0; i < disk_superblock->DE_length && rem_files > 0; i++) {
       Dir_Entry * tmp = (Dir_Entry *) alloca(sizeof(Dir_Entry));
       read_dirent(i, tmp, disk_superblock);
       if ((tmp->occupied == 1) && (strcmp(name, tmp->name) == 0)) {
         int fd = open(name, O_CREAT|O_WRONLY|O_TRUNC,S_IRUSR|S_IWUSR); // needs error check
+        total_fd++;
         return fd;
       } else if (tmp->occupied) {
         rem_files--;
@@ -320,6 +323,8 @@ int fs_close(int fildes){
   // check if file exists
     // if not return -1;
 
+  total_fd--;
+  
   close(fildes);
   return 0;
 }

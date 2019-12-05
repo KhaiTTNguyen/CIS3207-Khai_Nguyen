@@ -9,12 +9,14 @@ superblock * disk_superblock;
 uint16_t FAT[DISK_BLOCKS]; // covers all diskblocks
 Dir_Entry * root_entry; // pointer to an array of dirents
 
+int total_fd;
 
 int main (int argc, char *argv[]){
     // if (make_disk("Test_Disk") < 0){
     //     printf("Error creating disk\n");
     //     return -1;
     // }
+    int total_fd = 0;
 
     if (make_fs("Test_Disk") < 0){
         printf("Filesys cant be made\n");

@@ -46,6 +46,7 @@ typedef struct superblock {
 extern superblock * disk_superblock;
 extern Dir_Entry * root_entry;
 extern uint16_t FAT[DISK_BLOCKS];
+extern int total_fd;
 /*
 A value = 0, indicating that the block is free.
 A value > 0, meaning that the block corresponding to the

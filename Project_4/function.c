@@ -351,7 +351,10 @@ int fs_write(int fildes, void *buf, size_t nbyte){
     }
 
     */
-    // printf("Buff in fs_write is %s\n", buf);
+    printf("Fildes is %d\n", fildes);
+    printf("Buff in fs_write is %s\n", buf);
+    printf("nbytes in fs_write is %d\n", nbyte);
+  
     if (write(fildes, buf, nbyte) < 0) {	
 		  printf("write system_call error\n");
     }
@@ -400,7 +403,7 @@ int fs_close(int fildes){
   // assume content of fidles < BLOCKSIZE
   char toWrite[BLOCK_SIZE];
   printf("Fildes is %d\n", fildes);
-  if(read(fildes, toWrite, BLOCK_SIZE+1) < 0){
+  if(read(fildes, toWrite, BLOCK_SIZE) < 0){
     printf("Cant write to toWrite buf\n");
     return -1;
   }

@@ -44,7 +44,6 @@ int main (int argc, char *argv[]){
     // dup2(,fd1); // creating another dup
     
     printf("file1_opened with fd1 = %d\n", fd1);
-
     // try writing to fd1
     // ******The function assumes that the buffer buf holds at least nbyte bytes****** 
     char buf [15] = "Sample string"; 

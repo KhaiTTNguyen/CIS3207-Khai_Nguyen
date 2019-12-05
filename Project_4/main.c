@@ -8,7 +8,7 @@
 superblock * disk_superblock;
 uint16_t FAT[DISK_BLOCKS]; // covers all diskblocks
 Dir_Entry * root_entry; // pointer to an array of dirents
-
+Dir_Entry * origin_root;
 int total_fd;
 
 int main (int argc, char *argv[]){
@@ -31,7 +31,7 @@ int main (int argc, char *argv[]){
         printf("Filesys cant be mounted\n");
         return -1;
     }
-
+    origin_root = root_entry; // keep origin root
     printf("Filesys mounted\n");
 
     if (fs_create("file1.txt") < 0){
@@ -40,23 +40,22 @@ int main (int argc, char *argv[]){
     }
     printf("file1_created\n");
 
-    // int fd1 = 0;
-    // if (fd1 = fs_open("file1.txt") < 0){
-    //     printf("Fiel cant be opened\n");
-    //     return -1;
-    // }
-    // printf("file1_opened\n");
+    int fd1 = fs_open("file1.txt");
+    // dup2(,fd1); // creating another dup
+    
+    printf("file1_opened with fd1 = %d\n", fd1);
 
-    // // try writing to fd1
-    // // ******The function assumes that the buffer buf holds at least nbyte bytes****** 
-    // char buf[10];
-    // fs_write(fd1, buf, strlen(buf));
+    // try writing to fd1
+    // ******The function assumes that the buffer buf holds at least nbyte bytes****** 
+    char buf [15] = "Sample string"; 
+    // printf("Buff len is %d\n", strlen(buf));
+    fs_write(fd1, buf, strlen(buf) + 1);
 
-    // if (fd1 = fs_close(fd1) < 0){
-    //     printf("Fiel cant be closed\n");
-    //     return -1;
-    // }
-    // printf("file1_closed\n");
+    if (fs_close(fd1) < 0){
+        printf("Fiel cant be closed\n");
+        return -1;
+    }
+    printf("file1_closed\n");
 
 
 

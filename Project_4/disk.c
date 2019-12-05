@@ -8,7 +8,7 @@
 
 /******************************************************************************/
 static int active = 0;  /* is the virtual disk open (active) */
-static int handle;      /* file descriptor to handle virtual disk       */
+int handle;      /* file descriptor to handle virtual disk       */
 
 /******************************************************************************/
 

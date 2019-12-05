@@ -12,14 +12,9 @@
 #include <stdint.h>     // unit32_t = unsigned int // 4 bytes
 #include <sys/types.h>
 #include <string.h> 
-#include <errno.h>
-#include <math.h>
-#include <string.h>
-#include <assert.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <time.h>
 #include <unistd.h>
+#include <errno.h>
+
 
 #define FILENAME_LENGTH 19 // 15(name) + 1(.) + 3(ext)
 #define EXTENSION_LENGTH 3
@@ -32,53 +27,30 @@ typedef struct Dir_Entry{
     uint16_t start_block; /*start block # in FAT*/
     uint16_t size; /*in bytes*/
     uint16_t file_type; //file = 1, directory = 0
-    uint16_t valid;
-    unsigned int first_block;
-    unsigned int size;
-    uid_t user;
-    gid_t group;
-    mode_t mode;
-    struct timespec access_time;
-    struct timespec modify_time;
-    struct timespec create_time;
+    uint16_t occupied;
+    // parent dir
 } Dir_Entry;
 
 // description of disk layout
 // total 14 BYTES
 typedef struct superblock {
-    // a magic number of identity of your disk
-    int magic;
-
-    // description of disk layout
-    int blocksize;
-    int de_start;
-    int de_length;
-    int fat_start;
-    int fat_length;
-    int db_start;
-    int valid_files;
-
-    // meta data for root dir
-    uid_t user;
-    gid_t group;
-    mode_t mode;
-    struct timespec access_time;
-    struct timespec modify_time;
-    struct timespec create_time;
+    uint16_t blocksize;  // 2 bytes = uint16_t
+    uint16_t bps; /* 2 bytes ,bytes per sector, 512 bytes */
+    uint16_t spb; /*2 bytes, sector per cluster, 8 sector/cluster */
+    uint16_t fat_start;
+    uint16_t fat_length;      // track end of FAT, in units of blocks
+    uint16_t DE_start;          
+    uint16_t DE_length;        // number of Dir_Entries allowed
+    uint16_t DataRegion_start;
+    uint16_t valid_files;
 } superblock;
-
-typedef struct fatent_s {
-  unsigned int used:1;
-  unsigned int eof:1;
-  unsigned int next:30;
-} fatent;
-
-
 
 extern superblock * disk_superblock;
 extern Dir_Entry * root_entry;
+extern Dir_Entry * origin_root;
 extern uint16_t FAT[DISK_BLOCKS];
-extern int total_fd;
+extern int total_fd;;
+extern int handle;
 /*
 A value = 0, indicating that the block is free.
 A value > 0, meaning that the block corresponding to the
@@ -92,6 +64,8 @@ int mount_fs(char *disk_name);
 int umount_fs(char *disk_name);
 
 int fs_open(char *name);
+int fs_write(int fildes, void *buf, size_t nbyte);
+int fs_close(int fildes);
 
 int write_fat(uint16_t * FAT);
 int read_fat();

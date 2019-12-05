@@ -161,7 +161,7 @@ int mount_fs(char *disk_name){
     }
 
     printf("FAT on memmory is:\n");
-    for (int i = 0; i < 10; i++){
+    for (int i = 9; i < 30; i++){
       printf("Read FAT is %d\n",FAT[i]);
     }
     
@@ -290,12 +290,18 @@ int fs_open(char *name){
     int rem_files = disk_superblock->valid_files;
     // grab the file dir_entry 
     // Loop through dirents, looking for the valid dirent with a matching name
+    int fd;
     for (int i = 0; i < disk_superblock->DE_length && rem_files > 0; i++) {
       Dir_Entry * tmp = (Dir_Entry *) alloca(sizeof(Dir_Entry));
       read_dirent(i, tmp, disk_superblock);
       if ((tmp->occupied == 1) && (strcmp(name, tmp->name) == 0)) {
-        int fd = open(name, O_CREAT|O_WRONLY|O_TRUNC,S_IRUSR|S_IWUSR); // needs error check
+        fd = open(name, O_CREAT|O_WRONLY|O_TRUNC,S_IRUSR|S_IWUSR); // needs error check
         total_fd++;
+
+        root_entry += i; // increment root_entry to points to "i"
+        printf("currently at dirent %i\n", i);
+        printf("currently at block %i\n", tmp->start_block);
+        printf("Got fd = %d\n",fd);
         return fd;
       } else if (tmp->occupied) {
         rem_files--;
@@ -304,11 +310,78 @@ int fs_open(char *name){
 
     fprintf(stderr, "Could not find specified file: %s", name); 
     return -1;
-    
     // get FAT entry from first block / current_index
-    
 }
 
+
+/*
+This function attempts to write nbyte bytes of data to the file referenced by the descriptor fildes from the buffer pointed to by buf. 
+
+******The function assumes that the buffer buf holds at least nbyte bytes****** 
+
+When the function attempts to write past the end of the file, the file is automatically extended to hold the additional bytes. 
+
+It is possible that the disk runs out of space while performing a write operation. In this case, the function attempts to write as many bytes as possible (i.e., to fill up the entire space that is left). 
+
+The maximum file size is 32 Mbytes (which is, 8192 blocks, each 4K). 
+
+Upon successful completion, the number of bytes that were actually written is returned. This number could be smaller than nbyte when the disk runs out of space (when writing to a full disk, the function returns zero). 
+
+In case of failure, the function returns -1. 
+
+It is a failure when the file descriptor fildes is not valid. The write function implicitly increments the file pointer by the number of bytes that were actually written.
+*/
+
+
+int fs_write(int fildes, void *buf, size_t nbyte){
+    
+    // file opened
+    // int og_size = nbyte;
+
+    //*************When a file is opened, the file offset (seek pointer) is set to 0 (the beginning of the file)*************
+
+    // get FAT entry from first block / current_index
+    //int current_index = f_dirent->start_block;
+
+    /*
+    if (nbyte > fs_get_filesize(fildes)){
+      int total_blocks_required = nbyte/BLOCK_SIZE;
+      return -1;
+      // update dirent & FAT
+    }
+
+    */
+    // printf("Buff in fs_write is %s\n", buf);
+    if (write(fildes, buf, nbyte) < 0) {	
+		  printf("write system_call error\n");
+    }
+
+    char * readBack = (char*) alloca(20);
+    read(fildes, readBack, nbyte);
+
+    printf("Buff written in fs_write is %s\n", readBack);
+    // while (nbyte > 0) {
+    //     //char current_buffer[BLOCK_SIZE];
+    //     //block_read(disk_superblock->DataRegion_start + current_FAT_index, current_buffer);
+
+        
+    //     buf = buf + BLOCK_SIZE;
+
+    //     nbyte -= BLOCK_SIZE;
+
+    //     if (EOF) {
+    //         break;
+    //     } else {
+    //         current_index = FAT[current_index];
+    //     }
+    // }
+
+    // Update size metadata
+    // Dir entry->size
+
+    return nbyte;
+
+}
 
 /*
 The file descriptor "fildes" is closed. 
@@ -323,11 +396,52 @@ int fs_close(int fildes){
   // check if file exists
     // if not return -1;
 
-  total_fd--;
+  // read to tempbuff toWrite
+  // assume content of fidles < BLOCKSIZE
+  char toWrite[BLOCK_SIZE];
+  printf("Fildes is %d\n", fildes);
+  if(read(fildes, toWrite, BLOCK_SIZE+1) < 0){
+    printf("Cant write to toWrite buf\n");
+    return -1;
+  }
 
+  printf("toWrite contains: %s\n", toWrite);
+
+  printf("Done checking toWrite\n");
+
+  // offset
+  int offset = root_entry->start_block;
+  block_write(offset, toWrite);
+  // fs_lseek(handle,offset);
+
+  // // only write to taht specific block
+  // if (write(handle, toWrite, BLOCK_SIZE) < 0) {
+  //   perror("block_write: failed to write");
+  //   return -1;
+  // }
+
+  total_fd--;
+  root_entry = origin_root; // push root_entry back to origin_root
   close(fildes);
   return 0;
 }
+
+
+/*
+This function returns the current size of the file pointed to by the file descriptor fildes. 
+In case fildes is invalid, the function returns -1.
+
+*/
+
+int fs_get_filesize(int fildes){
+    // check if file exists
+    
+    // grab the file dir_entry 
+    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));
+    return temp->size;
+}
+
+
 
 
 /*
@@ -494,82 +608,6 @@ int fs_read(int fildes, void *buf, size_t nbyte){
 }
 
 /*
-This function attempts to write nbyte bytes of data to the file referenced by the descriptor fildes from the buffer pointed to by buf. 
-
-******The function assumes that the buffer buf holds at least nbyte bytes****** 
-
-When the function attempts to write past the end of the file, the file is automatically extended to hold the additional bytes. 
-
-It is possible that the disk runs out of space while performing a write operation. In this case, the function attempts to write as many bytes as possible (i.e., to fill up the entire space that is left). 
-
-The maximum file size is 32 Mbytes (which is, 8192 blocks, each 4K). Upon successful completion, the number of bytes that were actually written is returned. This number could be smaller than nbyte when the disk runs out of space (when writing to a full disk, the function returns zero). 
-
-In case of failure, the function returns -1. 
-
-It is a failure when the file descriptor fildes is not valid. The write function implicitly increments the file pointer by the number of bytes that were actually written.
-*/
-
-
-
-int fs_write(char * name, void *buf, size_t nbyte){
-    
-    // file opened
-    int og_size = nbyte;
-
-    // grab the file dir_entry ---MIGHT NOT NEED
-    Dir_Entry* f_dirent = (Dir_Entry*)alloca(sizeof(Dir_Entry));
-    int b = find_dirent_by_name(f_dirent, name, disk_superblock);
-
-    // If file DNE
-    if (b == -ENOENT) { 
-      return b;
-    }
-    //*************When a file is opened, the file offset (seek pointer) is set to 0 (the beginning of the file)*************
-
-    // get FAT entry from first block / current_index
-    int current_index = f_dirent->start_block;
-
-    while (nbyte > 0) {
-        char current_buffer[BLOCK_SIZE];
-        //block_read(disk_superblock->DataRegion_start + current_FAT_index, current_buffer);
-
-        memcpy(buf, current_buffer, BLOCK_SIZE);
-
-        // block_write(start_of_data_region + current_FAT_index, current_buffer);
-
-        buf = buf + BLOCK_SIZE;
-
-        nbyte -= BLOCK_SIZE;
-
-        if (EOF) {
-            break;
-        } else {
-            current_index = FAT[current_index];
-        }
-    }
-
-    // Update size metadata
-    // Dir entry->size
-
-    return 0;
-
-}
-
-/*
-This function returns the current size of the file pointed to by the file descriptor fildes. 
-In case fildes is invalid, the function returns -1.
-
-*/
-
-int fs_get_filesize(int fildes){
-    // check if file exists
-    
-    // grab the file dir_entry 
-    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));
-    return temp->size;
-}
-
-/*
 This function sets the file pointer (the offset used for read and write operations) associated with the file descriptor fildes to the argument offset. 
 
 It is an error to set the file pointer beyond the end of the file. 
@@ -586,19 +624,29 @@ or when offset is less than zero.
 */
 // The off_t data type is a signed integer
 int fs_lseek(int fildes, off_t offset){
-    // check if file descriptor is valid
+  // check if file descriptor is valid
 
 
-    // check if offset > file size
-    if (offset > fs_get_filesize(fildes)){
-      printf("requested offset is larger than the file size, \n");
-      return -1;
-    }
+  // check if offset > file size
+  if (offset > fs_get_filesize(fildes)){
+    printf("requested offset is larger than the file size, \n");
+    return -1;
+  }
 
-    Dir_Entry * temp = (Dir_Entry *) calloc(1, sizeof(Dir_Entry));   
+/*--------------------------------*/
 
-    // change start_block to offset
-    temp->start_block = offset;
+  if ((offset < 0) || (offset >= DISK_BLOCKS)) {
+    fprintf(stderr, "offset index out of bounds\n");
+    return -1;
+  }
+
+  // move seeker to that "block" number
+  if (lseek(fildes, offset * BLOCK_SIZE, SEEK_SET) < 0) {  // fix offset of "handle"/disk file
+    perror("fs_lseek: failed to lseek");
+    return -1;
+  }
+
+/*-----------------------------------*/
 
     return 0;
 }

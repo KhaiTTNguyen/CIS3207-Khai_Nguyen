@@ -101,3 +101,26 @@ void update_dirent(int index, Dir_Entry* de, superblock* disk_v) {
     // Write the block back to disk
     block_write(block_index, block_buffer);
 } 
+
+
+int find_dirent_by_name(Dir_Entry* de, char* path, superblock* disk_vcb) {
+  
+  int rem_files = disk_vcb->valid_files;
+
+  // Loop through dirents, looking for the valid dirent with a matching name
+  for (int i = 0; i < disk_vcb->DE_length && rem_files > 0; i++) {
+    Dir_Entry* tmp = (Dir_Entry*)alloca(sizeof(Dir_Entry));
+    read_dirent(i, tmp, disk_vcb);
+    if ((tmp->occupied == 1) && (strcmp(path, tmp->name) == 0)) {
+       *de = *tmp;
+       return i;
+    } else if (tmp->occupied) {
+      rem_files--;
+    }
+  }
+
+  fprintf(stderr, "Could not find specified file: %s", path); 
+  return -ENOENT;
+}
+
+

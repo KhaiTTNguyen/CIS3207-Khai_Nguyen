@@ -40,6 +40,26 @@ int main (int argc, char *argv[]){
     }
     printf("file1_created\n");
 
+    // int fd1 = 0;
+    // if (fd1 = fs_open("file1.txt") < 0){
+    //     printf("Fiel cant be opened\n");
+    //     return -1;
+    // }
+    // printf("file1_opened\n");
+
+    // // try writing to fd1
+    // // ******The function assumes that the buffer buf holds at least nbyte bytes****** 
+    // char buf[10];
+    // fs_write(fd1, buf, strlen(buf));
+
+    // if (fd1 = fs_close(fd1) < 0){
+    //     printf("Fiel cant be closed\n");
+    //     return -1;
+    // }
+    // printf("file1_closed\n");
+
+
+
     if (umount_fs("Test_Disk") < 0){
         printf("FILEsys cant be umounted\n");
         return -1;

@@ -77,7 +77,7 @@ int fs_delete(char *name);
 ```bash
 int fs_truncate(int fildes, off_t length);
 ```
-##Project stage (Incompleted)
+## Project stage (Incompleted)
 Having issue writing and reading into file descriptors
 
 # Contributors
